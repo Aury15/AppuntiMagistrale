@@ -258,12 +258,11 @@ A characteristic of this model is *amnesia*: a crashed process loses its interna
 
 #### Timing assumptions
 
-| Model        | Assumption |
-| ------------ | ---------- |
-| Synchronous  |            |
-| Asynchronous |            |
-|              |            |
-
+| Model                 | Assumption                                                                                                                              |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| Synchronous           | known upper bounds on (i) the time to execute a basic step, (ii) message transit time, (iii) the drift of local clocks w.r.t. real time |
+| Asynchronous          | no known bound on processes or links                                                                                                    |
+| Partially synchronous | there exists a time t after which the synchrony bounds hold                                                                             |
 
 **Synchronous systems**: enable timed failure detection, measuring transit delays, time-based coordination, worst-case performance guarantees and synchronised clocks. The major problem is the coverage of the synchrony assumption: it is hard to build a system in which the bounds hold with high probability. 
 **Asynchronous systems**: even without physical clocks, the passage of time can be measured through the transmission and delivery of messages: time is defined with respect to communication. This is *logical time*, and the resulting notion of clock is a logical clock.
