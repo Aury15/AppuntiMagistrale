@@ -76,4 +76,5 @@ If two irreconcilable transactions happen, only the first one recorded is consid
 
 ## Modelling distributed system
 
-A distributed system pursues its goal by running a distributed algorithm, i
+A distributed system pursues its goal by running a distributed algorithm, i.e. a piece of software that takes care of communication, coordination and resource sharing. The road to a distributed abstraction has three steps: 
+1. System model 
