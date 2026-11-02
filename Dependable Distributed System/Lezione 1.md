@@ -51,4 +51,8 @@ A dependable distributed system can be:
 ![[Lezione 1-1793616007202.webp]]
 
 >[!defintions] Consensus
->A consensus algorithm allows a group of distributed nodes to agree on a common value or state, even when some nodes fails or behave malicio
+>A **consensus** algorithm allows a group of distributed nodes to agree on a common value or state, even when some nodes fails or behave maliciously. It must satisfy:
+>	- **Agreement**: all honest nodes agree on the same value;
+>	- **Validity**: the decided value satisfies the protocol rules;
+>	- **Termination**: every honest node reaches a decision.
+
