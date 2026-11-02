@@ -129,14 +129,16 @@ $$
 
 Two implementations satisfy this specification. In the *synchronous* one the job is processed before being confirmed; in the *asynchronous* one it is only stored in a buffer, which is why the confirmation says “has been or will be” processed.
 
+###### Algorithm: synchronous job handler
 $$
 \begin{aligned}
-&\textbf{Algorithm: } \text{synchronous job handler} \\
 &\textbf{Upon event } \langle jh, \text{Submit} \mid \text{job} \rangle \textbf{ do} \\
 &\quad \text{process(job);} \\
 &\quad \text{trigger } \langle jh, \text{Confirm} \mid \text{job} \rangle; \\
-& \\
 \end{aligned}
+$$
+$$
+\begin{aligned}
 &\textbf{Algorithm: } \text{asynchronous job handler} \\
 &\textbf{Upon event } \langle jh, \text{Init} \rangle \textbf{ do} \\
 &\quad \text{buffer} := \emptyset; \\
