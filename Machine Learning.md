@@ -999,7 +999,6 @@ Questa è l'**Equazione Normale**. Se la matrice quadrata $X^T X$ (di dimensione
 > A differenza del Perceptron, del Gradient Descent o della Soft-SVM, la Regressione Lineare con MSE non richiede cicli iterativi: se la matrice è invertibile, la soluzione ottima globale si calcola istantaneamente in "one-shot" con un'operazione di algebra lineare.
 
 ---
-
 ## 4. Analisi Statistica: La Linear Assumption
 Abbiamo trovato l'ERM. Ma per valutare quanto sia "buono" teoricamente, dobbiamo fare un'assunzione sul processo generativo reale dei dati (il Predittore di Bayes).
 
@@ -1027,7 +1026,8 @@ Verifichiamo analiticamente se il nostro algoritmo empirico "scopre" il vero vet
 > $$ = \mathbb{E}[(X^T X)^{-1} X^T (X\theta^* + \epsilon) | X] $$
 > Distribuiamo la moltiplicazione matriciale:
 > $$ = \mathbb{E}[\underbrace{(X^T X)^{-1} (X^T X)}_{=I} \theta^* | X] + \mathbb{E}[(X^T X)^{-1} X^T \epsilon | X] $$
-> Poiché $X$ è considerato costante in questo valore atteso condizionato, possiamo estrarlo dal secondo termine[cite: 103]:
+> Poiché $X$ è considerato costante in questo valore atteso condizionato, possiamo estrarlo dal secondo termine:
 > $$ = \theta^* + (X^T X)^{-1} X^T \mathbb{E}[\epsilon | X] $$
-> Poiché $\epsilon$ ha media zero indipendente da $X$, l'ultimo termine si annulla ($\mathbb{E}[\epsilon|X]=0$)[cite: 103]. Ne consegue che $\mathbb{E}[\hat{\theta} | X] = \theta^*$[cite: 103].
-> Infine, applicando la Total Expectation Law, estraiamo l'aspettativa totale rispetto a $X$, ottenendo $\mathbb{E}[\hat{\theta}] = \theta^*$, dimostrando che OLS non ha bias sistematici[cite: 103].
+> Poiché $\epsilon$ ha media zero indipendente da $X$, l'ultimo termine si annulla ($\mathbb{E}[\epsilon|X]=0$). Ne consegue che $\mathbb{E}[\hat{\theta} | X] = \theta^*$.
+> Infine, applicando la Total Expectation Law, estraiamo l'aspettativa totale rispetto a $X$, ottenendo $\mathbb{E}[\hat{\theta}] = \theta^*$, dimostrando che OLS non ha bias sistematici.
+
