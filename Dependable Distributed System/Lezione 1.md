@@ -9,3 +9,4 @@ Distributed system are useful:
 - To build dependable services, coping with failures.
 
 A distributed system is characterized by: 
+1. A collection of aut
