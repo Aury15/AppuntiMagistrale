@@ -247,7 +247,8 @@ $$
 \text{Arbitrary (Byzantine)} & \text{the process may deviate arbitrarily from its algorithm}
 \end{array}
 $$
+
 **Crash-stop**. The process crashes at time $t$ and never recovers. A process is faulty if it crashes at some time during the execution, and correct if it never crashes and executes an infinite number of steps.
 
->[!definitions] Fault tolerance
-**Fault tolerance** means designing an algorithm that works despite faults, by assuming that at most $f$ of the $N$ processes are faulty. The relation between $f$ and N is called resilience; 9 Dependable Distributed Systems 5. Modelling Distributed Systems an upper bound f means that any number of processes up to f may fail. Crash-stop does not preclude recovery: a recovered process is simply no longer part of the system, and the algorithm must not rely on it to make progress.
+>[!definitions] Fault tolerance, resilience
+**Fault tolerance** means designing an algorithm that works despite faults, by assuming that at most $f$ of the $N$ processes are faulty. The relation between $f$ and $N$ is called **resilience**; an upper bound $f$ means that any number of processes up to $f$ may fail. *Crash-stop* does not preclude recovery: a recovered process is simply no longer part of the system, and the algorithm must not rely on it to make progress.
