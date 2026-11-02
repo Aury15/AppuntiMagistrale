@@ -41,3 +41,5 @@ The characteristics and challenges of these systems are:
 5. **Fault tolerance**; 
 6. **Concurrency**: multiple access to shared resources, coordination and synchronisation;
 7. **Transparency**.
+
+## Blockchain
