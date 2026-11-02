@@ -1006,26 +1006,26 @@ Abbiamo trovato l'ERM. Ma per valutare quanto sia "buono" teoricamente, dobbiamo
 > [!definition] Linear Assumption
 > Diciamo che la vera distribuzione incognita $\mathcal{D}$ soddisfa l'**Assunzione Lineare** se esiste un vettore "perfetto" $\theta^* \in \mathbb{R}^d$ tale che:
 > $$ Y = X^T \theta^* + \epsilon $$
-> dove $\epsilon$ è una variabile aleatoria di rumore, indipendente da $X$, con media nulla ($\mathbb{E}[\epsilon]=0$) e varianza finita ($\mathbb{E}[\epsilon^2] = \sigma^2 < \infty$)[cite: 102].
+> dove $\epsilon$ è una variabile aleatoria di rumore, indipendente da $X$, con media nulla ($\mathbb{E}[\epsilon]=0$) e varianza finita ($\mathbb{E}[\epsilon^2] = \sigma^2 < \infty$).
 
 > [!theorem] Predittore Ottimo Sotto Assunzione Lineare
 > Il predittore ottimo in assoluto per la loss quadratica, che minimizza il rischio atteso condizionato $X=x$, è proprio il valore atteso condizionato $\mathbb{E}[Y | X=x]$[cite: 102].
 > *Dimostrazione:* Troviamo il minimo di $g(z) = \mathbb{E}[(z-Y)^2 | X=x]$. Derivando e ponendo a 0 otteniamo $g'(z) = \mathbb{E}[2(z-Y) | X=x] = 0 \implies z = \mathbb{E}[Y | X=x]$[cite: 102].
 > Inserendo l'Assunzione Lineare, otteniamo:
 > $$ \mathbb{E}[Y | X=x] = \mathbb{E}[X^T \theta^* + \epsilon | X=x] = X^T \theta^* + \mathbb{E}[\epsilon | X=x] $$
-> Poiché $\epsilon$ ha media 0 ed è indipendente, il termine di rumore si annulla, lasciando esattamente il modello lineare $X^T \theta^*$ come target teorico insuperabile[cite: 102].
+> Poiché $\epsilon$ ha media 0 ed è indipendente, il termine di rumore si annulla, lasciando esattamente il modello lineare $X^T \theta^*$ come target teorico insuperabile.
 
 ### Correttezza dello Stimatore OLS ($\mathbb{E}[\hat{\theta}] = \theta^*$)
-Verifichiamo analiticamente se il nostro algoritmo empirico "scopre" il vero vettore $\theta^*$[cite: 103].
+Verifichiamo analiticamente se il nostro algoritmo empirico "scopre" il vero vettore $\theta^*$.
 
 > [!theorem] Non distorsione (Unbiasedness) di OLS
-> Sotto la Linear Assumption, il valore atteso del nostro stimatore $\hat{\theta}$ coincide esattamente con i pesi reali generativi: $\mathbb{E}[\hat{\theta}] = \theta^*$[cite: 103].
+> Sotto la Linear Assumption, il valore atteso del nostro stimatore $\hat{\theta}$ coincide esattamente con i pesi reali generativi: $\mathbb{E}[\hat{\theta}] = \theta^*$.
 
 > [!intuition] Dimostrazione (Algebra delle Aspettative)
-> Sostituiamo i dati reali $y = X\theta^* + \epsilon$ (in notazione vettoriale) nella formula dello stimatore OLS[cite: 103]. Calcoliamo il valore atteso condizionato alla conoscenza di $X$ (cioè $x_1, \dots, x_n$ sono costanti note)[cite: 103]:
+> Sostituiamo i dati reali $y = X\theta^* + \epsilon$ (in notazione vettoriale) nella formula dello stimatore OLS. Calcoliamo il valore atteso condizionato alla conoscenza di $X$ (cioè $x_1, \dots, x_n$ sono costanti note):
 > $$ \mathbb{E}[\hat{\theta} | X] = \mathbb{E}[(X^T X)^{-1} X^T y | X] $$
 > $$ = \mathbb{E}[(X^T X)^{-1} X^T (X\theta^* + \epsilon) | X] $$
-> Distribuiamo la moltiplicazione matriciale[cite: 103]:
+> Distribuiamo la moltiplicazione matriciale:
 > $$ = \mathbb{E}[\underbrace{(X^T X)^{-1} (X^T X)}_{=I} \theta^* | X] + \mathbb{E}[(X^T X)^{-1} X^T \epsilon | X] $$
 > Poiché $X$ è considerato costante in questo valore atteso condizionato, possiamo estrarlo dal secondo termine[cite: 103]:
 > $$ = \theta^* + (X^T X)^{-1} X^T \mathbb{E}[\epsilon | X] $$
