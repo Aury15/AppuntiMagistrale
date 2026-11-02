@@ -56,3 +56,7 @@ A dependable distributed system can be:
 >	- **Validity**: the decided value satisfies the protocol rules;
 >	- **Termination**: every honest node reaches a decision.
 
+
+A transaction is made of several phases; it is atomic when all its phases are executed as a single unit. 
+
+>[!definitions] Ledger o
