@@ -1,0 +1,7 @@
+body {
+  --math-normal: var(--text-normal);
+  --math-error: var(--text-error);
+}
+.math {
+  color: var(--text-normal) !important;
+}

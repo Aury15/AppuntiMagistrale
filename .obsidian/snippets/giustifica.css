@@ -1,0 +1,11 @@
+/* Giustifica il testo in modalità Lettura */
+.markdown-rendered p {
+    text-align: justify;
+    hyphens: auto;
+}
+
+/* Giustifica il testo in modalità Live Preview (Modifica) */
+.cm-line {
+    text-align: justify;
+    hyphens: auto;
+}

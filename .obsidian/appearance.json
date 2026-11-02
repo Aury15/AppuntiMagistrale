@@ -1,3 +1,7 @@
 {
-  "cssTheme": "Primary Simplified"
+  "cssTheme": "Primary Simplified",
+  "enabledCssSnippets": [
+    "giustifica",
+    "latex-fix"
+  ]
 }
