@@ -28,4 +28,6 @@ The characteristics of dependability are:
 3. **Safety:** no catastrophic consequences,
 4. **Integrity:** no system alteration;
 5. **Maintainability:** possibility to modify and repair;
-6. **Robustness:** keep performing well even if the environment changes
+6. **Robustness:** keep performing well even if the environment changes.
+
+fault $\longrightarrow$ cause 
