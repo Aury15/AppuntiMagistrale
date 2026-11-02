@@ -167,3 +167,32 @@ $$
 &\quad \textbf{TH2: } \text{Soundness: A submitted job whose transformation fails is not processed.}
 \end{aligned}
 $$
+###### Algorithm: Job-Transformation by Buffering
+$$
+\begin{aligned}
+&\textbf{Algorithm 1.3: } \text{Job-Transformation by Buffering} \\
+&\textbf{Implements:} \text{ TransformationHandler, instance } th. \\
+&\textbf{Uses:} \text{ JobHandler, instance } jh. \\
+& \\
+&\textbf{Upon event } \langle th, \text{Init} \rangle \textbf{ do} \\
+&\quad \text{top} := 1; \quad \text{bottom} := 1; \\
+&\quad \text{handling} := \text{FALSE}; \quad \text{buffer} := [\bot]^M; \\
+& \\
+&\textbf{Upon event } \langle th, \text{Submit} \mid \text{job} \rangle \textbf{ do} \\
+&\quad \textbf{if } \text{bottom} + M = \text{top} \textbf{ then} \\
+&\quad \quad \text{trigger } \langle th, \text{Error} \mid \text{job} \rangle; \\
+&\quad \textbf{else} \\
+&\quad \quad \text{buffer}[\text{top} \bmod M + 1] := \text{job}; \\
+&\quad \quad \text{top} := \text{top} + 1; \\
+&\quad \quad \text{trigger } \langle th, \text{Confirm} \mid \text{job} \rangle; \\
+& \\
+&\textbf{Upon } \text{bottom} < \text{top} \land \text{handling} = \text{FALSE} \textbf{ do} \\
+&\quad \text{job} := \text{buffer}[\text{bottom} \bmod M + 1]; \\
+&\quad \text{bottom} := \text{bottom} + 1; \\
+&\quad \text{handling} := \text{TRUE}; \\
+&\quad \text{trigger } \langle jh, \text{Submit} \mid \text{job} \rangle; \\
+& \\
+&\textbf{Upon event } \langle th, \text{Confirm} \mid \text{job} \rangle \textbf{ do} \\
+&\quad \text{handling} := \text{FALSE};
+\end{aligned}
+$$
