@@ -937,10 +937,10 @@ Finora ci siamo concentrati sulla classificazione (label discrete). Ora passiamo
 
 - **Cosa facciamo**: Il dominio delle features è $\mathcal{X} = \mathbb{R}^d$ e lo spazio dei target è continuo $\mathcal{Y} = \mathbb{R}$. Cerchiamo un predittore all'interno della famiglia delle funzioni lineari:
   $$ \mathcal{H} = \{ f_\theta : \mathbb{R}^d \rightarrow \mathbb{R} \mid f_\theta(x) = \langle \theta, x \rangle, \text{ per } \theta \in \mathbb{R}^d \} $$
-- **Funzione di Loss**: Sostituiamo la 0-1 loss con la **Squared Loss** (Loss Quadratica)[cite: 97]:
+- **Funzione di Loss**: Sostituiamo la 0-1 loss con la **Squared Loss** (Loss Quadratica):
   $$ l(f(x), y) = (f(x) - y)^2 $$
 
-L'obiettivo dell'apprendimento diventa la minimizzazione dell'[[Empirical Risk]] (Errore Quadratico Medio Empirico o MSE)[cite: 97]:
+L'obiettivo dell'apprendimento diventa la minimizzazione dell'[[Empirical Risk]] (Errore Quadratico Medio Empirico o MSE):
 $$ \hat{R}_S(f_\theta) = \frac{1}{n}\sum_{i=1}^n (f_\theta(x_i) - y_i)^2 $$
 
 ---
@@ -949,14 +949,14 @@ $$ \hat{R}_S(f_\theta) = \frac{1}{n}\sum_{i=1}^n (f_\theta(x_i) - y_i)^2 $$
 Per costruire l'intuizione, risolviamo analiticamente il problema per $d=1$ con funzioni affini (una retta nel piano cartesiano).
 
 > [!example] Regressione Lineare Semplice (1D)
-> Il modello è $f(x) = mx + q$[cite: 98]. L'errore empirico sui campioni è[cite: 98]:
+> Il modello è $f(x) = mx + q$. L'errore empirico sui campioni è:
 > $$ \hat{R}_S(m,q) = \frac{1}{n} \sum_{i=1}^n (m x_i + q - y_i)^2 $$
-> Poiché $\hat{R}_S$ è una funzione quadratica (quindi convessa) nei parametri $m$ e $q$, e limitata inferiormente da 0, il suo minimo globale si trova dove il gradiente è nullo[cite: 98].
+> Poiché $\hat{R}_S$ è una funzione quadratica (quindi convessa) nei parametri $m$ e $q$, e limitata inferiormente da 0, il suo minimo globale si trova dove il gradiente è nullo.
 
 **Calcolo dell'Intercetta ($q$)**:
-Poniamo la derivata parziale rispetto a $q$ uguale a 0[cite: 98]:
+Poniamo la derivata parziale rispetto a $q$ uguale a 0:
 $$ \frac{\partial \hat{R}_S}{\partial q} = \frac{1}{n} \sum_{i=1}^n 2(m x_i + q - y_i) = 0 $$
-Definendo le medie campionarie $\bar{x} = \frac{1}{n}\sum x_i$ e $\bar{y} = \frac{1}{n}\sum y_i$, ed espandendo la sommatoria[cite: 98]:
+Definendo le medie campionarie $\bar{x} = \frac{1}{n}\sum x_i$ e $\bar{y} = \frac{1}{n}\sum y_i$, ed espandendo la sommatoria:
 $$ q = \frac{1}{n}\sum_{i=1}^n (y_i - m x_i) \implies q = \bar{y} - m\bar{x} $$
 
 **Calcolo della Pendenza ($m$)**:
