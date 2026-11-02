@@ -66,3 +66,5 @@ A transaction is made of several phases; it is atomic when all its phases are ex
 
 >[!Definitions] Block chain
 >A **blockchain** is a distributed ledger that records transactions in an immutable, verifiable and permanent way.
+
+If two irreconcilable transactions happen, only the first one recorded is considered legitimate.
