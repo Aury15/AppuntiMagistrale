@@ -113,3 +113,14 @@ Events are of three kinds, and form the programming interface between layers:
 - **Indication**: used by a component c1 to deliver information to c2 (e.g. the notification of a message delivery).
 
 ![[Lezione 1-1793618151965.webp|575x310]]
+##### Example: job handler and layering 
+
+$$
+\begin{aligned}
+&\textbf{upon event } \langle c_1, \text{Event}_1 \mid \text{att}_1, \text{att}_2, \dots \rangle \textbf{ do} \\
+&\quad \text{do something;}   \quad  \quad \quad \quad \quad                 // send-some-event                \\ 
+&\quad \textbf{trigger } \langle c_2, \text{Event}_2 \mid \text{att}_1, \text{att}_2, \dots \rangle; \\
+&\textbf{upon condition do}  \quad  \quad \quad \quad \quad                 // an-internal-event   \\
+&\quad \text{do something;}
+\end{aligned}
+$$
