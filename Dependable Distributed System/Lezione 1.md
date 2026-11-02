@@ -5,6 +5,8 @@
 
 Usually a distributed system needs to complete a task, or goal, for which more than half ( $\frac{2}{3}$) of the entities need to agree.
 
+![[Lezione 1-1793615269064.webp|706]]
+
 Distributed system are useful:
 - To increase performance, coping with the increasing demand of users in both processing power and data storage, and reducing latency;
 - To build dependable services, coping with failures.
@@ -20,3 +22,7 @@ A distributed system is characterized by:
 >[!definitions] Dependability
 >Dependability is the ability of a system to deliver a service that can justifiably be trusted, i.e. the ability to avoid service failures that are more frequent than is acceptable. 
 
+The characteristics of dependability are:
+1. **Availability:** ready to be used;
+2. **Reliability:** continuity of correct service;
+3. ****
