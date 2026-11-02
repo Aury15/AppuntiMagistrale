@@ -25,4 +25,7 @@ A distributed system is characterized by:
 The characteristics of dependability are:
 1. **Availability:** ready to be used;
 2. **Reliability:** continuity of correct service;
-3. ****
+3. **Safety:** no catastrophic consequences,
+4. **Integrity:** no system alteration;
+5. **Maintainability:** possibility to modify and repair;
+6. **Robustness:** keep performing well even if the environment changes
