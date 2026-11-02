@@ -221,3 +221,12 @@ $$This algorithm maintains a buffer of size $M$ to temporarily store incoming jo
     - **When both conditions are verified:** It retrieves the next job, increments the `bottom` index, sets `handling := TRUE` to prevent simultaneous transmissions, and forwards the job to the lower-level handler via `trigger` $\langle jh, \text{Submit} \mid \text{job} \rangle$.
 - **Handling Confirmation from the Lower Level (`jh, Confirm`)**
     - Upon receiving the completion signal $\langle jh, \text{Confirm} \mid \text{job} \rangle$ from the lower-level handler ($jh$), the `handling` flag is reset to `FALSE`, allowing the system to process the next job from the buffer.
+
+#### Processes, messages and algorithms
+
+$\Pi$ \text{ denotes the set of processes.} \\
+&\text{Unless stated otherwise, it is static and every process knows the identities of all the others.} \\
+&\text{Sometimes a function } \text{rank} : \Pi \to \{1, \dots, N\} \text{ gives each process a unique index;} \\
+&\text{in the code, } \texttt{self} \text{ is the name of the process executing it.}
+\end{aligned}
+$$
