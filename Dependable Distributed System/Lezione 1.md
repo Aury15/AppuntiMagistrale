@@ -15,4 +15,8 @@ A distributed system is characterized by:
 2. **A single coherent system**, where *coherent* means that it behaves according to the expectations of its users. 
 	1. *Challenge*: failures.
 
-##
+## Dependability 
+
+>[!definitions] Dependability
+>Dependability is the ability of a system to deliver a service that can justifiably be trusted, i.e. the ability to avoid service failures that are more frequent than is acceptable. 
+
