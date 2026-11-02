@@ -153,3 +153,15 @@ $$
 &\quad \text{buffer} := \text{buffer} \setminus \{\text{job}\};
 \end{aligned}
 $$
+$$
+\begin{aligned}
+&\textbf{Module: } \text{TransformationHandler, instance } th. \\
+&\textbf{Events:} \\
+&\quad \textbf{Request:} \langle th, \text{Submit} \mid \text{job} \rangle : \text{Submits a job for transformation and for processing.} \\
+&\quad \textbf{Indication:} \langle th, \text{Confirm} \mid \text{job} \rangle : \text{Confirms that the given job has been (or will be) transformed and processed.} \\
+&\quad \textbf{Indication:} \langle th, \text{Error} \mid \text{job} \rangle : \text{Indicates that the transformation of the given job failed.} \\
+&\textbf{Properties:} \\
+&\quad \textbf{TH1: } \text{Guaranteed response: Every submitted job is eventually confirmed or its transformation fails.} \\
+&\quad \textbf{TH2: } \text{Soundness: A submitted job whose transformation fails is not processed.}
+\end{aligned}
+$$
