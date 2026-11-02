@@ -43,3 +43,4 @@ The characteristics and challenges of these systems are:
 7. **Transparency**.
 
 ## Blockchain
+
