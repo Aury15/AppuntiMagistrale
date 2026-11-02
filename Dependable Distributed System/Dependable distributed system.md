@@ -230,3 +230,5 @@ $\Pi$ denotes the **set of processes**. Unless stated otherwise it is static and
 >[!definitions] Distributed algorithm
 >A **distributed algorithm** is a distributed collection of automata, one per process. The automaton regulates how the process executes its computation steps, i.e. how it reacts to a message; every process runs the same automaton. An execution is a sequence of steps executed by the processes.
 
+>[!definitions] Safety and liveness
+>A **safety** property states that the algorithm does not do anything wrong: it can be violated at some time $t$ and never be satisfied again after $t$ (equivalently, if it is violated in an execution $E$, there is a partial execution $E^′$ of $E$ such that it is violated in every extension of $E^′$ ). A **liveness** property ensures that eventually something good happens: for any time t there is some hope that it can be satisfied at some t ′ ≥ t$.
