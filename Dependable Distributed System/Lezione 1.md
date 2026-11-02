@@ -111,3 +111,5 @@ Events are of three kinds, and form the programming interface between layers:
 - **Request**: used by a component c1 to request a service from c2 (e.g. disseminate a message in a group); 
 - **Confirmation**: used by a component to confirm the completion of a request; 
 - **Indication**: used by a component c1 to deliver information to c2 (e.g. the notification of a message delivery).
+
+![[Lezione 1-1793618151965.webp|575x310]]
