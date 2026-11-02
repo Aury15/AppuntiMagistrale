@@ -224,9 +224,6 @@ $$This algorithm maintains a buffer of size $M$ to temporarily store incoming jo
 
 #### Processes, messages and algorithms
 
-$\Pi$ \text{ denotes the set of processes.} \\
-&\text{Unless stated otherwise, it is static and every process knows the identities of all the others.} \\
-&\text{Sometimes a function } \text{rank} : \Pi \to \{1, \dots, N\} \text{ gives each process a unique index;} \\
-&\text{in the code, } \texttt{self} \text{ is the name of the process executing it.}
-\end{aligned}
-$$
+$\Pi$ denotes the **set of processes**. Unless stated otherwise it is static and every process knows the identities of all the others. Sometimes a function $rank$ : $\Pi \to \{1, \dots, N\}$ gives each process a unique index; in the code, $\texttt{self}$ is the name of the process executing it.
+
+
