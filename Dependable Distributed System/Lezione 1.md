@@ -206,4 +206,5 @@ $$This algorithm maintains a buffer of size $M$ to temporarily store incoming jo
 	3. If the buffer isn't full insert the job on the correct position of the buffer using the module operatore (top mod M + 1), increases the top indices and respond at the users with a confirm $\langle th, \text{Confirm} \mid \text{job} \rangle$. 
 3. **Asynchronous sending to the lower level (`upon bottom < top ∧ handling = FALSE`)**:
 	1. This internal condition monitorize constantly if there is job attending in the buffers (bottom < top) and if the system is free (handling = FALSE)
-	2. When both the condition are verified, extract the next job, increases the bottom indices, puts 
+	2. When both the condition are verified, extract the next job, increases the bottom indices, puts Handling := TRUE for block new send simultaneopus and inoltra il job al gestore sottostante tramite `trigger ⟨jh, Submit | job⟩`.
+4. Handling confirmation from the lower level <jh, Confirm>
