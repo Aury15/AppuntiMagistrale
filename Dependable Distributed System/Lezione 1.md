@@ -86,3 +86,5 @@ Abstraction are important because they capture properties common to a large and 
 #### Composition model
 
 Protocols are written in pseudo.code that reflects a reactive computing model: components of the same process communicate by exchanging events and an algorithm is a set of event handlers that react to incoming events and possibly trigger new ones.
+
+```text upon event ⟨ co1, Event1 | att1, att2, ... ⟩ do do something; trigger ⟨ co2, Event2 | att1, att2, ... ⟩; // invio di un evento upon condition do // gestione di un evento interno o di una guardia logica do something;
