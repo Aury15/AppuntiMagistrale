@@ -157,7 +157,7 @@ $$
 $$
 \begin{aligned}
 &\textbf{Module: } \\
-&\quad \&\textbf{Name: } text{TransformationHandler, instance } th. \\
+&\quad \textbf{Name: } \text{TransformationHandler, \textbf{instance} } th. \\
 &\textbf{Events:} \\
 &\quad \textbf{Request:} \langle th, \text{Submit} \mid \text{job} \rangle : \text{Submits a job for transformation and for processing.} \\
 &\quad \textbf{Indication:} \langle th, \text{Confirm} \mid \text{job} \rangle : \text{Confirms that the given job has been (or will be) transformed and processed.} \\
