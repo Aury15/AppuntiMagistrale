@@ -935,7 +935,7 @@ Questo chiude il cerchio dimostrando la supremazia dell'ottimizzazione stocastic
 ## 1. Il Problema della Regressione Lineare
 Finora ci siamo concentrati sulla classificazione (label discrete). Ora passiamo al problema di predire valori continui.
 
-- **Cosa facciamo**: Il dominio delle features è $\mathcal{X} = \mathbb{R}^d$ e lo spazio dei target è continuo $\mathcal{Y} = \mathbb{R}$[cite: 97]. Cerchiamo un predittore all'interno della famiglia delle funzioni lineari[cite: 97]:
+- **Cosa facciamo**: Il dominio delle features è $\mathcal{X} = \mathbb{R}^d$ e lo spazio dei target è continuo $\mathcal{Y} = \mathbb{R}$. Cerchiamo un predittore all'interno della famiglia delle funzioni lineari:
   $$ \mathcal{H} = \{ f_\theta : \mathbb{R}^d \rightarrow \mathbb{R} \mid f_\theta(x) = \langle \theta, x \rangle, \text{ per } \theta \in \mathbb{R}^d \} $$
 - **Funzione di Loss**: Sostituiamo la 0-1 loss con la **Squared Loss** (Loss Quadratica)[cite: 97]:
   $$ l(f(x), y) = (f(x) - y)^2 $$
