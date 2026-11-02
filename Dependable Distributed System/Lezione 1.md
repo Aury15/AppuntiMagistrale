@@ -196,15 +196,25 @@ $$
 &\quad \text{handling} := \text{FALSE};
 \end{aligned}
 $$This algorithm maintains a buffer of size $M$ to temporarily store incoming jobs and send them one at a time to the underlying JobHandler ($jh$):
-1. **Initialization (Init)**: 
-	1. Top and bottom are set to 1 (pointing to the insert and withdraw position respectively).
-	2. Handling := FALSE means that the system doesen't elaborating jobs. 
-	3. Buffer := $[\bot]^M$ creates an empty array. 
-2. **Reciving the request (Submit)**:
-	1. When a new jobs arrives with $\langle th, \text{Submit} \mid \text{job} \rangle$ the algorithm verifies if the buffes is full checking the overflow condition bottom + M = top;
-	2. If the buffer is full reject the job omitting the error event $\langle th, \text{Error} \mid \text{job} \rangle$
-	3. If the buffer isn't full insert the job on the correct position of the buffer using the module operatore (top mod M + 1), increases the top indices and respond at the users with a confirm $\langle th, \text{Confirm} \mid \text{job} \rangle$. 
-3. **Asynchronous sending to the lower level (`upon bottom < top ∧ handling = FALSE`)**:
-	1. This internal condition monitorize constantly if there is job attending in the buffers (bottom < top) and if the system is free (handling = FALSE)
-	2. When both the condition are verified, extract the next job, increases the bottom indices, puts Handling := TRUE for block new send simultaneopus and inoltra il job al gestore sottostante tramite `trigger ⟨jh, Submit | job⟩`.
-4. Handling confirmation from the lower level <jh, Confirm>
+- **Initialization (`Init`)**
+    - The `top` and `bottom` indices are set to $1$, pointing to the insertion and extraction positions, respectively.
+    - `handling := FALSE` indicates that the system is currently not processing any jobs.
+    - `buffer := [\bot]^M` initializes an empty circular buffer of size $M$ filled with null elements ($\bot$).
+
+- **Receiving the Request (`Submit`)**
+    
+    - When a new job arrives via the event $\langle th, \text{Submit} \mid \text{job} \rangle$, the algorithm checks whether the buffer is full by evaluating the overflow condition $\text{bottom} + M = \text{top}$.
+        
+    - **If the buffer is full:** It rejects the request by triggering the error event $\langle th, \text{Error} \mid \text{job} \rangle$.
+        
+    - **If the buffer is not full:** It stores the job at the correct position using the modulo operator ($\text{top} \bmod M + 1$), increments the `top` index, and immediately confirms the submission by triggering $\langle th, \text{Confirm} \mid \text{job} \rangle$.
+        
+- **Asynchronous Sending to the Lower Level ($\text{bottom} < \text{top} \land \text{handling} = \text{FALSE}$)**
+    
+    - This internal guard continuously monitors whether there are pending jobs in the buffer ($\text{bottom} < \text{top}$) and whether the system is free ($\text{handling} = \text{FALSE}$).
+        
+    - **When both conditions are met:** It retrieves the next job, increments the `bottom` index, sets `handling := TRUE` to prevent simultaneous transmissions, and forwards the job to the lower-level handler via `trigger` $\langle jh, \text{Submit} \mid \text{job} \rangle$.
+        
+- **Handling Confirmation from the Lower Level (`jh, Confirm`)**
+    
+    - Upon receiving the completion signal $\langle jh, \text{Confirm} \mid \text{job} \rangle$ from the lower-level handler ($jh$), the `handling` flag is reset to `FALSE`, allowing the system to process the next job from the buffer.
