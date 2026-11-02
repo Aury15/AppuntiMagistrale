@@ -930,3 +930,104 @@ $$ ||\hat{g}^{(t)}|| \le \lambda ||w^{(t)}|| + ||x_{i_t}|| \le \lambda \frac{R}{
 $$ \eta_t = \frac{1}{\lambda t} \implies \mathbb{E}[F(\bar{w}^{(T)})] - F(w^*) \le \frac{2R^2(1 + \log T)}{\lambda T} $$
 Questo chiude il cerchio dimostrando la supremazia dell'ottimizzazione stocastica su larga scala ("No difference between the stochastic and full rates").
 
+# Lezione 11: Regressione Lineare e Ordinary Least Squares (OLS)
+
+## 1. Il Problema della Regressione Lineare
+Finora ci siamo concentrati sulla classificazione (label discrete). Ora passiamo al problema di predire valori continui.
+
+- **Cosa facciamo**: Il dominio delle features è $\mathcal{X} = \mathbb{R}^d$ e lo spazio dei target è continuo $\mathcal{Y} = \mathbb{R}$[cite: 97]. Cerchiamo un predittore all'interno della famiglia delle funzioni lineari[cite: 97]:
+  $$ \mathcal{H} = \{ f_\theta : \mathbb{R}^d \rightarrow \mathbb{R} \mid f_\theta(x) = \langle \theta, x \rangle, \text{ per } \theta \in \mathbb{R}^d \} $$
+- **Funzione di Loss**: Sostituiamo la 0-1 loss con la **Squared Loss** (Loss Quadratica)[cite: 97]:
+  $$ l(f(x), y) = (f(x) - y)^2 $$
+
+L'obiettivo dell'apprendimento diventa la minimizzazione dell'[[Empirical Risk]] (Errore Quadratico Medio Empirico o MSE)[cite: 97]:
+$$ \hat{R}_S(f_\theta) = \frac{1}{n}\sum_{i=1}^n (f_\theta(x_i) - y_i)^2 $$
+
+---
+
+## 2. Derivazione in 1D: La Retta di Regressione Affine
+Per costruire l'intuizione, risolviamo analiticamente il problema per $d=1$ con funzioni affini (una retta nel piano cartesiano).
+
+> [!example] Regressione Lineare Semplice (1D)
+> Il modello è $f(x) = mx + q$[cite: 98]. L'errore empirico sui campioni è[cite: 98]:
+> $$ \hat{R}_S(m,q) = \frac{1}{n} \sum_{i=1}^n (m x_i + q - y_i)^2 $$
+> Poiché $\hat{R}_S$ è una funzione quadratica (quindi convessa) nei parametri $m$ e $q$, e limitata inferiormente da 0, il suo minimo globale si trova dove il gradiente è nullo[cite: 98].
+
+**Calcolo dell'Intercetta ($q$)**:
+Poniamo la derivata parziale rispetto a $q$ uguale a 0[cite: 98]:
+$$ \frac{\partial \hat{R}_S}{\partial q} = \frac{1}{n} \sum_{i=1}^n 2(m x_i + q - y_i) = 0 $$
+Definendo le medie campionarie $\bar{x} = \frac{1}{n}\sum x_i$ e $\bar{y} = \frac{1}{n}\sum y_i$, ed espandendo la sommatoria[cite: 98]:
+$$ q = \frac{1}{n}\sum_{i=1}^n (y_i - m x_i) \implies q = \bar{y} - m\bar{x} $$
+
+**Calcolo della Pendenza ($m$)**:
+Poniamo la derivata parziale rispetto a $m$ uguale a 0 e sostituiamo $q = \bar{y} - m\bar{x}$[cite: 99]:
+$$ \frac{\partial \hat{R}_S}{\partial m} = \frac{1}{n} \sum_{i=1}^n 2x_i(m x_i + q - y_i) = 0 $$
+$$ \sum_{i=1}^n x_i (m x_i - m\bar{x} + \bar{y} - y_i) = 0 $$
+Isoliamo i termini con $m$[cite: 99]:
+$$ m \sum_{i=1}^n x_i (x_i - \bar{x}) = \sum_{i=1}^n x_i (y_i - \bar{y}) $$
+Sfruttando le proprietà delle medie ($\sum(x_i - \bar{x}) = 0$), possiamo sottrarre $\bar{x}$ dentro la sommatoria di sinistra senza alterare il risultato, ottenendo[cite: 99]:
+$$ m = \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^n (x_i - \bar{x})^2} $$
+Questa è esattamente la formula che esprime $m$ come il rapporto tra la Covarianza Empirica di $X$ e $Y$ diviso la Varianza Empirica di $X$[cite: 99].
+
+*(Nota sulle eccezioni: se tutti gli $x_i$ sono identici, la varianza è zero e la pendenza $m$ è indefinita. In tal caso, il modello degenera costringendoci a porre $m=0$ e $q = \bar{y}$)[cite: 99].*
+
+---
+
+## 3. Generalizzazione in $\mathbb{R}^d$ e lo stimatore OLS
+Estendiamo il problema a $d$ dimensioni. Per farlo in modo pulito, passiamo alla notazione vettoriale e matriciale.
+
+> [!definition] Design Matrix
+> Dato un dataset di $n$ campioni, definiamo la Design Matrix $X \in \mathbb{R}^{n \times d}$, dove ogni riga è la trasposta di un vettore di feature $x_i^T$[cite: 100]. Definiamo inoltre il vettore colonna delle label $y \in \mathbb{R}^n$[cite: 100].
+> In questa forma compatta, le previsioni per tutti i punti sono date dal prodotto matrice-vettore $X\theta$[cite: 100].
+
+Il Rischio Empirico si riscrive come norma quadratica del vettore residuo[cite: 100, 101]:
+$$ \hat{R}_S(\theta) = \frac{1}{n} ||y - X\theta||^2 = \frac{1}{n} \langle y - X\theta, y - X\theta \rangle $$
+
+### Derivazione dell'Equazione Normale
+Espandiamo il prodotto scalare per isolare $\theta$[cite: 101]:
+$$ \hat{R}_S(\theta) = \frac{1}{n} [||y||^2 + ||X\theta||^2 - 2y^T X\theta] $$
+Calcoliamo il gradiente rispetto al vettore $\theta$ e lo poniamo uguale a 0[cite: 101]:
+$$ \nabla \hat{R}_S(\theta) = \frac{2}{n} [X^T X\theta - X^T y] = 0 $$
+$$ X^T X\theta = X^T y $$
+Questa è l'**Equazione Normale**[cite: 101]. Se la matrice quadrata $X^T X$ (di dimensione $d \times d$) è invertibile, possiamo isolare $\theta$ e trovare la soluzione chiusa[cite: 101].
+
+> [!theorem] Ordinary Least Squares (OLS) Estimator
+> Assumendo che $X^T X$ sia invertibile (il che richiede che le features siano linearmente indipendenti e $n \ge d$), lo stimatore ottimale è[cite: 101]:
+> $$ \hat{\theta} = (X^T X)^{-1} X^T y $$
+
+> [!intuition] Perché è importante?
+> A differenza del Perceptron, del Gradient Descent o della Soft-SVM, la Regressione Lineare con MSE non richiede cicli iterativi: se la matrice è invertibile, la soluzione ottima globale si calcola istantaneamente in "one-shot" con un'operazione di algebra lineare[cite: 101].
+
+---
+
+## 4. Analisi Statistica: La Linear Assumption
+Abbiamo trovato l'ERM. Ma per valutare quanto sia "buono" teoricamente, dobbiamo fare un'assunzione sul processo generativo reale dei dati (il Predittore di Bayes).
+
+> [!definition] Linear Assumption
+> Diciamo che la vera distribuzione incognita $\mathcal{D}$ soddisfa l'**Assunzione Lineare** se esiste un vettore "perfetto" $\theta^* \in \mathbb{R}^d$ tale che[cite: 102]:
+> $$ Y = X^T \theta^* + \epsilon $$
+> dove $\epsilon$ è una variabile aleatoria di rumore, indipendente da $X$, con media nulla ($\mathbb{E}[\epsilon]=0$) e varianza finita ($\mathbb{E}[\epsilon^2] = \sigma^2 < \infty$)[cite: 102].
+
+> [!theorem] Predittore Ottimo Sotto Assunzione Lineare
+> Il predittore ottimo in assoluto per la loss quadratica, che minimizza il rischio atteso condizionato $X=x$, è proprio il valore atteso condizionato $\mathbb{E}[Y | X=x]$[cite: 102].
+> *Dimostrazione:* Troviamo il minimo di $g(z) = \mathbb{E}[(z-Y)^2 | X=x]$. Derivando e ponendo a 0 otteniamo $g'(z) = \mathbb{E}[2(z-Y) | X=x] = 0 \implies z = \mathbb{E}[Y | X=x]$[cite: 102].
+> Inserendo l'Assunzione Lineare, otteniamo:
+> $$ \mathbb{E}[Y | X=x] = \mathbb{E}[X^T \theta^* + \epsilon | X=x] = X^T \theta^* + \mathbb{E}[\epsilon | X=x] $$
+> Poiché $\epsilon$ ha media 0 ed è indipendente, il termine di rumore si annulla, lasciando esattamente il modello lineare $X^T \theta^*$ come target teorico insuperabile[cite: 102].
+
+### Correttezza dello Stimatore OLS ($\mathbb{E}[\hat{\theta}] = \theta^*$)
+Verifichiamo analiticamente se il nostro algoritmo empirico "scopre" il vero vettore $\theta^*$[cite: 103].
+
+> [!theorem] Non distorsione (Unbiasedness) di OLS
+> Sotto la Linear Assumption, il valore atteso del nostro stimatore $\hat{\theta}$ coincide esattamente con i pesi reali generativi: $\mathbb{E}[\hat{\theta}] = \theta^*$[cite: 103].
+
+> [!intuition] Dimostrazione (Algebra delle Aspettative)
+> Sostituiamo i dati reali $y = X\theta^* + \epsilon$ (in notazione vettoriale) nella formula dello stimatore OLS[cite: 103]. Calcoliamo il valore atteso condizionato alla conoscenza di $X$ (cioè $x_1, \dots, x_n$ sono costanti note)[cite: 103]:
+> $$ \mathbb{E}[\hat{\theta} | X] = \mathbb{E}[(X^T X)^{-1} X^T y | X] $$
+> $$ = \mathbb{E}[(X^T X)^{-1} X^T (X\theta^* + \epsilon) | X] $$
+> Distribuiamo la moltiplicazione matriciale[cite: 103]:
+> $$ = \mathbb{E}[\underbrace{(X^T X)^{-1} (X^T X)}_{=I} \theta^* | X] + \mathbb{E}[(X^T X)^{-1} X^T \epsilon | X] $$
+> Poiché $X$ è considerato costante in questo valore atteso condizionato, possiamo estrarlo dal secondo termine[cite: 103]:
+> $$ = \theta^* + (X^T X)^{-1} X^T \mathbb{E}[\epsilon | X] $$
+> Poiché $\epsilon$ ha media zero indipendente da $X$, l'ultimo termine si annulla ($\mathbb{E}[\epsilon|X]=0$)[cite: 103]. Ne consegue che $\mathbb{E}[\hat{\theta} | X] = \theta^*$[cite: 103].
+> Infine, applicando la Total Expectation Law, estraiamo l'aspettativa totale rispetto a $X$, ottenendo $\mathbb{E}[\hat{\theta}] = \theta^*$, dimostrando che OLS non ha bias sistematici[cite: 103].
