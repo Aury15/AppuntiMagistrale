@@ -69,3 +69,11 @@ A transaction is made of several phases; it is atomic when all its phases are ex
 
 If two irreconcilable transactions happen, only the first one recorded is considered legitimate.
 ![[Lezione 1-1793616554037.webp]]
+
+#### How a transaction gets into a blockchain
+
+![[Lezione 1-1793616647445.webp]]
+
+## Modelling distributed system
+
+A distributed system pursues its goal by running a distributed algorithm, i
