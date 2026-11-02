@@ -45,7 +45,7 @@ The characteristics and challenges of these systems are:
 ## Blockchain
 
 A dependable distributed system can be:
-- **Centralized**: there is a single central node on which all the other peripheral nodes depend. If the central node fails, the entire system collapses.
-- **Decentralized:**
+- **Centralized**: there is a single central node on which all the other peripheral nodes depend. If the central node fails, the entire system collapses;
+- **Decentralized:** There are multiple intermediate-level nodes, each of which manages its own subset of peripheral nodes. Control is divided among multiple entities, reducing dependance on a single central point;
 - 
 ![[Lezione 1-1793616007202.webp]]
