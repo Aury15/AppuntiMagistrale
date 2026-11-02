@@ -195,5 +195,5 @@ $$
 &\textbf{Upon event } \langle th, \text{Confirm} \mid \text{job} \rangle \textbf{ do} \\
 &\quad \text{handling} := \text{FALSE};
 \end{aligned}
-$$
-This algorithm manages a buffer with dimension M 
+$$This algorithm maintains a buffer of size $M$ to temporarily store incoming jobs and send them one at a time to the underlying JobHandler ($jh$):
+1. Initialization
