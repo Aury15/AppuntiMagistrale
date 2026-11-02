@@ -196,3 +196,4 @@ $$
 &\quad \text{handling} := \text{FALSE};
 \end{aligned}
 $$
+This algorithm manages a buffer with dimension M 
