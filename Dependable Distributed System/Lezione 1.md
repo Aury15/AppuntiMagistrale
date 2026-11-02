@@ -201,5 +201,6 @@ $$This algorithm maintains a buffer of size $M$ to temporarily store incoming jo
 	2. Handling := FALSE means that the system doesen't elaborating jobs. 
 	3. Buffer := $[\bot]^M$ creates an empty array. 
 2. Reciving the request (Submit):
-	1. When a new jobs arrives with <th, submit | job> the algorithm verifies if the buffes is full checking the overflow condition bottom + M = top;
-	2. If the buffer is full reject the jov 
+	1. When a new jobs arrives with $\langle th, \text{Submit} \mid \text{job} \rangle$ the algorithm verifies if the buffes is full checking the overflow condition bottom + M = top;
+	2. If the buffer is full reject the job omitting the error event $\langle th, \text{Error} \mid \text{job} \rangle$
+	3. If the buffer isn't full insert the job on the correct position of the buffer using the module operatore (top mod M + 1), increases t
