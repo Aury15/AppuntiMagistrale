@@ -138,6 +138,13 @@ $$
 &\quad \text{trigger } \langle jh, \text{Confirm} \mid \text{job} \rangle; \\
 \end{aligned}
 $$
+- **Event Trigger (`Submit`):** When a job submission request arrives via $\langle jh, \text{Submit} \mid \text{job} \rangle$, the handler handles it straight away.
+- **Execution Flow:**
+    - It executes the task synchronously: `process(job);`
+        
+    - Once processing is fully completed, it triggers the confirmation event: `trigger ⟨jh, Confirm | job⟩;`
+        
+- **Characteristics:** It is **blocking**. The system processes the request sequentially and remains tied up until the job is completely executed before sending a confirmation back.
 ###### Algorithm: asynchronous job handler
 $$
 \begin{aligned}
