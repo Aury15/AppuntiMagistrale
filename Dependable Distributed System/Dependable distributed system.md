@@ -233,4 +233,17 @@ $\Pi$ denotes the **set of processes**. Unless stated otherwise it is static and
 >[!definitions] Safety and liveness
 >A **safety** property states that the algorithm does not do anything wrong: it can be violated at some time $t$ and never be satisfied again after $t$ (equivalently, if it is violated in an execution $E$, there is a partial execution $E^′$ of $E$ such that it is violated in every extension of $E^′$ ). A **liveness** property ensures that eventually something good happens: for any time t there is some hope that it can be satisfied at some $t^′ ≥ t$.
 
-
+#### Failure models 
+$$
+\begin{array}{l|l}
+\textbf{Failure} & \textbf{Behaviour} \\ \hline
+\text{Crash} & \text{the process stops its execution} \\
+\text{Omission} & \text{the process does not send (or receive) a message that it should,} \\
+& \text{according to its algorithm} \\
+\text{Crash-recovery} & \text{the process crashes and stops sending messages, but might} \\
+& \text{recover later} \\
+\text{Eavesdropping} & \text{the process leaks information obtained in an algorithm to an} \\
+& \text{outside entity} \\
+\text{Arbitrary (Byzantine)} & \text{the process may deviate arbitrarily from its algorithm}
+\end{array}
+$$
