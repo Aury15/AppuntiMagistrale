@@ -960,16 +960,16 @@ Definendo le medie campionarie $\bar{x} = \frac{1}{n}\sum x_i$ e $\bar{y} = \fra
 $$ q = \frac{1}{n}\sum_{i=1}^n (y_i - m x_i) \implies q = \bar{y} - m\bar{x} $$
 
 **Calcolo della Pendenza ($m$)**:
-Poniamo la derivata parziale rispetto a $m$ uguale a 0 e sostituiamo $q = \bar{y} - m\bar{x}$[cite: 99]:
+Poniamo la derivata parziale rispetto a $m$ uguale a 0 e sostituiamo $q = \bar{y} - m\bar{x}$:
 $$ \frac{\partial \hat{R}_S}{\partial m} = \frac{1}{n} \sum_{i=1}^n 2x_i(m x_i + q - y_i) = 0 $$
 $$ \sum_{i=1}^n x_i (m x_i - m\bar{x} + \bar{y} - y_i) = 0 $$
-Isoliamo i termini con $m$[cite: 99]:
+Isoliamo i termini con $m$:
 $$ m \sum_{i=1}^n x_i (x_i - \bar{x}) = \sum_{i=1}^n x_i (y_i - \bar{y}) $$
-Sfruttando le proprietà delle medie ($\sum(x_i - \bar{x}) = 0$), possiamo sottrarre $\bar{x}$ dentro la sommatoria di sinistra senza alterare il risultato, ottenendo[cite: 99]:
+Sfruttando le proprietà delle medie ($\sum(x_i - \bar{x}) = 0$), possiamo sottrarre $\bar{x}$ dentro la sommatoria di sinistra senza alterare il risultato, ottenendo:
 $$ m = \frac{\sum_{i=1}^n (x_i - \bar{x})(y_i - \bar{y})}{\sum_{i=1}^n (x_i - \bar{x})^2} $$
-Questa è esattamente la formula che esprime $m$ come il rapporto tra la Covarianza Empirica di $X$ e $Y$ diviso la Varianza Empirica di $X$[cite: 99].
+Questa è esattamente la formula che esprime $m$ come il rapporto tra la Covarianza Empirica di $X$ e $Y$ diviso la Varianza Empirica di $X$.
 
-*(Nota sulle eccezioni: se tutti gli $x_i$ sono identici, la varianza è zero e la pendenza $m$ è indefinita. In tal caso, il modello degenera costringendoci a porre $m=0$ e $q = \bar{y}$)[cite: 99].*
+*(Nota sulle eccezioni: se tutti gli $x_i$ sono identici, la varianza è zero e la pendenza $m$ è indefinita. In tal caso, il modello degenera costringendoci a porre $m=0$ e $q = \bar{y}$).*
 
 ---
 
@@ -977,7 +977,7 @@ Questa è esattamente la formula che esprime $m$ come il rapporto tra la Covaria
 Estendiamo il problema a $d$ dimensioni. Per farlo in modo pulito, passiamo alla notazione vettoriale e matriciale.
 
 > [!definition] Design Matrix
-> Dato un dataset di $n$ campioni, definiamo la Design Matrix $X \in \mathbb{R}^{n \times d}$, dove ogni riga è la trasposta di un vettore di feature $x_i^T$[cite: 100]. Definiamo inoltre il vettore colonna delle label $y \in \mathbb{R}^n$[cite: 100].
+> Dato un dataset di $n$ campioni, definiamo la Design Matrix $X \in \mathbb{R}^{n \times d}$, dove ogni riga è la trasposta di un vettore di feature $x_i^T$. Definiamo inoltre il vettore colonna delle label $y \in \mathbb{R}^n$.
 > In questa forma compatta, le previsioni per tutti i punti sono date dal prodotto matrice-vettore $X\theta$[cite: 100].
 
 Il Rischio Empirico si riscrive come norma quadratica del vettore residuo[cite: 100, 101]:
