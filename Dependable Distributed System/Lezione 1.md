@@ -30,4 +30,12 @@ The characteristics of dependability are:
 5. **Maintainability:** possibility to modify and repair;
 6. **Robustness:** keep performing well even if the environment changes.
 
-fault $\longrightarrow$ cause 
+$$\text{Fault} \xrightarrow{\text{causes}} \text{error} \xrightarrow{\text{generates}} \text{failure}$$
+## Dependable distributed systems
+
+The characteristics and challenges of these systems are:
+1. heterogeneity [not defined]; 
+2. openness: the capability of a system to be extended and re-implemented; 
+3. security: confidentiality, integrity and availability; 
+4. scalability: the system keeps running with adequate performance even if the number of resources and/or users grows by orders of magnitude; 
+5. fault tolerance; • concurrency: multiple access to shared resources, coordination and synchronisation; • transparency.
