@@ -196,4 +196,6 @@ $$
 &\quad \text{handling} := \text{FALSE};
 \end{aligned}
 $$This algorithm maintains a buffer of size $M$ to temporarily store incoming jobs and send them one at a time to the underlying JobHandler ($jh$):
-1. Initialization
+1. **Initialization (Init)**: 
+	1. Top and bottom are set to 1 (pointing to the insert and withdraw position respectively).
+	2. Han
