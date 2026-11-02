@@ -47,5 +47,8 @@ The characteristics and challenges of these systems are:
 A dependable distributed system can be:
 - **Centralized**: there is a single central node on which all the other peripheral nodes depend. If the central node fails, the entire system collapses;
 - **Decentralized:** There are multiple intermediate-level nodes, each of which manages its own subset of peripheral nodes. Control is divided among multiple entities, reducing dependance on a single central point;
-- **Distributed:** 
+- **Distributed:** All nodes are connected to each other in a peer-to-peer network (or mesh), where there is no central authority or single coordinator and each node collaborates to achieve a common goal. This is the key model for ensuring high fault tolerance and reliability in modern distributed systems.
 ![[Lezione 1-1793616007202.webp]]
+
+>[!defintions] Consensus
+>A consensus algorithm allows a group of distributed nodes to agree on a common value or state, even when some nodes fails or behave malicio
