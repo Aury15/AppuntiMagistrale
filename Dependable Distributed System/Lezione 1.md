@@ -205,4 +205,5 @@ $$This algorithm maintains a buffer of size $M$ to temporarily store incoming jo
 	2. If the buffer is full reject the job omitting the error event $\langle th, \text{Error} \mid \text{job} \rangle$
 	3. If the buffer isn't full insert the job on the correct position of the buffer using the module operatore (top mod M + 1), increases the top indices and respond at the users with a confirm $\langle th, \text{Confirm} \mid \text{job} \rangle$. 
 3. **Asynchronous sending to the lower level (`upon bottom < top ∧ handling = FALSE`)**:
-	1. This inter
+	1. This internal condition monitorize constantly if there is job attending in the buffers (bottom < top) and if the system is free (handling = FALSE)
+	2. When both the condition are verified, extract the next job, increases the bottom indices, puts 
