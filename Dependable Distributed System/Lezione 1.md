@@ -132,11 +132,13 @@ Two implementations satisfy this specification. In the *synchronous* one the job
 ###### Algorithm: synchronous job handler
 $$
 \begin{aligned}
+&\textbf{Algorithm: } \text{synchronous job handler} \\
 &\textbf{Upon event } \langle jh, \text{Submit} \mid \text{job} \rangle \textbf{ do} \\
 &\quad \text{process(job);} \\
 &\quad \text{trigger } \langle jh, \text{Confirm} \mid \text{job} \rangle; \\
 \end{aligned}
 $$
+###### Algorithm: asynchronous job handler
 $$
 \begin{aligned}
 &\textbf{Algorithm: } \text{asynchronous job handler} \\
