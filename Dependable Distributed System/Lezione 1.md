@@ -117,10 +117,15 @@ Events are of three kinds, and form the programming interface between layers:
 
 $$
 \begin{aligned}
-&\textbf{upon event } \langle c_1, \text{Event}_1 \mid \text{att}_1, \text{att}_2, \dots \rangle \textbf{ do} \\
-&\quad \text{do something;}   \quad  \quad \quad \quad \quad                 // send-some-event                \\ 
-&\quad \textbf{trigger } \langle c_2, \text{Event}_2 \mid \text{att}_1, \text{att}_2, \dots \rangle; \\
-&\textbf{upon condition do}  \quad  \quad \quad \quad \quad                 // an-internal-event   \\
-&\quad \text{do something;}
+&\textbf{Component: } \text{JobHandler, instance } jh. \\
+&\textbf{Request:} \\
+&\quad \langle jh, \text{Submit} \mid \text{job} \rangle : \text{requests a job to be processed.} \\
+&\textbf{Indication:} \\
+&\quad \langle jh, \text{Confirm} \mid \text{job} \rangle : \text{confirms that the job has been (or will be) processed.} \\
+&\textbf{Property JH1 (Guaranteed response):} \\
+&\quad \text{every submitted job is eventually confirmed.}
 \end{aligned}
 $$
+
+Two implementations satisfy this specification. In the *synchronous* one the job is processed before being confirmed; in the *asynchronous* one it is only stored in a buffer, which is why the confirmation says “has been or will be” processed.
+
