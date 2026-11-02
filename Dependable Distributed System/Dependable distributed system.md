@@ -141,9 +141,7 @@ $$
 - **Event Trigger (`Submit`):** When a job submission request arrives via $\langle jh, \text{Submit} \mid \text{job} \rangle$, the handler handles it straight away.
 - **Execution Flow:**
     - It executes the task synchronously: `process(job);`
-        
     - Once processing is fully completed, it triggers the confirmation event: `trigger ⟨jh, Confirm | job⟩;`
-        
 - **Characteristics:** It is **blocking**. The system processes the request sequentially and remains tied up until the job is completely executed before sending a confirmation back.
 ###### Algorithm: asynchronous job handler
 $$
@@ -160,6 +158,13 @@ $$
 &\quad \text{buffer} := \text{buffer} \setminus \{\text{job}\};
 \end{aligned}
 $$
+- **Initialization (`Init`):**
+    - Upon initialization, it creates an empty data structure to store incoming tasks: `buffer := ∅;`
+- **Receiving Requests (`Submit`):**
+    - When a job arrives, instead of processing it right away, it appends the job to the buffer (`buffer := buffer ∪ {job}`) and immediately triggers a confirmation ($\langle jh, \text{Confirm} \mid \text{job} \rangle$). This decouples request acceptance from actual execution.
+- **Background Processing (`upon buffer ≠ ∅`):**
+    - A continuous internal guard monitors the buffer. Whenever it is not empty, the system selects a job (`selectjob(buffer)`), processes it, and removes it from the queue (`buffer := buffer \ {job}`).   
+- **Characteristics:** It is **non-blocking**. The system accepts and confirms requests instantly while queuing them up for background processing.
 ###### Layering
 $$
 \begin{aligned}
