@@ -9,4 +9,6 @@ Distributed system are useful:
 - To build dependable services, coping with failures.
 
 A distributed system is characterized by: 
-1. A collection of aut
+1. **A collection of autonomous computing elements.**
+	1. *Challenges*: the absence of a global clock, group membership (open vs closed) and the overlay networks (structured vs unstructured)
+2. **A single coherent system, where coherent means t**
