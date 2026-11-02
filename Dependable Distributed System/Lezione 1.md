@@ -199,4 +199,6 @@ $$This algorithm maintains a buffer of size $M$ to temporarily store incoming jo
 1. **Initialization (Init)**: 
 	1. Top and bottom are set to 1 (pointing to the insert and withdraw position respectively).
 	2. Handling := FALSE means that the system doesen't elaborating jobs. 
-	3. \text{buffer} := [\bot]^M;
+	3. Buffer := $[\bot]^M$ creates an empty array. 
+2. Reciving the request (Submit):
+	1. When a new j
