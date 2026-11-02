@@ -978,25 +978,25 @@ Estendiamo il problema a $d$ dimensioni. Per farlo in modo pulito, passiamo alla
 
 > [!definition] Design Matrix
 > Dato un dataset di $n$ campioni, definiamo la Design Matrix $X \in \mathbb{R}^{n \times d}$, dove ogni riga è la trasposta di un vettore di feature $x_i^T$. Definiamo inoltre il vettore colonna delle label $y \in \mathbb{R}^n$.
-> In questa forma compatta, le previsioni per tutti i punti sono date dal prodotto matrice-vettore $X\theta$[cite: 100].
+> In questa forma compatta, le previsioni per tutti i punti sono date dal prodotto matrice-vettore $X\theta$.
 
-Il Rischio Empirico si riscrive come norma quadratica del vettore residuo[cite: 100, 101]:
+Il Rischio Empirico si riscrive come norma quadratica del vettore residuo:
 $$ \hat{R}_S(\theta) = \frac{1}{n} ||y - X\theta||^2 = \frac{1}{n} \langle y - X\theta, y - X\theta \rangle $$
 
 ### Derivazione dell'Equazione Normale
-Espandiamo il prodotto scalare per isolare $\theta$[cite: 101]:
+Espandiamo il prodotto scalare per isolare $\theta$:
 $$ \hat{R}_S(\theta) = \frac{1}{n} [||y||^2 + ||X\theta||^2 - 2y^T X\theta] $$
-Calcoliamo il gradiente rispetto al vettore $\theta$ e lo poniamo uguale a 0[cite: 101]:
+Calcoliamo il gradiente rispetto al vettore $\theta$ e lo poniamo uguale a 0:
 $$ \nabla \hat{R}_S(\theta) = \frac{2}{n} [X^T X\theta - X^T y] = 0 $$
 $$ X^T X\theta = X^T y $$
-Questa è l'**Equazione Normale**[cite: 101]. Se la matrice quadrata $X^T X$ (di dimensione $d \times d$) è invertibile, possiamo isolare $\theta$ e trovare la soluzione chiusa[cite: 101].
+Questa è l'**Equazione Normale**. Se la matrice quadrata $X^T X$ (di dimensione $d \times d$) è invertibile, possiamo isolare $\theta$ e trovare la soluzione chiusa.
 
 > [!theorem] Ordinary Least Squares (OLS) Estimator
-> Assumendo che $X^T X$ sia invertibile (il che richiede che le features siano linearmente indipendenti e $n \ge d$), lo stimatore ottimale è[cite: 101]:
+> Assumendo che $X^T X$ sia invertibile (il che richiede che le features siano linearmente indipendenti e $n \ge d$), lo stimatore ottimale è:
 > $$ \hat{\theta} = (X^T X)^{-1} X^T y $$
 
 > [!intuition] Perché è importante?
-> A differenza del Perceptron, del Gradient Descent o della Soft-SVM, la Regressione Lineare con MSE non richiede cicli iterativi: se la matrice è invertibile, la soluzione ottima globale si calcola istantaneamente in "one-shot" con un'operazione di algebra lineare[cite: 101].
+> A differenza del Perceptron, del Gradient Descent o della Soft-SVM, la Regressione Lineare con MSE non richiede cicli iterativi: se la matrice è invertibile, la soluzione ottima globale si calcola istantaneamente in "one-shot" con un'operazione di algebra lineare.
 
 ---
 
@@ -1004,7 +1004,7 @@ Questa è l'**Equazione Normale**[cite: 101]. Se la matrice quadrata $X^T X$ (di
 Abbiamo trovato l'ERM. Ma per valutare quanto sia "buono" teoricamente, dobbiamo fare un'assunzione sul processo generativo reale dei dati (il Predittore di Bayes).
 
 > [!definition] Linear Assumption
-> Diciamo che la vera distribuzione incognita $\mathcal{D}$ soddisfa l'**Assunzione Lineare** se esiste un vettore "perfetto" $\theta^* \in \mathbb{R}^d$ tale che[cite: 102]:
+> Diciamo che la vera distribuzione incognita $\mathcal{D}$ soddisfa l'**Assunzione Lineare** se esiste un vettore "perfetto" $\theta^* \in \mathbb{R}^d$ tale che:
 > $$ Y = X^T \theta^* + \epsilon $$
 > dove $\epsilon$ è una variabile aleatoria di rumore, indipendente da $X$, con media nulla ($\mathbb{E}[\epsilon]=0$) e varianza finita ($\mathbb{E}[\epsilon^2] = \sigma^2 < \infty$)[cite: 102].
 
