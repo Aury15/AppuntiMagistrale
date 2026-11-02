@@ -57,6 +57,12 @@ A dependable distributed system can be:
 >	- **Termination**: every honest node reaches a decision.
 
 
+![[Lezione 1-1793616407264.webp]]
+
 A transaction is made of several phases; it is atomic when all its phases are executed as a single unit. 
 
->[!definitions] Ledger o
+>[!definitions] Ledger of transactions
+>The **ledger of transactions** is the record of all the transactions made. It is easier to keep updated and synchronised in a centralised architecture.
+
+>[!Definitions] Block chain
+>A **blockchain** is a distributed ledger that records transactions in an immutable, verifiable and permanent way.
