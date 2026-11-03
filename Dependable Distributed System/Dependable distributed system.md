@@ -289,4 +289,7 @@ Each process generates a sequence of events:
 The evolution of the computation can be represented with a space-time diagram:![[Dependable distributed system-1793719418826.webp|694x331]]We denote with $\rightarrow _i$  the ordering relationship between two events in the same processes $p_i$: $e \rightarrow_i$ $e' \iff e \text{ is happened before } e' \text{ in }p_i$. 
 
 >[!definitions] Local history
->Sequence of events produced by a process: $\te$
+>Sequence of events produced by a process: $\text{history}(p_1) = h_1 = <e_1^1, e_1^2, e_1^3, e_1^4, e_1^5, e_1^6>$ 
+
+>[]
+
