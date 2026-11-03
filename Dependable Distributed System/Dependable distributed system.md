@@ -280,4 +280,7 @@ We want to measure the time, but why? because many algorithm depends on time and
 To solve these problem ordering events is fundamental.
 
 #### System model
-A distributed system is composed by a set $\Pi = {{p_1, ..., p_n}}$  of n processes. Each *process* runs on a single mono-processor machine with no shared memory. Each process $p_i$ has a *state* $s_i$ that is changed by the actions it takes during algorithm execution. The state $s_i$ includes all the values of variables maintained by $p_i$ 
+A distributed system is composed by a set $\Pi = {{p_1, ..., p_n}}$  of n processes. Each *process* runs on a single mono-processor machine with no shared memory. Each process $p_i$ has a *state* $s_i$ that is changed by the actions it takes during algorithm execution. The state $s_i$ includes all the values of variables maintained by $p_i$. Each process can communicate with other processes only by exchanging messages. 
+Each process generates a sequence of events:
+- I
+
