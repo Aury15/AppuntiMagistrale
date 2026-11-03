@@ -339,7 +339,10 @@ becomes 1/1/1900 rather than 1/1/2000)
 - **Timing**: The process sets its clock to $t + \frac{\text{RTT}}{2}$, where $\text{RTT}$ (Round Trip Time) is the total round-trip time for the message. 
 - **Accuracy**: The maximum estimated error is $\pm\left(\frac{\text{RTT}}{2} - \min\right)$, where $\min$ is the minimum estimated transmission time on the network.
 - **Limitations**: Represents a single point of failure; requires the use of redundant server clusters and authentication mechanisms.
- *picture*
+ 
+ ![[Dependable distributed system-1793740918279.webp]]![[Dependable distributed system-1793740914128.webp]]
+ 
+ ![[Dependable distributed system-1793740897735.webp]]*
 ##### Berkeley Algorithm (Internal Synchronization) 
 - **Structure**: Master-slave architecture. 
 - **Algorithm steps**: 
