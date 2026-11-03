@@ -295,7 +295,7 @@ The evolution of the computation can be represented with a space-time diagram:![
 >Prefix of local history $h_1^m = e_1^1 \text{ ... } e_1^m$ 
 
 >[!definitions] Global history
->	Set containing every local history: $H = \cup_i h_i \text{ per } 1\leq i \leq n$ 
->
+>	Set containing every local history: $H = \cup_i h_i$ per $1 \leq i \leq n$
 
 
+$H = \cup_i h_i$ per $1 \leq i \leq n$
