@@ -304,3 +304,4 @@ The naive solution to build a global history is *time-stamping*: every process l
 A **physical clock** is a counting register incremented at every tick of an oscillator (hardware clock $H_i(t)$). The operating system reads the hardware $H_i(t)$ and produces a software clock $C_i(t) = \alpha H_i(t) + \beta$ which approximates the real time $t$ at  process $p_i$.
 *Example*: $C_i(t)$ may be implemented by a 64-bit word, representing nanoseconds that have elapsed at time t.
 Generally this clock is not completely accurate: it can be different from the real time $t$, it can be different at any process due to the precision of the approximation. 
+$C_i$ can be used such as timestamp for event produced by $p_i$. 
