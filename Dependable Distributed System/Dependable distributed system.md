@@ -274,6 +274,6 @@ In a distributed system the processes run on different nodes interconnected by m
 
 #### Why time is so important? 
 We want to measure the time, but why? because many algorithm depends on time and we have many problems related to time: 
-1. Data consistency: Ensure that different replicas of a database reflect updates in the correct order;
-2. Authentication: Validate tokens and time-based certificates;
-3. 
+1. **Data consistency**: Ensure that different replicas of a database reflect updates in the correct order;
+2. **Authentication**: Validate tokens and time-based certificates;
+3. **Double processing avoidance**: Prevent the same operation from being performed twice on different nodes.
