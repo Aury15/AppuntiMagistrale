@@ -254,7 +254,7 @@ $$
 **Fault tolerance** means designing an algorithm that works despite faults, by assuming that at most $f$ of the $N$ processes are faulty. The relation between $f$ and $N$ is called **resilience**; an upper bound $f$ means that any number of processes up to $f$ may fail. *Crash-stop* does not preclude recovery: a recovered process is simply no longer part of the system, and the algorithm must not rely on it to make progress.
 
 **Crash-recovery**. A process is *faulty* if it crashes and never recovers, or if it keeps crashing and recovering infinitely often; otherwise it is correct, even if it crashed and recovered a finite number of times.
-A characteristic of this model is *amnesia*: a crashed process loses its internal state, so after recovering it might send messages that contradict those sent before the crash. To cope with this, every process is assumed to have a stable storage (a log), accessed through $store()$ and $retrieve()$, and to be aware upon recovery that it crashed and recovered.![[Dependable distributed system-1793621296255.webp|637]]The first one crashes and never recovers so its faulty. The second one crashes and recovers infinitely often so its faulty. The third one its correct and the fourth one crashes and recover finitely so its correct.
+A characteristic of this model is *amnesia*: a crashed process loses its internal state, so after recovering it might send messages that contradict those sent before the crash. To cope with this, every process is assumed to have a stable storage (a log), accessed through $store()$ and $retrieve()$, and to be aware upon recovery that it crashed and recovered.![[Dependable distributed system-1793621296255.webp|637]]The he second one crashes and recovers infinitely often so its faulty. The third one its correct and the fourth one crashes and recover finitely so its correct.
 
 #### Timing assumptions
 
@@ -270,4 +270,4 @@ A characteristic of this model is *amnesia*: a crashed process loses its interna
 
 ## Time in distributed systems
 
-In a distributed system the processes run on different nodes interconnected by mean of 
+In a distributed system the processes run on different nodes interconnected by mean of a network (LAN, WLAN...). This processes coperate to
