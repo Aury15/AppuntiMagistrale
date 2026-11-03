@@ -297,4 +297,5 @@ The evolution of the computation can be represented with a space-time diagram:![
 >[!definitions] Global history
 >Set containing every local history: $H = \cup_i h_i$ per $1 \leq i \leq n$
 
-
+The first (and bigger) circle is the 
+![[Dependable distributed system-1793730759525.webp|643x307]]
