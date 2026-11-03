@@ -309,4 +309,7 @@ $C_i$ can be used such as timestamp for event produced by $p_i$. To distinguish 
 We have two different parameter that affect the clock synchronization accuracy:
 - **Skew**: the difference in time between two clocks $\rightarrow |C_i(t) - C_j(t)|$ ;
 - **Drift rate**: the gradual misalignment of once synchronized clocks caused by the slight inaccuracies of the time keeping-mechanism. Difference for time unit with respect to an ideal clock. 
-The standard of time is the **UTC** $\rightarrow$ *U*niversal *T*ime *C*oordinated, is the base of any international measure. Based on international atomic time: 1 sec =
+The standard of time is the **UTC** $\rightarrow$ *U*niversal *T*ime *C*oordinated, is the base of any international measure. Based on international atomic time: 1 sec = time a cesium atom needs for 9192631770 state transitions.
+
+We have two type of synchronization:
+1. **External Synchronization**: processes synchronize their clock $C_i$ with an authoritative external source $S$. Let $D > 0$ be the synchronization bou
