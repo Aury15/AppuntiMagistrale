@@ -323,4 +323,11 @@ In presence of a correct hardware clock $H$ we can measure a time interval [$t, 
 
 >[!important] A hardware clock is considered correct if its speed deviation respects this band between $(1 - \rho)$ and $(1 + \rho)$. Thanks to this inequality, we know with mathematical certainty that, measuring an interval with a clock with a certain drift $\rho$, the introduced error will remain confined within very precise and predictable limits.!
 
-Software clocks have to be **monotone** $$
+Software clocks have to be **monotone** $t > t' \rightarrow C(t') > C(t)$. The monotonic property can be guaranteed choosing opportune α and β. (Note that α and β can be a function of time) 
+
+**Clock failure**:
+◦ *crash failure* : clock simply stops
+◦ *arbitrary failure* : clock behaves arbitrarily (e.g. Y2K bug: the day after the 31/1/1999
+becomes 1/1/1900 rather than 1/1/2000)
+
+#### Synchronization algorithm
