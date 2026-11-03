@@ -299,4 +299,5 @@ The evolution of the computation can be represented with a space-time diagram:![
 
 The first (and bigger) circle is the local history of $p_1$, the second circle is a partial local history of $h_3^3$  
 ![[Dependable distributed system-1793730759525.webp|650]]
-Each process attaches a label to each event, using a timestamp. In this way it should be possibile to realize a global history of the system 
+#### Time-stamping and physical clocks
+The naive solution to build a global history is *time-stamping*: every process labels each event with the value of its own physical clock. Events of the same process are always ordered this way, but for processes on different machines the network and processing delays make it impossible to realise a common clock shared by all of them. What can be done is to synchronise the physical clocks, through suitable algorithms, up to a certain accuracy (synchronisation error), and to timestamp events with the synchronised local clock
