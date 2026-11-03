@@ -319,4 +319,4 @@ Internally synchronized clocks are not necessarily externally synchronized: they
 
 #### Correct clock 
 An *hardware clock* $H$ is **correct** if its drift rate is within a limited bound of $\rho > 0$, respecting: $1 - \rho \leq \frac{dC}{dt} \leq 1 + \rho$. 
-In pr
+In presence of a correct hardware clock $H$ we can measure a time interval [$t, t'$] ($\forall t' > t$) introducing only limited error. So we can 
