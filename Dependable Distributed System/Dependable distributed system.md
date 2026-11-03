@@ -340,9 +340,8 @@ becomes 1/1/1900 rather than 1/1/2000)
 - **Accuracy**: The maximum estimated error is $\pm\left(\frac{\text{RTT}}{2} - \min\right)$, where $\min$ is the minimum estimated transmission time on the network.
 - **Limitations**: Represents a single point of failure; requires the use of redundant server clusters and authentication mechanisms.
  
- ![[Dependable distributed system-1793740918279.webp]]![[Dependable distributed system-1793740914128.webp]]
- 
- ![[Dependable distributed system-1793740897735.webp]]*
+ ![[Dependable distributed system-1793741044363.webp]]
+ ![[Dependable distributed system-1793740918279.webp]]![[Dependable distributed system-1793740897735.webp]]*
 ##### Berkeley Algorithm (Internal Synchronization) 
 - **Structure**: Master-slave architecture. 
 - **Algorithm steps**: 
