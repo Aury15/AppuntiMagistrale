@@ -331,3 +331,10 @@ Software clocks have to be **monotone** $t > t' \rightarrow C(t') > C(t)$. The m
 becomes 1/1/1900 rather than 1/1/2000)
 
 #### Synchronization algorithm
+
+##### Christian's algorithm (external synchronization)
+
+- **Operation**: A process $p$ sends a time request (ask the current time) through a message $m_r$  to a time server $S$ (connected to a UTC source) and receives the timestamp $t$ via $m_t$. 
+- **Timing**: The process sets its clock to $t + \frac{\text{RTT}}{2}$, where $\text{RTT}$ (Round Trip Time) is the total round-trip time for the message. 
+- **Accuracy**: The maximum estimated error is $\pm\left(\frac{\text{RTT}}{2} - \min\right)$, where $\min$ is the minimum estimated transmission time on the network.
+- **Limitations**: Represents a single point of failure; requires the use of redundant server clusters and authentication mechanisms.
