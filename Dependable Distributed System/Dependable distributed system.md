@@ -299,3 +299,4 @@ The evolution of the computation can be represented with a space-time diagram:![
 
 The first (and bigger) circle is the local history of $p_1$, the second circle is a partial local history of $h_3^3$  
 ![[Dependable distributed system-1793730759525.webp|650]]
+Each process attaches a label to each event, using a timestamp. In this way it should be possibile to realize a global history of the system 
