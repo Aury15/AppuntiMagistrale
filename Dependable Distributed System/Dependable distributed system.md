@@ -291,5 +291,9 @@ The evolution of the computation can be represented with a space-time diagram:![
 >[!definitions] Local history
 >Sequence of events produced by a process: $\text{history}(p_1) = h_1 = <e_1^1, e_1^2, e_1^3, e_1^4, e_1^5, e_1^6>$ 
 
->[]
+>[!definitions] Partial local history
+>Prefix of local history $h_1^m = e_1^1 \text{ ... } e_1^m$ 
+
+>[!definitions] Global history
+>
 
