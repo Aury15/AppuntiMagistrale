@@ -341,6 +341,10 @@ becomes 1/1/1900 rather than 1/1/2000)
 - **Limitations**: Represents a single point of failure; requires the use of redundant server clusters and authentication mechanisms.
  *picture*
 ##### Berkeley Algorithm (Internal Synchronization) 
-- Structure: Master-slave architecture. 
-- Algorithm steps: 
-	The master periodically polls the slaves, sending its own timestamp and receiving the nodes' local timestamps in return. The master calculates the differences $\Delta$ between its own clock and that of each process. The master discards the values ​​of faulty processes (whose difference exceeds a threshold $\gamma$). It calculates the average of the valid values ​​and sends each process the algebraic correction to apply. Slowdown management: To avoid jumping back in time (violating causality and monotonicity), excess clocks are not set to a past value, but are slowed down by temporarily hiding hardware clock interrupts.
+- **Structure**: Master-slave architecture. 
+- **Algorithm steps**: 
+	1. The master periodically polls the slaves, sending its own timestamp and receiving the nodes' local timestamps in return. 
+	2. The master calculates the differences $\Delta$ between its own clock and that of each process. 
+	3. The master discards the values ​​of faulty processes (whose difference exceeds a threshold $\gamma$). 
+	4. It calculates the average of the valid values ​​and sends each process the algebraic correction to apply.
+- **Slowdown management**: To avoid jumping back in time (violating causality and monotonicity), excess clocks are not set to a past value, but are slowed down by temporarily hiding hardware clock interrupts.
