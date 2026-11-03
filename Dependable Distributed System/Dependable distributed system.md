@@ -301,4 +301,5 @@ The first (and bigger) circle is the local history of $p_1$, the second circle i
 ![[Dependable distributed system-1793730759525.webp|650]]
 #### Time-stamping and physical clocks
 The naive solution to build a global history is *time-stamping*: every process labels each event with the value of its own physical clock. Events of the same process are always ordered this way, **but for processes on different machines the network and processing delays make it impossible to realise a common clock shared by all of them**. What can be done is to synchronize the physical clocks, through suitable algorithms, up to a certain accuracy (synchronization error), and to timestamp events with the synchronized local clock. 
-A **physical clock** is a counting register incremented at every tick of an oscillator (hardware clock $H_i(t)$). The operating system derives the software clock $C_i(t) = αH_i(t) + β$, which approximates the real time $t$ at $p_i$ 
+A **physical clock** is a counting register incremented at every tick of an oscillator (hardware clock $H_i(t)$). The operating system reads the hardware $H_i(t)$ and produces a software clock $C_i(t) = \alpha H_i(t) + \beta$ which approximates the real time $t$ at  process $p_i$.
+*Example*: Ci(t) may be implemented by a 64-bit word, representing nanoseconds that haveelapsed at time t.
