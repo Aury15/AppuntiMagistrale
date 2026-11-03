@@ -312,4 +312,4 @@ We have two different parameter that affect the clock synchronization accuracy:
 The standard of time is the **UTC** $\rightarrow$ *U*niversal *T*ime *C*oordinated, is the base of any international measure. Based on international atomic time: 1 sec = time a cesium atom needs for 9192631770 state transitions.
 
 We have two type of synchronization:
-1. **External Synchronization**: processes synchronize their clock $C_i$ with an authoritative external source $S$. Let $D > 0$ be the synchronization bound and $S$ be the source of UTC. Clocks $C_i$ for $i = 1, ... , N$ are externally synchronized with a time source $S$ (UTC) if for each time interval $I$: $$ 
+1. **External Synchronization**: processes synchronize their clock $C_i$ with an authoritative external source $S$. Let $D > 0$ be the synchronization bound and $S$ be the source of UTC. Clocks $C_i$ for $i = 1, ... , N$ are **externally synchronized** with a time source $S$ (UTC) if for each time interval $I$: $|S(t) - C_i(t)|$ for $i = 1, 2, ..., N$ and for real time $t$ in $I$.  
