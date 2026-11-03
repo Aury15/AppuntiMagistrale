@@ -305,3 +305,6 @@ A **physical clock** is a counting register incremented at every tick of an osci
 *Example*: $C_i(t)$ may be implemented by a 64-bit word, representing nanoseconds that have elapsed at time t.
 Generally this clock is not completely accurate: it can be different from the real time $t$, it can be different at any process due to the precision of the approximation. 
 $C_i$ can be used such as timestamp for event produced by $p_i$. To distinguish two events, its resolution (the time between two consecutive increments) must satisfy $T_{resolution} < T$  between the two events.
+##### Parameters affecting the Clock Synchronization accuracy
+We have two different parameter that affect the clock synchronization accuracy:
+- **Skew**: the difference in time between two clocks $\rightarrow |C_i|$
