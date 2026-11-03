@@ -307,5 +307,6 @@ Generally this clock is not completely accurate: it can be different from the re
 $C_i$ can be used such as timestamp for event produced by $p_i$. To distinguish two events, its resolution (the time between two consecutive increments) must satisfy $T_{resolution} < T$  between the two events.
 ##### Parameters affecting the Clock Synchronization accuracy
 We have two different parameter that affect the clock synchronization accuracy:
-- **Skew**: the difference in time between two clocks $\rightarrow |C_i(t) - C_j(t)|$ 
+- **Skew**: the difference in time between two clocks $\rightarrow |C_i(t) - C_j(t)|$ ;
 - **Drift rate**: the gradual misalignment of once synchronized clocks caused by the slight inaccuracies of the time keeping-mechanism. Difference for time unit with respect to an ideal clock. 
+The standard of time is the **UTC** $\rightarrow$ *U*niversal *T*ime *C*oordinated, is the base of any international measure. Based on international atomic time: 1 sec =
