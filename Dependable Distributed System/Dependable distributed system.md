@@ -503,14 +503,14 @@ _Why is this rule necessary?_ Because the arrival of an ACK from another node gu
 *PICTURES OF THE EXAMPLE*
 
 ###### Safety proof
-Supponiamo per assurdo che sia $p_i$ che $p_j$ riescano a entrare nella Sezione Critica.
-Per le regole dell'algoritmo di Lamport, affinché un processo possa entrare nella CS, devono essere vere contemporaneamente due cose:
-- Il processo deve aver ricevuto un `ACK` da _tutti_ gli altri nodi del sistema.
-- La sua richiesta deve avere il **timestamp più piccolo** in assoluto all'interno della coda locale ($Q$)
-Se ipotizziamo che $p_i$ abbia inviato una richiesta con un timestamp $t_i$ e $p_j$ con un timestamp $t_j$:
-- Uno dei due deve avere per forza il timestamp temporalmente più piccolo dell'altro (supponiamo $t_i < t_j$).
-- Poiché i timestamp logici creano un **ordine totale** (grazie ai contatori scalari e agli ID dei processi in caso di parità), le code di tutti i nodi rifletteranno esattamente lo stesso ordine di priorità.
-- Di conseguenza, $p_j$ non potrà mai considerare il proprio timestamp $t_j$ come "il più piccolo" se in coda c'è quello di $p_i$ ($t_i$) che è arrivato prima, oppure $p_j$ non avrà ancora ricevuto l'ACK da tutti i nodi perché bloccato dalla priorità di $p_i$.
+Let's assume, for the sake of argument, that both $p_i$ and $p_j$ manage to enter the Critical Section.
+According to the rules of Lamport's algorithm, for a process to enter the CS, two things must be simultaneously true:
+- The process must have received an ACK from _all_ other nodes in the system.
+- Its request must have the absolute smallest timestamp within the local queue ($Q$).
+If we assume that $p_i$ sent a request with a timestamp of $t_i$ and $p_j$ with a timestamp of $t_j$:
+- One of the two must necessarily have the temporally smallest timestamp than the other (assume $t_i < t_j$).
+- Since logical timestamps create a total order (thanks to scalar counters and process IDs in case of ties), the queues of all nodes will reflect exactly the same priority order.
+- Consequently, $p_j$ will never be able to consider its own timestamp $t_j$ as "the smallest" if the timestamp of $p_i$ ($t_i$) which arrived first is in the queue, or $p_j$ has not yet received the ACK from all nodes because it is blocked by the priority of $p_i$.
 ###### Properties of the algorithm
 - **Fairness (Absence of Starvation):** Requests are fulfilled strictly in the chronological order established by logical timestamps (_happened-before_ relationship). First come, first served.
 - **Fairness (Mutual Exclusion):** Two processes are guaranteed never to enter the CS at the same time, precisely because the combination of ordered timestamps and universal ACKs creates a global and consistent view of the queues on all nodes.
