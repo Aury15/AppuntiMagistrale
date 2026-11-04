@@ -788,4 +788,5 @@ Maekawa showed that to minimize the number of messages and balance the load:
 A rule of thumb for constructing the groups ($V_i$) is to arrange the $N$ processes in a matrix $\sqrt{N} \times \sqrt{N}$ and define the voting set $V_i$ as **the union of the row and column** in which the process $p_i$ is located.
 
 <mark style="background:#d3f8b6">Example: </mark>
-Let us consider a system composed by N = 4 processes. $M = K \$
+Let us consider a system composed by N = 4 processes. $M = K \sim \sqrt[2]{4}$  
+Let's place processes 
