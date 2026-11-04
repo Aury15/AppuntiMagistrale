@@ -639,4 +639,11 @@ This is the code executed exclusively by the process elected as coordinator, whi
 	- `current_in_CS = ⊥`: Frees the resource by setting it to $\bot$. (This immediately unlocks the `when` lock described above, allowing the coordinator to serve the next process in the queue.)
 
 Example:
-![[Dependable distributed system-1793809731647.webp]]![[Dependable distributed system-1793809735721.webp]]![[Dependable distributed system-1793809737748.webp]]![[Dependable distributed system-1793809741189.webp]]![[Dependable distributed system-1793809747758.webp]]![[Dependable distributed system-1793809783788.webp]]![[Dependable distributed system-1793809798764.webp]]![[Dependable distributed system-1793809811798.webp]]
+![[Dependable distributed system-1793809731647.webp]]![[Dependable distributed system-1793809735721.webp]]![[Dependable distributed system-1793809737748.webp]]![[Dependable distributed system-1793809741189.webp]]![[Dependable distributed system-1793809747758.webp]]![[Dependable distributed system-1793809783788.webp]]![[Dependable distributed system-1793809798764.webp]]![[Dependable distributed system-1793809811798.webp]]![[Dependable distributed system-1793809819636.webp]]
+
+###### Pro/Cons
+- **Performance**: Per entrare nella CS servono esattamente **2 messaggi** (1 `REQ` e 1 `GRANT`), pari a un solo RTT (Round Trip Time). Per rilasciare la risorsa serve **1 messaggio** `REL`.
+- **Pro**: Protocollo estremamente leggero e facile da implementare.
+- **Contro**:
+    - Problemi di scalabilità se il traffico aumenta sul coordinatore.
+    - **Single Point of Failure (SPOF)**: Se il coordinatore va in crash, l'intero sistema di mutua esclusione si blocca.
