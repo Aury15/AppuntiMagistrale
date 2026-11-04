@@ -373,5 +373,7 @@ Internet. It synchronizes clients with UTC. NTP employs several security mechani
 - Primary server that loses its connection with UTC-signal can become a secondary server;
 - Secondary server that loses its connection with a primary server (e.g. a crash of the primary server) can contact and connect itself to another primary.
 ###### NTP Synchronizations models
-- multicast: server periodically sends its actual time to its leaves in the LAN. Leavesset their time using the received time assuming a certain delay. It is used in quickLANs but it shows a low accuracy
-- Procedure call: server replies to requests with its actual timestamp (likeCristian%E2%80%99s algorithm). High Accuracy and it is useful when it is not available hwmulticast.Symmetrical: used to synchronize between pairs of time servers using messagescontaining timing information. Only used in high level of hierarchy.
+- **Multicast**: server periodically send its actual time to its leaves in the LAN. Leaves set their time using the received time assuming a certain delay. It is used in quick LANs but it shows
+-    multicast: server periodically sends its actual time to its leaves in the LAN. Leavesset their time using the received time assuming a certain delay. It is used in quickLANs but it shows a low accuracy
+- Procedure call: server replies to requests with its actual timestamp (likeCristian%E2%80%99s algorithm). High Accuracy and it is useful when it is not available hwmulticast.
+- Symmetrical: used to synchronize between pairs of time servers using messagescontaining timing information. Only used in high level of hierarchy.
