@@ -700,9 +700,33 @@ $$
 
 **So we obtain**
 
+$$
+\begin{aligned}
+&\textbf{Init:} \\
+&\quad \text{state} := \text{idle}; \\
+&\quad \text{next} := p_{(i+1) \bmod N}; \\
+&\quad \textbf{if } \text{self} = p_0 \textbf{ then} \\
+&\quad \quad \text{trigger } \text{pp2pSend}(\text{TOKEN}) \text{ to next}; \\
+& \\
+&\textbf{upon event } \text{request}() \textbf{ do} \\
+&\quad \text{state} := \text{waiting}; \\
+& \\
+&\textbf{upon event } \text{pp2pDeliver}(\text{TOKEN}) \textbf{ do} \\
+&\quad \textbf{if } \text{state} = \text{waiting} \textbf{ then} \\
+&\quad \quad \text{state} := \text{CS}; \\
+&\quad \quad \text{trigger } \text{ok}(); \\
+&\quad \textbf{else} \\
+&\quad \quad \text{trigger } \text{pp2pSend}(\text{TOKEN}) \text{ to next}; \\
+& \\
+&\textbf{upon event } \text{release}() \textbf{ do} \\
+&\quad \text{state} := \text{idle}; \\
+&\quad \text{trigger } \text{pp2pSend}(\text{TOKEN}) \text{ to next};
+\end{aligned}
+$$
 
 
-
-- **Svantaggio principale**: Il token continua a girare incessantemente consumando risorse di rete e banda anche quando nessun processo è interessato ad accedere alla CS.
-- **Latenza**: Il tempo di attesa (ritardo) varia da 0 (il token arriva subito) fino a $N$ messaggi nel caso in cui il token sia appena passato e debba fare l'intero giro dell'anello prima di tornare disponibile.
+- **Main disadvantage**: The token continues to cycle incessantly, consuming network resources and bandwidth even when no process is interested in accessing the CS.
+- **Latency**: The waiting time (delay) varies from 0 (the token arrives immediately) to $N$ messages if the token has just been passed and must complete the entire loop before becoming available again.
 #### Quorum-based Algorithm – Maekawa’s voting algorithm
+
+Instead of asking permission from _all_ nodes (as in Lamport) or from a single coordinator, a process entering the CS must get acknowledgement (vote) only from a **specific subset of processes**, called the **Quorum or Voting Set ($V_i$)**.
