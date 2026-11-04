@@ -532,22 +532,24 @@ Each process maintains the following information about its state:
 - **`#replies`**: A counter that tracks permissions (`REPLY`) received from other nodes (initially 0).
 - **`Q`**: A queue of pending requests (requests received from others that have been decided not to respond to yet).
 
-###### Le Fasi dell'Algoritmo
- **Fase A: Quando un processo vuole entrare nella Sezione Critica**
-1. Il processo $p_i$ cambia il suo stato in `Requesting`, incrementa il suo clock logico e imposta `num`.
-2. Invia un messaggio di `REQUEST(num, i)` (contenente il proprio timestamp e il proprio ID) a **tutti** gli altri $N-1$ processi del sistema.
-3. **Attende** pazientemente finché non riceve il permesso da tutti gli altri nodi, cioè finché il contatore `#replies` non raggiunge il valore $N-1$.
-4. Quando ha ottenuto tutti i permessi, entra nella Sezione Critica (`State = CS`).
-5. 
- **Fase B: Quando un processo $p_j$ riceve una richiesta `REQUEST(t, i)` da $p_i$**
-Quando un nodo $p_j$ riceve la richiesta di un altro nodo $p_i$, deve decidere se rispondere subito o posticipare la risposta, confrontando le priorità (basate su timestamp e ID del processo: la coppia `{timestamp, id}` minore ha la precedenza):
-- **Condizioni per posticipare la risposta (rinviare il `REPLY`):** Il processo $p_j$ **non** risponde subito se si trova in una di queste due situazioni:
-    1. $p_j$ è attualmente dentro la Sezione Critica (`State == CS`).
-    2. $p_j$ si trova nello stato `Requesting` **ed** ha una priorità superiore rispetto a $p_i$ (cioè il suo timestamp/ID `Last_Req` è minore di quello di $p_i$: `{Last_Req_j, j} < {t, i}`).
-    _In questo caso_, $p_j$ inserisce la richiesta di $p_i$ all'interno della sua coda locale in sospeso `Q`.
-- **Quando rispondere subito:** Se $p_j$ non è interessato alla risorsa (`State == NCS`) oppure ha una priorità inferiore rispetto a $p_i$, allora **invia immediatamente un messaggio di `REPLY`** a $p_i$.
-- 
- **Fase C: Quando il processo esce dalla Sezione Critica (Release)**
-Una volta terminato il lavoro nella Sezione Critica, il processo $p_i$:
-1. Scorre la sua coda locale `Q` delle richieste che aveva messo in attesa e invia un messaggio di `REPLY` a ciascuno di quei processi.
-2. Svuota la coda `Q`, riporta lo stato a `NCS` e azzera il contatore `#replies`.
+###### The Phases of the Algorithm
+**Phase A: When a process wants to enter the Critical Section**
+1. Process $p_i$ changes its state to `Requesting`, increments its logical clock, and sets `num`.
+2. It sends a `REQUEST(num, i)` message (containing its timestamp and ID) to **all** other $N-1$ processes in the system.
+3. It **waits** patiently until it receives permission from all other nodes, that is, until the `#replies` counter reaches the value $N-1$.
+4. Once it has obtained all permissions, it enters the Critical Section (`State = CS`).
+
+**Phase B: When a process $p_j$ receives a `REQUEST(t, i)` request from $p_i$**
+When a node $p_j$ receives a request from another node $p_i$, it must decide whether to respond immediately or postpone the response, comparing priorities (based on timestamp and process ID: the lowest `{timestamp, id}` pair takes precedence):
+- **Conditions for postponing the response (deferring the `REPLY`):** Process $p_j$ **does not** respond immediately if it is in one of these two situations:
+1. $p_j$ is currently in the Critical Section (`State == CS`).
+2. $p_j$ is in the `Requesting` state **and** has a higher priority than $p_i$ (i.e., its `Last_Req` timestamp/ID is less than that of $p_i$: `{Last_Req_j, j} < {t, i}`).
+_In this case_, $p_j$ puts $p_i$'s request into its local pending queue `Q`.
+- **When to respond immediately:** If $p_j$ is not interested in the resource (`State == NCS`) or has a lower priority than $p_i$, then it **immediately sends a `REPLY` message** to $p_i$.
+
+**Phase C: When the process leaves the Critical Section (Release)**
+Once it has finished its work in the Critical Section, process $p_i$:
+1. It scrolls through its local queue `Q` for requests it had queued and sends a `REPLY` message to each of those processes.
+2. It empties the `Q` queue, returns the state to `NCS`, and resets the `#replies` counter.
+
+*for the example -> DDS lecture5B*
