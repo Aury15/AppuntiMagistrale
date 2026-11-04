@@ -559,8 +559,10 @@ Once it has finished its work in the Critical Section, process $p_i$:
 We keep the same setting as before: a set of processes $\Pi$, a single resource, an asynchronous system, correct processes and perfect point-to-point links. After the logical clock-based algorithms, this lecture presents the other three approaches: coordinator-based, token-based and quorum-based.
 *Basic idea:* There exist a special process, called coordinator, that collects requests and grant permission to enter into the critical section. 
 
+###### Process code
 $\begin{aligned} &\textbf{Init:} \\ &\quad \text{state} := \text{idle}; \\ &\quad \text{coordinator} := \text{getCoordinatorId()}; \\ & \\ &\textbf{upon event } \text{request}() \textbf{ do} \\ &\quad \text{state} := \text{waiting}; \\ &\quad \text{trigger } \text{pp2pSend}(\text{REQ}, i) \text{ to coordinator}; \\ & \\ &\textbf{upon event } \text{pp2pDeliver}(\text{GRANT\_CS}) \textbf{ do} \\ &\quad \text{state} := \text{CS}; \\ &\quad \text{trigger } \text{ok}(); \\ & \\ &\textbf{upon event } \text{release}() \textbf{ do} \\ &\quad \text{state} := \text{idle}; \\ &\quad \text{trigger } \text{pp2pSend}(\text{REL}, i) \text{ to coordinator}; \end{aligned}$
 
+###### Coordinator code
 $\begin{aligned} &\textbf{Init:} \\ &\quad \text{pending} := \emptyset; \\ &\quad \text{current\_in\_CS} := \bot; \\ & \\ &\textbf{upon event } \text{pp2pDeliver}(\text{REQ}, j) \text{ from } p_j \textbf{ do} \\ &\quad \text{pending} := \text{pending} \cup \{p_j\}; \\ & \\ &\textbf{when } \text{pending} \neq \emptyset \land \text{current\_in\_CS} = \bot \textbf{ do} \\ &\quad \text{candidate} := \text{select\_process}(\text{pending}); \\ &\quad \text{pending} := \text{pending} \setminus \{\text{candidate}\}; \\ &\quad \text{current\_in\_CS} := \text{candidate}; \\ &\quad \text{trigger } \text{pp2pSend}(\text{GRANT\_CS}) \text{ to candidate}; \\ & \\ &\textbf{upon event } \text{pp2pDeliver}(\text{REL}, j) \text{ from } p_j \textbf{ do} \\ &\quad \textbf{if } \text{current\_in_CS} = j \textbf{ then} \\ &\quad \quad \text{current\_in\_CS} := \bot; \end{aligned}$
 
 
