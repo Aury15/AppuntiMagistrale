@@ -987,4 +987,5 @@ This algorithm implements a **Monarchical Leader Election** mechanism (`le`), wh
 
 **example**
 
-#### Eventual leader election
+#### Eventual leader election $\Omega$
+
