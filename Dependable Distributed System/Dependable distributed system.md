@@ -474,5 +474,46 @@ Distributed Mutual Exclusion is a fundamental problem in distributed systems. Im
 ![[Dependable distributed system-1793789585449.webp|566]]
 #### Lamport's algorithm
  The Lamport Algorithm for Distributed Mutual Exclusion is one of the most important classical methods in distributed systems for regulating access to a shared resource (Critical Section, or CS) using scalar logical timestamps.
- In questo algoritmo, ogni processo $p_i$ del sistema mantiene due strutture fondamentali:
- 
+In this algorithm, each process $p_i$ in the system maintains two fundamental structures:
+- A *local logical clock counter* ($ck$).
+- A *local request queue* ($Q$) in which all requests for access to the Critical Section (both its own and those of other processes) are stored in chronological order.
+##### Le Fasi dell'Algoritmo
+
+ **Fase 1: La Richiesta (Request)**
+
+- Quando un processo $p_i$ vuole accedere alla Sezione Critica, incrementa il proprio clock logico e invia un messaggio di `REQUEST` (contenente il timestamp $t$ e il proprio identificativo $id$) a **tutti** gli altri processi del sistema.
+    
+- Contemporaneamente, $p_i$ inserisce la propria richiesta all'interno della sua coda locale $Q$.
+    
+
+ **Fase 2: La Ricezione e la Risposta (Ack)**
+
+- Quando un qualsiasi altro processo $p_j$ riceve il messaggio di `REQUEST` da $p_i$:
+    
+    - Inserisce la richiesta di $p_i$ nella propria coda locale $Q$.
+        
+    - Risponde inviando immediatamente un messaggio di conferma (**ACK**) a $p_i$. _(Nota: l'ACK viaggia con un proprio timestamp logico successivo)._
+        
+
+ **Fase 3: L'Entrata nella Sezione Critica (Critical Section)**
+
+Un processo $p_i$ può entrare nella Sezione Critica **solo e soltanto se** sono verificate contemporaneamente tre condizioni:
+
+1. La sua richiesta si trova in cima alla sua coda $Q$ (il che significa che ha il **timestamp più piccolo** di tutti tra quelli pendenti).
+    
+2. $p_i$ ha già ricevuto un messaggio di `ACK` da parte di _tutti_ gli altri processi del sistema.
+    
+3. I timestamp degli `ACK` ricevuti sono strettamente maggiori del timestamp della propria richiesta.
+    
+
+_Perché serve questa regola?_ Perché l'arrivo di un `ACK` da parte di un altro nodo garantisce a $p_i$ che quel nodo ha visto la sua richiesta e ha registrato un orologio logico superiore; quindi nessun altro nodo potrà inserire in futuro una richiesta con un timestamp "nel passato" che avrebbe dovuto avere la precedenza.
+
+#### **Fase 4: Il Rilascio (Release)**
+
+- Una volta terminato il lavoro all'interno della Sezione Critica, il processo $p_i$:
+    
+    - Invia un messaggio di `RELEASE` a tutti gli altri processi.
+        
+    - Rimuove la propria richiesta dalla sua coda locale $Q$.
+        
+- Quando gli altri processi ricevono il messaggio di `RELEASE` da $p_i$, rimuovono a loro volta la richiesta di $p_i$ dalle loro code locali $Q$. In questo modo le code si aggiornano e la risorsa si libera per il prossimo processo in coda.
