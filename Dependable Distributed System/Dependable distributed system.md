@@ -789,4 +789,11 @@ A rule of thumb for constructing the groups ($V_i$) is to arrange the $N$ proces
 
 <mark style="background:#d3f8b6">Example: </mark>
 Let us consider a system composed by N = 4 processes. $M = K \sim \sqrt[2]{4}$  
-Let's place processes 
+Let's place processes in the matrix and compute $V_i$ 
+
+| Process id | V               |
+| ---------- | --------------- |
+| 1          | $p_1, p_2, p_3$ |
+| 2          | $p_1, p_2, p_4$ |
+| 3          | $p_1, p_3, p_4$ |
+| 4          |                 |
