@@ -675,6 +675,6 @@ $$2. A token is created and propagated in the ring during the initialization pha
 &\textbf{state} \text{= idle} \\
 &\textbf{next} = p_{i+1}mod (n) \\
 &\text{if self =} p_0 \\
-& \quad \quad \quad \text{trigger pp2pSend(To)}
+& \quad \quad \quad \text{trigger pp2pSend(TOKEN) to next} 
 \end{aligned}
 $$
