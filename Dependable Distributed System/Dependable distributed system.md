@@ -730,3 +730,11 @@ $$
 #### Quorum-based Algorithm – Maekawa’s voting algorithm
 
 Instead of asking permission from _all_ nodes (as in Lamport) or from a single coordinator, a process entering the CS must get acknowledgement (vote) only from a **specific subset of processes**, called the **Quorum or Voting Set ($V_i$)**.
+
+**The Properties of Voting Sets ($V_i$)**
+
+To ensure mutual exclusion and correct operation, voting sets must adhere to strict geometric/mathematical rules:
+1. $p_i \in V_i$ (each process is part of its own voting set).
+2. The *intersection* between any two sets is never empty: $V_i \cap V_j \neq \emptyset$. This ensures that there is always at least one "arbiter node" in common between two processes claiming to enter the CS, preventing conflicts.
+3. All sets have the same size $\vert{}V_i\vert{} = K$ (fair load principle).
+4. Each process $p_j$ belongs to the same number of sets $M$ (fair responsibility principle).
