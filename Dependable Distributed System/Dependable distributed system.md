@@ -984,3 +984,4 @@ This algorithm implements a **Monarchical Leader Election** mechanism (`le`), wh
 - This is a reactive guard condition (`upon ... do`) that constantly monitors the set of active (non-suspected) processes: $\Pi \setminus \text{suspected}$.
 - **Selecting the Leader**: It computes `maxrank(...)`, which identifies the process with the highest rank among the currently alive processes.
 - **Updating and Notifying**: If the current `leader` differs from this newly calculated highest-rank process, the variable is updated (`leader := maxrank(...)`), and a notification is broadcasted via the trigger `trigger `$< le, Leader \mid leader >$` to inform the system of the new leader.
+
