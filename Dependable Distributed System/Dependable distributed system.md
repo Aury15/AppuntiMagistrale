@@ -503,4 +503,9 @@ _Why is this rule necessary?_ Because the arrival of an ACK from another node gu
 *PICTURES OF THE EXAMPLE*
 
 ###### Properties of the algorithm
-1. 
+- **Fairness (Absence of Starvation):** Requests are fulfilled strictly in the chronological order established by logical timestamps (_happened-before_ relationship). First come, first served.
+- **Fairness (Mutual Exclusion):** Two processes are guaranteed never to enter the CS at the same time, precisely because the combination of ordered timestamps and universal ACKs creates a global and consistent view of the queues on all nodes.
+- **Message Cost:** For each single access to the Critical Section, the Lamport algorithm requires a fixed total of **$3(N - 1)$ messages**, divided as follows:
+- $N - 1$ `REQUEST` messages sent to all other nodes.
+- $N - 1$ `ACK` response messages.
+- $N - 1$ `RELEASE` messages.
