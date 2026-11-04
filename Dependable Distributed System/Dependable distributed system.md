@@ -810,17 +810,27 @@ A **Failure Detector** is an oracle providing information about the failure stat
 - **Accuracy**:  the ability to avoid mistakes in the detection;
 - **Completeness**: informally is ability to detect all failures.
 ![[Dependable distributed system-1793813585115.webp|729]]
-
 ###### Failure detectors classification
-Combinando i diversi livelli di Accuratezza e Completezza, i rivelatori si suddividono in classi:
+Combining the different levels of Accuracy and Completeness, detectors are divided into classes:
 
-- **Completezza**:
-    - _Strong (Forte)_: Prima o poi, ogni processo che va in crash viene permanentemente sospettato da _tutti_ i processi corretti.
-    - _Weak (Debole)_: Prima o poi, ogni processo in crash viene permanentemente sospettato da _almeno un_ processo corretto.
-        
-- **Accuratezza**:
-    - _Strong (Forte)_: I processi corretti **non** vengono mai sospettati.
-    - _Weak (Debole)_: Esiste almeno un processo corretto che non viene mai sospettato.
-        
-- **Accuratezza Eventuale ($\diamond$)**: L'accuratezza non è richiesta fin da subito, ma vale "dopo un certo tempo" (_eventually_):
-    - _Eventual Strong Accuracy ($\diamond S$)_: Esiste un tempo dopo il quale nessun processo corretto viene sospettato da un altro processo corretto.
+- **Completeness**:
+- _Strong_: Sooner or later, every process that crashes is permanently suspected by _all_ healthy processes.
+- _Weak_: Sooner or later, every process that crashes is permanently suspected by _at least_ one healthy process.
+
+- **Accuracy**:
+- _Strong_: Healthy processes are **never** suspected.
+- _Weak_: There is at least one healthy process that is never suspected.
+
+- **Eventual Accuracy ($\diamond$)**: Accuracy is not required immediately, but applies "after a certain time" (_eventually_):
+- **Eventual Strong Accuracy** ($\diamond S$)_: There is a time after which no correct process is suspected by another correct process.
+![[Dependable distributed system-1793813713281.webp]]#### La Matrice delle Classi:
+
+- **P (Perfect Failure Detector)**: Completezza forte + Accuratezza forte (richiede un sistema sincrono).
+    
+- **S (Strong Failure Detector)**: Completezza forte + Accuratezza debole.
+    
+- **Q (Quasi-perfect Failure Detector)**: Completezza debole + Accuratezza forte.
+    
+- **W (Weak Failure Detector)**: Completezza debole + Accuratezza debole.
+    
+- Le versioni con il rombo ($\diamond P, \diamond S, \diamond Q, \diamond W$) indicano che le proprietà di accuratezza valgono in modo eventuale (tipico della parziale sincronia).
