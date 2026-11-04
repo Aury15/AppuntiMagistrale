@@ -921,7 +921,7 @@ $$
 This algorithm implements an **Eventually Perfect Failure Detector ($\diamond\mathcal{P}$)**. Unlike a _perfect_ failure detector (which makes no mistakes), an eventually perfect failure detector can make temporary mistakes during periods of asynchrony (such as suspecting a process that is still alive), but guarantees that it eventually becomes accurate once the system reaches periods of synchrony.
 
 1. **Initialization** (`Init`)
-- `alive := \Pi`: Initially, the algorithm assumes that all processes in the system set ($\Pi$) are alive.
+- `alive := $\Pi$`: Initially, the algorithm assumes that all processes in the system set ($\Pi$) are alive.
 - `suspected := \emptyset`: No process is initially suspected of having crashed.
 - `delay := \Delta`: Sets an initial timeout duration.
 - `starttimer(delay)`: Starts the timer using the current delay value.
