@@ -865,3 +865,15 @@ $$
 &\quad \text{alive} := \text{alive} \cup \{p\};
 \end{aligned}
 $$
+This algorithm implements a **Perfect Failure Detector** ($\mathcal{P}$) using point-to-point communication channels ($pl$). Its purpose is to monitor processes in the system and detect crashes with absolute accuracy and completeness.
+* **Initialization (`Init`)**: 
+  - `alive := Π`: Initially assumes all processes in the system are alive.
+  - `detected := ∅`: No process is marked as crashed yet.
+  - `starttimer(Δ)`: Starts a periodic heartbeat timer with a interval $\Delta$.
+* **Timeout Handling (`Timeout`)**: 
+  - The algorithm periodically checks every process $p \in \Pi$.
+  - If a process $p$ is neither in the `alive` set nor already marked in `detected`, it means $p$ failed to send a heartbeat within the last interval. The detector marks it as crashed (`detected := detected ∪ {p}`), triggers a crash indication ($\langle \mathcal{P}, \text{Crash} \mid p \rangle$), and sends a heartbeat request to check its status.
+  - It then resets `alive := ∅` for the next round and restarts the timer.
+* **Responding to Heartbeats (`HEARTBEATREQUEST` / `HEARTBEATREPLY`)**: 
+  - When a process receives a `HEARTBEATREQUEST`, it immediately replies with a `HEARTBEATREPLY.
+  - When a process receives a `HEARTBEATREPLY` from $p$, it adds $p$ back to the `alive` set (`alive := alive ∪ {p}`), confirming that $p$ is still operational.
