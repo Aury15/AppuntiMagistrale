@@ -344,7 +344,7 @@ becomes 1/1/1900 rather than 1/1/2000)
 ##### Berkeley Algorithm (Internal Synchronization) 
 - **Structure**: Master-slave architecture. 
 - **Algorithm steps**: 
-	1. The master periodically polls the slaves, sending its own timestamp and receiving the nodes' local timestamps in return. 
+	1. The master $p_m$ periodically polls the slaves, sending its own timestamp $t_1$ and receiving the nodes' local timestamps $t_2$ in return. 
 	2. The master calculates the differences $\Delta$ between its own clock and that of each process. 
 	3. The master discards the values ​​of faulty processes (whose difference exceeds a threshold $\gamma$). 
 	4. It calculates the average of the valid values ​​and sends each process the algebraic correction to apply.
