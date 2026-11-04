@@ -531,3 +531,23 @@ Each process maintains the following information about its state:
 - **`Last_Req`**: The timestamp of the last request sent by the process.
 - **`#replies`**: A counter that tracks permissions (`REPLY`) received from other nodes (initially 0).
 - **`Q`**: A queue of pending requests (requests received from others that have been decided not to respond to yet).
+
+###### Le Fasi dell'Algoritmo
+ **Fase A: Quando un processo vuole entrare nella Sezione Critica**
+1. Il processo $p_i$ cambia il suo stato in `Requesting`, incrementa il suo clock logico e imposta `num`.
+2. Invia un messaggio di `REQUEST(num, i)` (contenente il proprio timestamp e il proprio ID) a **tutti** gli altri $N-1$ processi del sistema.
+3. **Attende** pazientemente finché non riceve il permesso da tutti gli altri nodi, cioè finché il contatore `#replies` non raggiunge il valore $N-1$.
+4. Quando ha ottenuto tutti i permessi, entra nella Sezione Critica (`State = CS`).
+5. 
+ **Fase B: Quando un processo $p_j$ riceve una richiesta `REQUEST(t, i)` da $p_i$**
+Quando un nodo $p_j$ riceve la richiesta di un altro nodo $p_i$, deve decidere se rispondere subito o posticipare la risposta, confrontando le priorità (basate su timestamp e ID del processo: la coppia `{timestamp, id}` minore ha la precedenza):
+- **Condizioni per posticipare la risposta (rinviare il `REPLY`):** Il processo $p_j$ **non** risponde subito se si trova in una di queste due situazioni:
+    1. $p_j$ è attualmente dentro la Sezione Critica (`State == CS`).
+    2. $p_j$ si trova nello stato `Requesting` **ed** ha una priorità superiore rispetto a $p_i$ (cioè il suo timestamp/ID `Last_Req` è minore di quello di $p_i$: `{Last_Req_j, j} < {t, i}`).
+    _In questo caso_, $p_j$ inserisce la richiesta di $p_i$ all'interno della sua coda locale in sospeso `Q`.
+- **Quando rispondere subito:** Se $p_j$ non è interessato alla risorsa (`State == NCS`) oppure ha una priorità inferiore rispetto a $p_i$, allora **invia immediatamente un messaggio di `REPLY`** a $p_i$.
+- 
+ **Fase C: Quando il processo esce dalla Sezione Critica (Release)**
+Una volta terminato il lavoro nella Sezione Critica, il processo $p_i$:
+1. Scorre la sua coda locale `Q` delle richieste che aveva messo in attesa e invia un messaggio di `REPLY` a ciascuno di quei processi.
+2. Svuota la coda `Q`, riporta lo stato a `NCS` e azzera il contatore `#replies`.
