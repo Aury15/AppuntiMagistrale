@@ -621,24 +621,22 @@ $$
 This is the code executed exclusively by the process elected as coordinator, which acts as a central "traffic policeman" for dispatching permissions.
 
 - **`Init` (Initialization):**
-- `pending = `: Initializes a queue or empty pool to collect incoming requests from various nodes.
-- `current_in_CS = ⊥`: A variable that keeps track of which process is currently in the Critical Section (initially empty/null, denoted by $\bot$).
+	- `pending = `: Initializes a queue or empty pool to collect incoming requests from various nodes.
+	- `current_in_CS = ⊥`: A variable that keeps track of which process is currently in the Critical Section (initially empty/null, denoted by $\bot$).
 
 - **`upon event pp2pDeliver(REQ, j) from pj` (When the coordinator receives a request):**
-- `pending = pending  {pj}`: Takes the requesting process $p_j$ and adds it to the pool of pending requests.
+	- `pending = pending  {pj}`: Takes the requesting process $p_j$ and adds it to the pool of pending requests.
 
 - **The `when pending   and current_in_CS = ⊥` control block (The scheduling logic):**
 	- This check is executed continuously (or triggered on an event-by-event basis): if there are pending requests (`pending` is not empty) **and** the resource is currently free (`current_in_CS = ⊥`), the coordinator performs three actions:
 		1. `candidate = select_process(pending)`: Selects a process from the waiting list (e.g., in FIFO order).
 		2. `pending = pending \ candidate`: Removes the selected process from the waiting list.
-
 		3. `current_in_CS = candidate`: Assigns the resource to the candidate.
-
-3. `trigger pp2pSend(GRANT_CS) to candidate`: Sends the `GRANT_CS` authorization message directly to that process.
+		4. `trigger pp2pSend(GRANT_CS) to candidate`: Sends the `GRANT_CS` authorization message directly to that process.
 
 - **`upon event pp2pDeliver(REL, j) from pj` (When the coordinator receives the release):**
-- `if current_in_CS = j`: Verifies that the process that was using the resource is actually releasing it.
-- `current_in_CS = ⊥`: Frees the resource by setting it to $\bot$. (This immediately unlocks the `when` lock described above, allowing the coordinator to serve the next process in the queue.)
+	- `if current_in_CS = j`: Verifies that the process that was using the resource is actually releasing it.
+	- `current_in_CS = ⊥`: Frees the resource by setting it to $\bot$. (This immediately unlocks the `when` lock described above, allowing the coordinator to serve the next process in the queue.)
 
 
 
