@@ -398,4 +398,6 @@ Formal definition ($e \rightarrow e'$): Two events $e$ and $e'$ are related by t
 ![[Dependable distributed system-1793785270199.webp]]Happened-before relation imposes a partial order over events of the execution history: 
 - If two events $e_i$ and $e_j$ are not linked by any cause-effect relationship, they are said to be **concurrent** ($e_i \vert{}\vert{} e_j$).
 - In a distributed system, for any pair of events only one of three conditions is always true:
-1. $e_i \rightarrow e_j$, $e_j \rightarrow e_i$, or $e_i \vert{}\vert{} e_j$ 
+	1. $e_i \rightarrow e_j$;
+	2. $e_j \rightarrow e_i$;
+	3. $e_i \vert{}\vert{} e_j$.
