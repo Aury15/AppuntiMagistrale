@@ -836,5 +836,32 @@ Combining the different levels of Accuracy and Completeness, detectors are divid
 ![[Dependable distributed system-1793813898316.webp]]
 ###### Perfect failure detector
 They operate in synchronous systems with crash-stop failures. Using its own clock and the bound of the synchrony model, a process can infer if another process is crashed. 
-- _PFD1 (Strong Completeness)_: Every process that crashes is permanently detec Ogni processo che fa crash viene permanentemente rilevato da ogni processo corretto.
-- _PFD2 (Strong Accuracy)_: Se un processo $p$ viene rilevato come morto, allora $p$ è effettivamente andato in crash.
+- _PFD1 (Strong Completeness)_: Every process that crashes is permanently detected by every correct process.
+- _PFD2 (Strong Accuracy)_: If one process $p$ is detected by any process, then $p$ has crashed. 
+$$
+\begin{aligned}
+&\textbf{Algorithm 2.5: } \text{Exclude on Timeout} \\
+&\textbf{Implements:} \text{ PerfectFailureDetector, instance } \mathcal{P}. \\
+&\textbf{Uses:} \text{ PerfectPointToPointLinks, instance } pl. \\
+& \\
+&\textbf{upon event } \langle \mathcal{P}, \text{Init} \rangle \textbf{ do} \\
+&\quad \text{alive} := \Pi; \\
+&\quad \text{detected} := \emptyset; \\
+&\quad \text{starttimer}(\Delta); \\
+& \\
+&\textbf{upon event } \langle \text{Timeout} \rangle \textbf{ do} \\
+&\quad \textbf{forall } p \in \Pi \textbf{ do} \\
+&\quad \quad \textbf{if } (p \notin \text{alive}) \land (p \notin \text{detected}) \textbf{ then} \\
+&\quad \quad \quad \text{detected} := \text{detected} \cup \{p\}; \\
+&\quad \quad \quad \textbf{trigger } \langle \mathcal{P}, \text{Crash} \mid p \rangle; \\
+&\quad \quad \textbf{trigger } \langle pl, \text{Send} \mid p, [\text{HEARTBEATREQUEST}] \rangle; \\
+&\quad \text{alive} := \emptyset; \\
+&\quad \text{starttimer}(\Delta); \\
+& \\
+&\textbf{upon event } \langle pl, \text{Deliver} \mid q, [\text{HEARTBEATREQUEST}] \rangle \textbf{ do} \\
+&\quad \textbf{trigger } \langle pl, \text{Send} \mid q, [\text{HEARTBEATREPLY}] \rangle; \\
+& \\
+&\textbf{upon event } \langle pl, \text{Deliver} \mid p, [\text{HEARTBEATREPLY}] \rangle \textbf{ do} \\
+&\quad \text{alive} := \text{alive} \cup \{p\};
+\end{aligned}
+$$
