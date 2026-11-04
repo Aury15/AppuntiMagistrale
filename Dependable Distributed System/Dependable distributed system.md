@@ -805,3 +805,4 @@ Let's place processes in the matrix and compute $V_i$
 
 ## Failure Detection and Leader Election
 
+#### Failure detection
