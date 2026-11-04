@@ -384,7 +384,7 @@ In an asynchronous distributed system, global **physical time is not directly ob
 ## Logical Clocks and Distributed Mutual Exclusion
 Synchronizing physical clocks in distributed systems is complex, and accuracy depends heavily on estimating network communication delays, which are often difficult to calculate precisely. <mark style="background:#fff88f">The key insight</mark>: In many distributed applications, it is not essential to know the exact time an event occurred, but it is essential to determine with certainty the order in which events occurred. **Goal**: Find a reliable way to order events without having to rely on physical clock synchronization.
 
-#### Happened-before relation and concurrent event
+#### Happened-before relation 
 
 ![[Remark]]
 
@@ -395,4 +395,7 @@ Formal definition ($e \rightarrow e'$): Two events $e$ and $e'$ are related by t
 	- $e$ corresponds to the sending of a message ($\text{send}(m)$) by one process and $e'$ corresponds to the reception/delivery of the same message ($\text{deliver}(m)$) by another process ($\text{send}(m) \rightarrow \text{deliver}(m)$). 
 3. **Transitivity**: $\exists e, e', e'' | (e \rightarrow e') \land (e'' \rightarrow e')$
 	- There exists an intermediate event $e''$ such that $e \rightarrow e''$ and $e'' \rightarrow e'$.
-![[Dependable distributed system-1793785270199.webp]]
+![[Dependable distributed system-1793785270199.webp]]Happened-before relation imposes a partial order over events of the execution history: 
+- If two events $e_i$ and $e_j$ are not linked by any cause-effect relationship, they are said to be **concurrent** ($e_i \vert{}\vert{} e_j$).
+- In a distributed system, for any pair of events only one of three conditions is always true:
+1. $e_i \rightarrow e_j$, $e_j \rightarrow e_i$, or $e_i \vert{}\vert{} e_j$ 
