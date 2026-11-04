@@ -371,5 +371,7 @@ Internet. It synchronizes clients with UTC. NTP employs several security mechani
 3. **Stratum 3** *and above*: Synchronization subnets for end-user computers.
 ![[Dependable distributed system-1793783886141.webp]]The NTP hierarchy is reconfigurable in presence of faults: 
 - Primary server that loses its connection with UTC-signal can become a secondary server;
-- Secondary server that loses its connection with a primary server (e.g. a crash of the
-primary server) can contact and connect itself to another primary.
+- Secondary server that loses its connection with a primary server (e.g. a crash of the primary server) can contact and connect itself to another primary.
+###### NTP Synchronizations models
+- multicast: server periodically sends its actual time to its leaves in the LAN. Leavesset their time using the received time assuming a certain delay. It is used in quickLANs but it shows a low accuracy
+- Procedure call: server replies to requests with its actual timestamp (likeCristian%E2%80%99s algorithm). High Accuracy and it is useful when it is not available hwmulticast.Symmetrical: used to synchronize between pairs of time servers using messagescontaining timing information. Only used in high level of hierarchy.
