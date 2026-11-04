@@ -182,7 +182,7 @@ $$
 ###### Algorithm: Job-Transformation by Buffering
 $$
 \begin{aligned}
-&\textbf{Algorithm 1.3: } \text{Job-Transformation by Buffering} \\
+&\textbf{Algorithm: } \text{Job-Transformation by Buffering} \\
 &\textbf{Implements:} \text{ TransformationHandler, instance } th. \\
 &\textbf{Uses:} \text{ JobHandler, instance } jh. \\
 & \\
