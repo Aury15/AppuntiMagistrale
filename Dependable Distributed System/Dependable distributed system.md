@@ -662,6 +662,8 @@ The processes are organized in a logical ring topology (overlay network) using e
 ![[Dependable distributed system-1793810509841.webp]]
 ![[Dependable distributed system-1793810667840.webp|681]]$$
 \begin{aligned}
-&\textbf{state} \text{= idle}
-\end{}
+&\textbf{Init} \\
+&\textbf{state} \text{= idle} \\
+&\textbf{next} = p_{i+1}mod (n) 
+\end{aligned}
 $$
