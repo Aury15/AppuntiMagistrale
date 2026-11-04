@@ -413,3 +413,4 @@ $ts_e = L_i(e)$ is the “logical” timestamp assigned by a process $p_i$ to ev
 - **Receiving**: When $p_i$ receives a message with a timestamp $ts$, it updates its clock by calculating the maximum and incrementing it: $L_i = \max(ts, L_i) + 1$ (before generating the receive event).
 
 
+$e_i^j$ is $j-th$
