@@ -823,14 +823,14 @@ Combining the different levels of Accuracy and Completeness, detectors are divid
 
 - **Eventual Accuracy ($\diamond$)**: Accuracy is not required immediately, but applies "after a certain time" (_eventually_):
 - **Eventual Strong Accuracy** ($\diamond S$)_: There is a time after which no correct process is suspected by another correct process.
-![[Dependable distributed system-1793813713281.webp]]#### La Matrice delle Classi:
 
-- **P (Perfect Failure Detector)**: Completezza forte + Accuratezza forte (richiede un sistema sincrono).
-    
-- **S (Strong Failure Detector)**: Completezza forte + Accuratezza debole.
-    
-- **Q (Quasi-perfect Failure Detector)**: Completezza debole + Accuratezza forte.
-    
-- **W (Weak Failure Detector)**: Completezza debole + Accuratezza debole.
-    
-- Le versioni con il rombo ($\diamond P, \diamond S, \diamond Q, \diamond W$) indicano che le proprietà di accuratezza valgono in modo eventuale (tipico della parziale sincronia).
+
+### The Class Matrix:
+
+- **P (Perfect Failure Detector)**: Strong completeness + Strong accuracy (requires a synchronous system).
+- **S (Strong Failure Detector)**: Strong completeness + Weak accuracy.
+- **Q (Quasi-perfect Failure Detector)**: Weak completeness + Strong accuracy.
+- **W (Weak Failure Detector)**: Weak completeness + Weak accuracy.
+- The diamond versions ($\diamond P, \diamond S, \diamond Q, \diamond W$) indicate that the accuracy properties hold only partially (typical of partial synchrony).
+
+![[Dependable distributed system-1793813748340.webp]]
