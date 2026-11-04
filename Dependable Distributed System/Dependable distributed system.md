@@ -921,16 +921,16 @@ $$
 This algorithm implements an **Eventually Perfect Failure Detector ($\diamond\mathcal{P}$)**. Unlike a _perfect_ failure detector (which makes no mistakes), an eventually perfect failure detector can make temporary mistakes during periods of asynchrony (such as suspecting a process that is still alive), but guarantees that it eventually becomes accurate once the system reaches periods of synchrony.
 
 1. **Initialization** (`Init`)
-- `alive := $\Pi$`: Initially, the algorithm assumes that all processes in the system set ($\Pi$) are alive.
-- `suspected := \emptyset`: No process is initially suspected of having crashed.
-- `delay := \Delta`: Sets an initial timeout duration.
-- `starttimer(delay)`: Starts the timer using the current delay value.
+- `alive := Π`: Initially, the algorithm assumes that all processes in the system set ($\Pi$) are alive.
+- `suspected := ∅`: No process is initially suspected of having crashed.
+- `delay := Δ`: Sets an initial timeout duration.
+- `starttimer(delay) `: Starts the timer using the current delay value.
     
 2. **Timeout Handling** (`Timeout`)
 This is the core mechanism that makes the algorithm adaptive:
-- **Checking for past mistakes (`alive \cap suspected \neq \emptyset`)**: If a process that was previously suspected of crashing successfully replies during the current interval (meaning it is actually in the `alive` set), it implies the timeout interval was too short for network conditions. Consequently, **the delay is increased** (`delay := delay + \Delta`).
+- **Checking for past mistakes (`alive \cap suspected \neq \emptyset`)**: If a process that was previously suspected of crashing successfully replies during the current interval (meaning it is actually in the `alive` set), it implies the timeout interval was too short for network conditions. Consequently, **the delay is increased** (`delay := delay + Δ`).
 - **Updating Suspicions (`forall p \in \Pi`)**:
-    - If a process $p$ is neither in `alive` nor already in `suspected`, it is added to the `suspected` set, and a `Suspect` indication is triggered (`trigger < \diamond\mathcal{P}, \text{Suspect} \mid p >`).
+    - If a process $p$ is neither in `alive` nor already in `suspected`, it is added to the `suspected` set, and a `Suspect` indication is triggered (`trigger < $\diamond\mathcal{P}$, $\text{Suspect} \mid p >$).
     - If a process was previously suspected but has now responded (meaning it is back in `alive`), it is removed from the `suspected` set, and a `Restore` indication is triggered (`trigger < \diamond\mathcal{P}, \text{Restore} \mid p >`).    
 - **Broadcasting Heartbeats (`HEARTBEATREQUEST`)**: The process sends a new heartbeat request to all nodes, resets the `alive` set to empty (`alive := \emptyset`), and restarts the timer with the updated (or maintained) `delay`.
 
