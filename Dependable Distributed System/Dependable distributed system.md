@@ -404,4 +404,6 @@ Formal definition ($e \rightarrow e'$): Two events $e$ and $e'$ are related by t
 ![[Dependable distributed system-1793785445872.webp]]
 #### Scalar logical clock
 The Logical Clock, introduced by Lamport, is a software counter that monotonically
-increases its value. 
+increases its value. A logical clock $L_i$ can be used to timestamp events: 
+$ts_e = L_i(e)$ is the “logical” timestamp assigned by a process $p_i$ to events e using its current logical clock.
+
