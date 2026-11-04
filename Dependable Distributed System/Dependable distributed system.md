@@ -783,3 +783,6 @@ $$
 \end{aligned}
 $$
 
+Maekawa showed that to minimize the number of messages and balance the load:
+					$K \approx \sqrt{N}$ and $M = K$.
+A rule of thumb for constructing the groups ($V_i$) is to arrange the $N$ processes in a matrix $\sqrt{N} \times \sqrt{N}$ and define the voting set $V_i$ as **the union of the row and column** in which the process $p_i$ is located.
