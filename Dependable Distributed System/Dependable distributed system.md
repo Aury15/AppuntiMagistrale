@@ -995,3 +995,4 @@ In asynchronous or partially synchronous systems, it is not possible to guarante
 
 **Important note**: $\Omega$ does not guarantee immediate stability; leaders can temporarily change before converging on the final election (_stabilization_).
 **Crash-Recovery Implementation**: When considering systems with crash-recovery failures (nodes can restart), epoch-based algorithms (generation/restart numbers) and fair-loss links are used to make nodes exchange heartbeats associated with the active epoch, ultimately electing the leader with the correct epoch and rank.
+
