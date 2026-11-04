@@ -457,7 +457,7 @@ Differently from Scalar Clock, Vector Clock allows to determine if two events ar
 
 #### Distributed mutual exclusion
 
-Lets us consider a set of processes $\Pi ={p_1, ..., p_n}$ and a set of resources $R = {r_1, ..., r_m}$ 
+Lets us consider a set of processes $\Pi ={p_1, ..., p_n}$ and a set of resources $R = {r_1, ..., r_m}$ . The system is asynchronous
 ![[Dependable distributed system-1793788795390.webp|603]]
 Processes need to access resources exclusively and we need to design a distributed
-abstraction that allows them to coordinate to get access to resources
+abstraction that allows them to coordinate to get access to resources.
