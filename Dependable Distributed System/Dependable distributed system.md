@@ -948,3 +948,9 @@ This is the core mechanism that makes the algorithm adaptive:
 	- **Why is it "eventual"?** This is where the temporal aspect of $\diamond \mathcal{P}$ comes into play.
 		- _Before time $T$_ (when the network is asynchronous and unpredictable), the system can make mistakes: a live node can be mistakenly suspected simply because the network delayed a message or because the timeout was set too short.
 		- _After time $T$, the magic of **eventually** comes true_: the network stabilizes and becomes synchronous. Messages travel within a certain time limit. If $q had wrongly suspected a live node $p$, as soon as it receives a real message from $p$, it will realize its error and **revise its suspicion**.
+
+#### Leader election 
+In distributed systems, continuously monitoring the state of all nodes can be cumbersome. Often, to coordinate actions (e.g., in consensus or transactional protocols), it's enough to know that **at least one process is alive** and acting as the coordinator (_leader_).
+- **LE1 (Eventual Detection)**: Either there are no valid processes, or a valid process is eventually elected as the leader.
+- **LE2 (Accuracy)**: If a process is the leader, all previously elected leaders have certainly failed.
+**Monarchical Implementation ("Monarchical Leader Election")**: Uses a Perfect Failure Detector ($\mathcal{P}$). Each node maintains a list of suspected processes and chooses as the leader the alive process with the highest identifier (or rank) among the unsuspected ones ($\text{maxrank}(\Pi \setminus \text{suspected})$).
