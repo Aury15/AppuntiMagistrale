@@ -452,6 +452,7 @@ A Vector Clock $V_i$:
   $\forall i = 1 \dots N, \quad V'[i] \ge V[i]$
   $\exists i \in \{1 \dots N\} \mid V'[i] > V[i]$
 
-
-
+![[Dependable distributed system-1793788692222.webp|656]]
 Differently from Scalar Clock, Vector Clock allows to determine if two events are concurrent or related by a happened-before relation.
+
+#### Distributed mutual exclusion
