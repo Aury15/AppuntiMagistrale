@@ -349,3 +349,4 @@ becomes 1/1/1900 rather than 1/1/2000)
 	3. The master discards the values ​​of faulty processes (whose difference exceeds a threshold $\gamma$). 
 	4. It calculates the average of the valid values $\Delta p_i$  ​​and sends each process the algebraic correction to apply.
 - **Slowdown management**: To avoid jumping back in time (violating causality and monotonicity), excess clocks are not set to a past value, but are slowed down by temporarily hiding hardware clock interrupts.
+- **Accuracy**
