@@ -461,6 +461,7 @@ Lets us consider a set of processes $\Pi ={p_1, ..., p_n}$ and a set of resource
 ![[Dependable distributed system-1793788795390.webp|603]]
 Processes need to access resources exclusively and we need to design a distributed
 abstraction that allows them to coordinate to get access to resources.
+Distributed Mutual Exclusion is a fundamental problem in distributed systems. Imagine having a set of processes distributed across different machines connected via a network (with no shared memory) that need access to a shared resource (called a Critical Section or CS, such as a file to write, a database, or a printer). The mutual exclusion problem involves designing a coordination mechanism that allows processes to access it in a safe and orderly manner.
 ###### Events
 - `request()`: it issues a request to enter into the critical section;
 - `ok()`: it notifies the process that it can now access the critical section;
@@ -469,3 +470,5 @@ abstraction that allows them to coordinate to get access to resources.
 - **Mutual exclusion:** at any time $t$, at most one process $p$ is running the critical section;
 - **No-deadlock:** there always exists a process $p$ able to enter the critical section;
 - **No-starvation:** every `request()` and `release()` operation eventually terminate. 
+
+![[Dependable distributed system-1793789585449.webp|566]]
