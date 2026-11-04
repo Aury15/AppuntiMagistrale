@@ -878,3 +878,5 @@ This algorithm implements a **Perfect Failure Detector** ($\mathcal{P}$) using p
   - When a process receives a `HEARTBEATREQUEST`, it immediately replies with a `HEARTBEATREPLY.
   - When a process receives a `HEARTBEATREPLY` from $p$, it adds $p$ back to the `alive` set (`alive := alive ∪ {p}`), confirming that $p$ is still operational.
 
+#### Eventually perfect failure detectors 
+Opera in condizioni di **parziale sincronia**. Prima di un tempo $t$ sconosciuto, il sistema si comporta come asincrono (il rivelatore può commettere errori e sospettare ingiustamente nodi vivi). Dopo il tempo $t$, il sistema diventa sincrono e i sospetti diventano accurati.
