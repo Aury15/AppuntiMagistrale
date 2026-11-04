@@ -378,3 +378,4 @@ Internet. It synchronizes clients with UTC. NTP employs several security mechani
 - **Symmetrical**: used to synchronize between pairs of time servers using messages containing timing information. *Only used in high level of hierarchy*.
 
 #### Time in asynchronous system 
+In an asynchronous distributed system, global **physical time is not directly observable** in a deterministic way due to the unpredictability of network communication delays. Clocks can only be synchronized with a certain degree of probability, and an accuracy bound can only be calculated by knowing rigorously the upper and lower limits of the transmission delays.
