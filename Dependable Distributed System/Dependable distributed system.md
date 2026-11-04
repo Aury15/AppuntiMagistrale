@@ -554,3 +554,6 @@ Once it has finished its work in the Critical Section, process $p_i$:
 
 *for the example -> DDS lecture5B*
 
+## Coordinator, Token and Quorum Algorithms for Mutual Exclusion
+
+We keep the same setting as before: a set of processes Π, a single resource, an asynchronous system, correct processes and perfect point-to-point links. After the logical clock-based algorithms, this lecture presents the other three approaches: coordinator-based, token-based and quorum-based.
