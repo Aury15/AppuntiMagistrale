@@ -520,4 +520,14 @@ If we assume that $p_i$ sent a request with a timestamp of $t_i$ and $p_j$ with 
 - $N - 1$ `RELEASE` messages.
 
 #### Ricart-Agrawala's algorithm
+The *Ricart-Agrawala algorithm* is an evolution and optimization of the Lamport algorithm to solve the Distributed Mutual Exclusion problem. While the Lamport algorithm requires sending `REQUEST`, `ACK`, and `RELEASE` messages separately (for a total of $3(N-1)$ messages), Ricart-Agrawala merges and reduces message exchange by leveraging dynamic responses called `REPLYs`.
 
+Each process maintains the following information about its state:
+- **`State`**: The current state of the process, which can be:
+- `NCS` (Non Critical Section): The process is not interested in the resource (initial state).
+- `Requesting`: The process is requesting entry into the Critical Section.
+- `CS`: The process is currently within the Critical Section.
+- **`num`**: The local logical clock counter (scalar).
+- **`Last_Req`**: The timestamp of the last request sent by the process.
+- **`#replies`**: A counter that tracks permissions (`REPLY`) received from other nodes (initially 0).
+- **`Q`**: A queue of pending requests (requests received from others that have been decided not to respond to yet).
