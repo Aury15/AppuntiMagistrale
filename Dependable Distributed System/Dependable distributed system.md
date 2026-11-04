@@ -429,4 +429,5 @@ $e^1_2 || e^1_3$ but respective timestamps have different values
 #### Vector clock 
 *Vector Clock* for a set of N processes is composed by an array of N integer counters.
 Each process $p_i$ maintains a Vector Clock $V_i$ and timestamps events by mean of its Vector Clock. Similarly to scalar clock, Vector Clock is attached to message $m$, but in this case the timestamp will be an integer vector. Vector Clock allows nodes to order events in happens-before just looking at their timestamps:
-		-  
+		- <u>Scalar clocks</u>: $e \rightarrow e' \implies L(e) < L(e')$ 
+		- Vector clocks: $e \rightarrow e' \iff L(e) < L(e')$ 
