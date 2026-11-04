@@ -499,3 +499,8 @@ _Why is this rule necessary?_ Because the arrival of an ACK from another node gu
 - Sends a `RELEASE` message to all other processes.
 - Removes its request from its local $Q$ queue.
 - When other processes receive the `RELEASE` message from $p_i$, they also remove $p_i$'s request from their local $Q$ queues. This refreshes the queues and frees the resource for the next process in the queue.
+
+*PICTURES OF THE EXAMPLE*
+
+###### Properties of the algorithm
+1. 
