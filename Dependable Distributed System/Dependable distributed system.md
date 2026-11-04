@@ -806,7 +806,7 @@ Let's place processes in the matrix and compute $V_i$
 ## Failure Detection and Leader Election
 
 #### Failure detection
-A **Failure Detector** is an oracle providing information about the failure state of a process. failure detector is generally described by two properties: 
+A **Failure Detector** is an oracle providing information about the failure state of a process. Failure detector is generally described by two properties: 
 - **Accuracy**:  the ability to avoid mistakes in the detection;
 - **Completeness**: informally is ability to detect all failures.
 ![[Dependable distributed system-1793813585115.webp|729]]
@@ -883,3 +883,38 @@ It operates under conditions of **partial synchrony**. Before an unknown time $t
 - _EPFD1 (Strong Completeness)_: Every crashed process is permanently suspected.
 - _EPFD2 (Eventual Strong Accuracy)_: After time $t$, no valid process is suspected.
 To avoid false alarms due to the variability of the asynchronous network, the algorithm adopts an incremental timeout: each time a node is incorrectly suspected of being alive due to a timeout that is too short, the delay value is increased ($\text{delay} = \text{delay} + \Delta$), ensuring convergence to accuracy when the network stabilizes.
+
+$$
+\begin{aligned}
+&\textbf{Algorithm 2.7: } \text{Increasing Timeout} \\
+&\textbf{Implements:} \text{ EventuallyPerfectFailureDetector, instance } \diamond\mathcal{P}. \\
+&\textbf{Uses:} \text{ PerfectPointToPointLinks, instance } pl. \\
+& \\
+&\textbf{upon event } \langle \diamond\mathcal{P}, \text{Init} \rangle \textbf{ do} \\
+&\quad \text{alive} := \Pi; \\
+&\quad \text{suspected} := \emptyset; \\
+&\quad \text{delay} := \Delta; \\
+&\quad \text{starttimer}(\text{delay}); \\
+& \\
+&\textbf{upon event } \langle \text{Timeout} \rangle \textbf{ do} \\
+&\quad \textbf{if } \text{alive} \cap \text{suspected} \neq \emptyset \text{ then} \\
+&\quad \quad \text{delay} := \text{delay} + \Delta; \\
+&\quad \textbf{forall } p \in \Pi \text{ do} \\
+&\quad \quad \textbf{if } (p \notin \text{alive}) \land (p \notin \text{suspected}) \text{ then} \\
+&\quad \quad \quad \text{suspected} := \text{suspected} \cup \{p\}; \\
+&\quad \quad \quad \textbf{trigger } \langle \diamond\mathcal{P}, \text{Suspect} \mid p \rangle; \\
+&\quad \quad \textbf{else if } (p \in \text{alive}) \land (p \in \text{suspected}) \text{ then} \\
+&\quad \quad \quad \text{suspected} := \text{suspected} \setminus \{p\}; \\
+&\quad \quad \quad \textbf{trigger } \langle \diamond\mathcal{P}, \text{Restore} \mid p \rangle; \\
+&\quad \quad \textbf{trigger } \langle pl, \text{Send} \mid p, [\text{HEARTBEATREQUEST}] \rangle; \\
+&\quad \text{delay} := \emptyset; \quad (\text{nota: alive } := \emptyset) \\
+&\quad \text{starttimer}(\text{delay}); \\
+& \\
+&\textbf{upon event } \langle pl, \text{Deliver} \mid q, [\text{HEARTBEATREQUEST}] \rangle \text{ do} \\
+&\quad \textbf{trigger } \langle pl, \text{Send} \mid q, [\text{HEARTBEATREPLY}] \rangle; \\
+& \\
+&\textbf{upon event } \text{pl, Deliver} \mid p, [\text{HEARTBEATREPLY}] \rangle \text{ do} \\
+&\quad \text{alive} := \text{alive} \cup \{p\};
+\end{aligned}
+$$
+
