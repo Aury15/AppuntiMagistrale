@@ -369,3 +369,5 @@ Internet. It synchronizes clients with UTC. NTP employs several security mechani
 1. **Stratum 1** (Primary servers): Connected directly to the primary UTC time sources.
 2. **Stratum 2** (Secondary servers): Synchronized hierarchically with the primary servers.
 3. **Stratum 3** *and above*: Synchronization subnets for end-user computers.
+![[Dependable distributed system-1793783886141.webp]]The NTP hierarchy is reconfigurable in presence of faults: 
+- 
