@@ -426,4 +426,4 @@ $e^1_2 || e^1_3$ but respective timestamps have different values
 ###### Properties and Limitations: 
 - **Guaranteed Property**: If $e \rightarrow e'$, then their timestamp satisfies the inequality $ts_e < ts_{e'}$.
 - **Critical Bound**: The implication is one-way. The converse is not true: if $ts_e < ts_{e'}$, we cannot deduce with certainty that $e \rightarrow e'$. With scalar clocks, it is not possible to determine whether two events are causally related or concurrent ($\vert{}\vert{}\}$).
--
+#### Vector clock 
