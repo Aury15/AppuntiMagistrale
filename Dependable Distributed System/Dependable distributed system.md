@@ -553,3 +553,4 @@ Once it has finished its work in the Critical Section, process $p_i$:
 2. It empties the `Q` queue, returns the state to `NCS`, and resets the `#replies` counter.
 
 *for the example -> DDS lecture5B*
+
