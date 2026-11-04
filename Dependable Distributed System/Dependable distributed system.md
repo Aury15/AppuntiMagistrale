@@ -796,4 +796,5 @@ Let's place processes in the matrix and compute $V_i$
 | 1          | $p_1, p_2, p_3$ |
 | 2          | $p_1, p_2, p_4$ |
 | 3          | $p_1, p_3, p_4$ |
-| 4          |                 |
+| 4          | $p_2, p_3, p_4$ |
+![[Dependable distributed system-1793812092141.webp]]
