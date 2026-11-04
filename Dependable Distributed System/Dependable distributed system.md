@@ -879,4 +879,7 @@ This algorithm implements a **Perfect Failure Detector** ($\mathcal{P}$) using p
   - When a process receives a `HEARTBEATREPLY` from $p$, it adds $p$ back to the `alive` set (`alive := alive ∪ {p}`), confirming that $p$ is still operational.
 
 #### Eventually perfect failure detectors 
-Opera in condizioni di **parziale sincronia**. Prima di un tempo $t$ sconosciuto, il sistema si comporta come asincrono (il rivelatore può commettere errori e sospettare ingiustamente nodi vivi). Dopo il tempo $t$, il sistema diventa sincrono e i sospetti diventano accurati.
+It operates under conditions of **partial synchrony**. Before an unknown time $t$, the system behaves asynchronously (the detector can make errors and incorrectly suspect live nodes). After time $t$, the system becomes synchronous and the suspicions become accurate.
+- _EPFD1 (Strong Completeness)_: Every crashed process is permanently suspected.
+- _EPFD2 (Eventual Strong Accuracy)_: After time $t$, no valid process is suspected.
+To avoid false alarms due to the variability of the asynchronous network, the algorithm adopts an incremental timeout: each time a node is incorrectly suspected of being alive due to a timeout that is too short, the delay value is increased ($\text{delay} = \text{delay} + \Delta$), ensuring convergence to accuracy when the network stabilizes.
