@@ -638,5 +638,5 @@ This is the code executed exclusively by the process elected as coordinator, whi
 	- `if current_in_CS = j`: Verifies that the process that was using the resource is actually releasing it.
 	- `current_in_CS = ⊥`: Frees the resource by setting it to $\bot$. (This immediately unlocks the `when` lock described above, allowing the coordinator to serve the next process in the queue.)
 
-
-
+Example:
+![[Dependable distributed system-1793808718071.webp]]
