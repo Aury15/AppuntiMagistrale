@@ -331,7 +331,7 @@ Software clocks have to be **monotone** $t > t' \rightarrow C(t') > C(t)$. The m
 ◦ *arbitrary failure* : clock behaves arbitrarily (e.g. Y2K bug: the day after the 31/1/1999
 becomes 1/1/1900 rather than 1/1/2000)
 
-#### Synchronization algorithm
+#### Synchronization algorithm based on time server
 
 ##### Christian's algorithm (external synchronization)
 
