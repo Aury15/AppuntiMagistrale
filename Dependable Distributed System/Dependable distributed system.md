@@ -389,6 +389,8 @@ Synchronizing physical clocks in distributed systems is complex, and accuracy de
 ![[Remark]]
 
 Formal definition ($e \rightarrow e'$): Two events $e$ and $e'$ are related by the happened-before relation if one of the following conditions is true:
-1. **Same process**: $e$ and $e'$ occur in the same process $p_i$ and $e$ precedes $e'$ in time.
-2. **Communication**: $e$ corresponds to the sending of a message ($\text{send}(m)$) by one process and $e'$ corresponds to the reception/delivery of the same message ($\text{deliver}(m)$) by another process ($\text{send}(m) \rightarrow \text{deliver}(m)$). 
+1. **Same process**: $\exists p_i | e \rightarrow_i e'$  
+	- $e$ and $e'$ occur in the same process $p_i$ and $e$ precedes $e'$ in time.
+2. **Communication**: $\exists m | e =(send)$
+	- $e$ corresponds to the sending of a message ($\text{send}(m)$) by one process and $e'$ corresponds to the reception/delivery of the same message ($\text{deliver}(m)$) by another process ($\text{send}(m) \rightarrow \text{deliver}(m)$). 
 3. **Transitivity**: There exists an intermediate event $e''$ such that $e \rightarrow e''$ and $e'' \rightarrow e'$.
