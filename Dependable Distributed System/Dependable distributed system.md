@@ -402,8 +402,10 @@ Formal definition ($e \rightarrow e'$): Two events $e$ and $e'$ are related by t
 	2. $e_j \rightarrow e_i$;
 	3. $e_i \vert{}\vert{} e_j$.
 ![[Dependable distributed system-1793785445872.webp]]
-#### Scalar logical clock
+#### Logical clock and scalar logical clock
 The Logical Clock, introduced by Lamport, is a software counter that monotonically
 increases its value. A logical clock $L_i$ can be used to timestamp events: 
-$ts_e = L_i(e)$ is the “logical” timestamp assigned by a process $p_i$ to events e using its current logical clock.
+$ts_e = L_i(e)$ is the “logical” timestamp assigned by a process $p_i$ to events e using its current logical clock with a property: if $e \rightarrow e' \text{ then } ts_e < ts_{e'}$ .
+Implementation Rules: Each process $p_i$ initializes its local clock to zero ($L_i = 0$). The process increments $L_i$ by $1$ each time it generates a local event (send or receive). Sending: When $p_i$ sends a message $m$, it appends the current timestamp value $ts = L_i$. Receiving: When $p_i$ receives a message with a timestamp $ts$, it updates its clock by calculating the maximum and incrementing it: $L_i = \max(ts, L_i) + 1$ (before generating the receive event).
+
 
