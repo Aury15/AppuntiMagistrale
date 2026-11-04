@@ -422,3 +422,5 @@ $e_i^j$ is $j-th$ event of process $p_i$, $L_i$ is the logical clock of $p_i$.
 $e_1^1 → e^2_1$ and timestamps reflect this property
 $e^1_1 || e^1_3$ and respective timestamps have the same value
 $e^1_2 || e^1_3$ but respective timestamps have different values
+
+Properties and Limitations: Guaranteed Property: If $e \rightarrow e'$, then their timestamp satisfies the inequality $ts_e < ts_{e'}$. Critical Bound: The implication is one-way. The converse is not true: if $ts_e < ts_{e'}$, we cannot deduce with certainty that $e \rightarrow e'$. With scalar clocks, it is not possible to determine whether two events are causally related or concurrent ($\vert{}\vert{}\}$).
