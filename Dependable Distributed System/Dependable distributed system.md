@@ -807,5 +807,6 @@ Let's place processes in the matrix and compute $V_i$
 
 #### Failure detection
 A **Failure Detector** is an oracle providing information about the failure state of a process. failure detector is generally described by two properties: 
-- **Accuracy**:  the ability to avoid mistakes in the detection
+- **Accuracy**:  the ability to avoid mistakes in the detection;
 - **Completeness**: informally is ability to detect all failures.
+![[Dependable distributed system-1793813585115.webp|729]]
