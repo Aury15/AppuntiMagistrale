@@ -461,5 +461,10 @@ Lets us consider a set of processes $\Pi ={p_1, ..., p_n}$ and a set of resource
 ![[Dependable distributed system-1793788795390.webp|603]]
 Processes need to access resources exclusively and we need to design a distributed
 abstraction that allows them to coordinate to get access to resources.
+###### Events
+
+
 ###### Properties 
-- **Mutual exclusion:** at any time $t$, at most 
+- **Mutual exclusion:** at any time $t$, at most one process $p$ is running the critical section;
+- **No-deadlock:** there always exists a process $p$ able to enter the critical section;
+- **No-starvation:** every `request()` and `release()` operation eventually terminate. 
