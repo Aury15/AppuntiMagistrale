@@ -365,7 +365,7 @@ becomes 1/1/1900 rather than 1/1/2000)
 #### Network time protocol (NTP)
 NTP is a standard de facto for **external clock synchronization** of distributed system on
 Internet. It synchronizes clients with UTC. NTP employs several security mechanisms (e.g. mechanisms for authentication of time references) usually they are not required in a local area network. Based on a remote reading procedure like Christian’s Algorithm, NTP specification adds to the basic algorithm mechanisms for clustering, filtering and evaluating data quality in order to minimize the synchronization. 
-==Stratum Hierarchy==: 
+<mark style="background:#fff88f">Stratum Hierarchy:</mark> 
 1. **Stratum 1** (Primary servers): Connected directly to the primary UTC time sources.
 2. **Stratum 2** (Secondary servers): Synchronized hierarchically with the primary servers.
 3. **Stratum 3** *and above*: Synchronization subnets for end-user computers.
