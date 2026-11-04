@@ -810,3 +810,17 @@ A **Failure Detector** is an oracle providing information about the failure stat
 - **Accuracy**:  the ability to avoid mistakes in the detection;
 - **Completeness**: informally is ability to detect all failures.
 ![[Dependable distributed system-1793813585115.webp|729]]
+
+###### Failure detectors classification
+Combinando i diversi livelli di Accuratezza e Completezza, i rivelatori si suddividono in classi:
+
+- **Completezza**:
+    - _Strong (Forte)_: Prima o poi, ogni processo che va in crash viene permanentemente sospettato da _tutti_ i processi corretti.
+    - _Weak (Debole)_: Prima o poi, ogni processo in crash viene permanentemente sospettato da _almeno un_ processo corretto.
+        
+- **Accuratezza**:
+    - _Strong (Forte)_: I processi corretti **non** vengono mai sospettati.
+    - _Weak (Debole)_: Esiste almeno un processo corretto che non viene mai sospettato.
+        
+- **Accuratezza Eventuale ($\diamond$)**: L'accuratezza non è richiesta fin da subito, ma vale "dopo un certo tempo" (_eventually_):
+    - _Eventual Strong Accuracy ($\diamond S$)_: Esiste un tempo dopo il quale nessun processo corretto viene sospettato da un altro processo corretto.
