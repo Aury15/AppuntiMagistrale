@@ -640,4 +640,4 @@ This is the code executed exclusively by the process elected as coordinator, whi
 
 Example:
 ![[Dependable distributed system-1793808718071.webp]]![[Dependable distributed system-1793808775063.webp]]![[Dependable distributed system-1793808865597.webp]]![[Dependable distributed system-1793808953323.webp]]
-![[Dependable distributed system-1793808718071.webp]]![[Dependable distributed system-1793808775063.webp]]![[Dependable distributed system-1793808865597.webp]]![[Dependable distributed system-1793808953323.webp]]![[Dependable distributed system-1793809271982.webp]]![[Dependable distributed system-1793809208552.webp]]
+![[Dependable distributed system-1793808718071.webp]]![[Dependable distributed system-1793808775063.webp]]![[Dependable distributed system-1793808865597.webp]]![[Dependable distributed system-1793808953323.webp]]![[Dependable distributed system-1793809271982.webp]]![[Dependable distributed system-1793809208552.webp]]![[Dependable distributed system-1793809357984.webp]]![[Dependable distributed system-1793809409189.webp]]
