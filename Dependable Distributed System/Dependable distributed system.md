@@ -989,3 +989,9 @@ This algorithm implements a **Monarchical Leader Election** mechanism (`le`), wh
 
 #### Eventual leader election $\Omega$
 
+In asynchronous or partially synchronous systems, it is not possible to guarantee a single, error-free leader from the outset. Therefore, the oracle $\Omega$ (_Eventual Leader Detector_) is introduced:
+- _ELD1 (Eventual Accuracy)_: There is a time after which all correct processes place their trust (_trust_) in the same correct process.
+- _ELD2 (Eventual Agreement)_: There is a time after which no two correct processes choose different correct leaders.
+
+**Important note**: $\Omega$ does not guarantee immediate stability; leaders can temporarily change before converging on the final election (_stabilization_).
+**Crash-Recovery Implementation**: When considering systems with crash-recovery failures (nodes can restart), epoch-based algorithms (generation/restart numbers) and fair-loss links are used to make nodes exchange heartbeats associated with the active epoch, ultimately electing the leader with the correct epoch and rank.
