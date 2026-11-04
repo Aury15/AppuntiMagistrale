@@ -402,3 +402,6 @@ Formal definition ($e \rightarrow e'$): Two events $e$ and $e'$ are related by t
 	2. $e_j \rightarrow e_i$;
 	3. $e_i \vert{}\vert{} e_j$.
 ![[Dependable distributed system-1793785445872.webp]]
+#### Scalar logical clock
+The Logical Clock, introduced by Lamport, is a software counter that monotonically
+increases its value. 
