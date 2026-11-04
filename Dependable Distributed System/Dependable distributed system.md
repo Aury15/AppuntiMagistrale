@@ -507,7 +507,10 @@ Supponiamo per assurdo che sia $p_i$ che $p_j$ riescano a entrare nella Sezione 
 Per le regole dell'algoritmo di Lamport, affinché un processo possa entrare nella CS, devono essere vere contemporaneamente due cose:
 - Il processo deve aver ricevuto un `ACK` da _tutti_ gli altri nodi del sistema.
 - La sua richiesta deve avere il **timestamp più piccolo** in assoluto all'interno della coda locale ($Q$)
-
+Se ipotizziamo che $p_i$ abbia inviato una richiesta con un timestamp $t_i$ e $p_j$ con un timestamp $t_j$:
+- Uno dei due deve avere per forza il timestamp temporalmente più piccolo dell'altro (supponiamo $t_i < t_j$).
+- Poiché i timestamp logici creano un **ordine totale** (grazie ai contatori scalari e agli ID dei processi in caso di parità), le code di tutti i nodi rifletteranno esattamente lo stesso ordine di priorità.
+- Di conseguenza, $p_j$ non potrà mai considerare il proprio timestamp $t_j$ come "il più piccolo" se in coda c'è quello di $p_i$ ($t_i$) che è arrivato prima, oppure $p_j$ non avrà ancora ricevuto l'ACK da tutti i nodi perché bloccato dalla priorità di $p_i$.
 ###### Properties of the algorithm
 - **Fairness (Absence of Starvation):** Requests are fulfilled strictly in the chronological order established by logical timestamps (_happened-before_ relationship). First come, first served.
 - **Fairness (Mutual Exclusion):** Two processes are guaranteed never to enter the CS at the same time, precisely because the combination of ordered timestamps and universal ACKs creates a global and consistent view of the queues on all nodes.
