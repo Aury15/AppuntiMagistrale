@@ -954,3 +954,22 @@ In distributed systems, continuously monitoring the state of all nodes can be cu
 - **LE1 (Eventual Detection)**: Either there are no valid processes, or a valid process is eventually elected as the leader.
 - **LE2 (Accuracy)**: If a process is the leader, all previously elected leaders have certainly failed.
 **Monarchical Implementation ("Monarchical Leader Election")**: Uses a Perfect Failure Detector ($\mathcal{P}$). Each node maintains a list of suspected processes and chooses as the leader the alive process with the highest identifier (or rank) among the unsuspected ones ($\text{maxrank}(\Pi \setminus \text{suspected})$).
+
+$$
+\begin{aligned}
+&\textbf{Algorithm 2.6: } \text{Monarchical Leader Election} \\
+&\textbf{Implements:} \text{ LeaderElection, instance } le. \\
+&\textbf{Uses:} \text{ PerfectFailureDetector, instance } \mathcal{P}. \\
+& \\
+&\textbf{upon event } \langle le, \text{Init} \rangle \textbf{ do} \\
+&\quad \text{suspected} := \emptyset; \\
+&\quad \text{leader} := \bot; \\
+& \\
+&\textbf{upon event } \langle \mathcal{P}, \text{Crash} \mid p \rangle \textbf{ do} \\
+&\quad \text{suspected} := \text{suspected} \cup \{p\}; \\
+& \\
+&\textbf{upon } \text{leader} \neq \text{maxrank}(\Pi \setminus \text{suspected}) \textbf{ do} \\
+&\quad \text{leader} := \text{maxrank}(\Pi \setminus \text{suspected}); \\
+&\quad \textbf{trigger } \langle le, \text{Leader} \mid \text{leader} \rangle;
+\end{aligned}
+$$
