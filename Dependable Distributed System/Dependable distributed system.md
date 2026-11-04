@@ -401,3 +401,4 @@ Formal definition ($e \rightarrow e'$): Two events $e$ and $e'$ are related by t
 	1. $e_i \rightarrow e_j$;
 	2. $e_j \rightarrow e_i$;
 	3. $e_i \vert{}\vert{} e_j$.
+![[Dependable distributed system-1793785445872.webp]]
