@@ -363,8 +363,9 @@ becomes 1/1/1900 rather than 1/1/2000)
 >**Solution**: slow down the clock! Since we can't make the clock "jump" back in time, the only legitimate solution is to slow down the slave's clock speed until the rest of the system "*reach it*". Computers update their software clocks using periodic hardware interrupts (electronic signals repeated at regular intervals, e.g., every millisecond, that tell the operating system to add a "tick" to the time counter). To slow down the clock, the operating system hides (ignores) a certain number of these interrupts. The system calculates how many specific interrupts to skip based on the amount of accumulated delay and the original tick rate. <u>Practical example:</u> If the counter normally ticks 1000 times per second, we decide to ignore some of these signals. This way, for a certain period, time on that machine will run slower than normal, allowing the average time calculated by the master to "catch up" with it without leaping into the past.
 
 #### Network time protocol (NTP)
-The de facto standard for (**external clock sync**) time synchronization on the Internet. it synchronizes clients with UTC. 
-Stratum Hierarchy: 
+NTP is a standard de facto for **external clock synchronization** of distributed system on
+Internet. It synchronizes clients with UTC. NTP employs several security mechanisms (e.g. mechanisms for authentication of time references) usually they are not required in a local area network. Based on a remote reading procedure like Christian’s Algorithm, NTP specification adds to the basic algorithm mechanisms for clustering, filtering and evaluating data quality in order to minimize the synchronization. 
+==Stratum Hierarchy==: 
 1. **Stratum 1** (Primary servers): Connected directly to the primary UTC time sources.
 2. **Stratum 2** (Secondary servers): Synchronized hierarchically with the primary servers.
 3. **Stratum 3** *and above*: Synchronization subnets for end-user computers.
