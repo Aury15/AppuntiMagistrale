@@ -518,3 +518,6 @@ If we assume that $p_i$ sent a request with a timestamp of $t_i$ and $p_j$ with 
 - $N - 1$ `REQUEST` messages sent to all other nodes.
 - $N - 1$ `ACK` response messages.
 - $N - 1$ `RELEASE` messages.
+
+#### Ricart-Agrawala's algorithm
+
