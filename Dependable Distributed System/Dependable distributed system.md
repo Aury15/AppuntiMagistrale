@@ -648,7 +648,7 @@ Example:
 - Scalability issues if traffic increases on the coordinator.
 - **Single Point of Failure (SPOF)**: If the coordinator crashes, the entire mutual exclusion system crashes.
 
-## Token-based Algorithm on Logical Ring
+#### Token-based Algorithm on Logical Ring
 The processes are organized in a logical ring topology (overlay network) using existing point-to-point communication channels. A single special message called a Token continuously circulates along the ring: only those who possess it are authorized to enter the Critical Section.
 
 **How ​​it works**
