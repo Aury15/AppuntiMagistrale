@@ -739,3 +739,47 @@ To ensure mutual exclusion and correct operation, voting sets must adhere to str
 3. All sets have the same size $\vert{}V_i\vert{} = K$ (fair load principle).
 4. Each process $p_j$ belongs to the same number of sets $M$ (fair responsibility principle).
 
+$$
+\begin{aligned}
+&\textbf{Init:} \\
+&\quad \text{state} := \text{released}; \\
+&\quad \text{voted} := \text{false}; \\
+&\quad V_i := \text{get\_voting\_set}(i); \\
+&\quad \text{replies} := \emptyset; \\
+&\quad \text{pending} := \emptyset; \\
+& \\
+&\textbf{upon event } \text{request}() \textbf{ do} \\
+&\quad \text{state} := \text{wanted}; \\
+&\quad \textbf{for each } p_j \in (V_i \setminus \{p_i\}) \textbf{ do} \\
+&\quad \quad \text{trigger } \text{pp2pSend}(\text{REQ}, i) \text{ to } p_j; \\
+& \\
+&\textbf{upon event } \text{pp2pDeliver}(\text{REQ}, j) \textbf{ do} \\
+&\quad \textbf{if } \text{state} = \text{held} \lor \text{voted} = \text{true} \textbf{ then} \\
+&\quad \quad \text{pending} := \text{pending} \cup \{p_j\}; \\
+&\quad \textbf{else} \\
+&\quad \quad \text{trigger } \text{pp2pSend}(\text{ACK}, i) \text{ to } p_j; \\
+&\quad \quad \text{voted} := \text{true}; \\
+& \\
+&\textbf{upon event } \text{pp2pDeliver}(\text{ACK}, j) \textbf{ do} \\
+&\quad \text{replies} := \text{replies} \cup \{p_j\}; \\
+& \\
+&\textbf{when } |\text{replies}| = |V_i| - 1 \textbf{ do} \\
+&\quad \text{state} := \text{held}; \\
+& \\
+&\textbf{upon event } \text{release}() \textbf{ do} \\
+&\quad \text{state} := \text{released}; \\
+&\quad \text{replies} := \emptyset; \\
+&\quad \textbf{for each } p_j \in (V_i \setminus \{p_i\}) \textbf{ do} \\
+&\quad \quad \text{trigger } \text{pp2pSend}(\text{REL}, i) \text{ to } p_j; \\
+& \\
+&\textbf{upon event } \text{pp2pDeliver}(\text{REL}, j) \textbf{ do} \\
+&\quad \textbf{if } |\text{pending}| > 0 \textbf{ then} \\
+&\quad \quad \text{candidate} := \text{select\_next}(\text{pending}); \\
+&\quad \quad \text{pending} := \text{pending} \setminus \{\text{candidate}\}; \\
+&\quad \quad \text{trigger } \text{pp2pSend}(\text{ACK}, i) \text{ to candidate}; \\
+&\quad \quad \text{voted} := \text{true}; \\
+&\quad \textbf{else} \\
+&\quad \quad \text{voted} := \text{false};
+\end{aligned}
+$$
+
