@@ -833,4 +833,6 @@ Combining the different levels of Accuracy and Completeness, detectors are divid
 - **W (Weak Failure Detector)**: Weak completeness + Weak accuracy.
 - The diamond versions ($\diamond P, \diamond S, \diamond Q, \diamond W$) indicate that the accuracy properties hold only partially (typical of partial synchrony).
 
-![[Dependable distributed system-1793813748340.webp]]
+![[Dependable distributed system-1793813898316.webp]]
+###### Perfect failure detector
+They operate in synchronous systems with crash-stop failures.
