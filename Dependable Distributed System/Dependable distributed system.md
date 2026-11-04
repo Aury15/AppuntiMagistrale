@@ -801,4 +801,7 @@ Let's place processes in the matrix and compute $V_i$
 
 >[!Warning] 
 >Maekawa's algorithm is not deadlock-free!
+>If two processes ($p_1$ and $p_4$) simultaneously request the resource and block each other by obtaining partial votes from the common nodes without being able to complete their quorum, the system becomes stuck in a structural deadlock.
+
+## Failure Detection and Leader Election
 
