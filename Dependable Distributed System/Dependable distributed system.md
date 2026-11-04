@@ -352,3 +352,8 @@ becomes 1/1/1900 rather than 1/1/2000)
 ![[Dependable distributed system-1793782696302.webp]]
 ![[Dependable distributed system-1793782931443.webp]]
 - **Accuracy**: the protocol accuracy depends on the maximum round-trip time. The master does not consider clock values associated to RTT grater than the maximum one. 
+- **Fault** **tolerance**:
+	- If the master crashes, another master is elected (in an unknown time);
+	- It is tolerant to arbitrary behavior (eg. slaves that send wrong values);
+	- Master process consider a certain number of clock values and these values do not differ between them over a certain threshold;
+
