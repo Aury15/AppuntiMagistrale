@@ -678,3 +678,12 @@ $$2. A token is created and propagated in the ring during the initialization pha
 & \quad \quad \quad \text{trigger pp2pSend(TOKEN) to next} 
 \end{aligned}
 $$
+![[Dependable distributed system-1793811185758.webp]]$$
+\begin{aligned}
+&\textbf{Init} \\
+&\textbf{state} \text{= idle} \\
+&\textbf{next} = p_{i+1}mod (n) \\
+&\text{if self =} p_0 \\
+& \quad \quad \quad \text{trigger pp2pSend(TOKEN) to next} 
+\end{aligned}
+$$
