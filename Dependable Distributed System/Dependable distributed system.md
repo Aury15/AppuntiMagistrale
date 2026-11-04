@@ -556,4 +556,5 @@ Once it has finished its work in the Critical Section, process $p_i$:
 
 ## Coordinator, Token and Quorum Algorithms for Mutual Exclusion
 
-We keep the same setting as before: a set of processes Π, a single resource, an asynchronous system, correct processes and perfect point-to-point links. After the logical clock-based algorithms, this lecture presents the other three approaches: coordinator-based, token-based and quorum-based.
+We keep the same setting as before: a set of processes $\Pi$, a single resource, an asynchronous system, correct processes and perfect point-to-point links. After the logical clock-based algorithms, this lecture presents the other three approaches: coordinator-based, token-based and quorum-based.
+*Basic idea:* There exist a special process, called coordinator, that collects requests and grant permission to enter into the critical section. 
