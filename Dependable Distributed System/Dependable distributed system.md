@@ -472,3 +472,7 @@ Distributed Mutual Exclusion is a fundamental problem in distributed systems. Im
 - **No-starvation:** every `request()` and `release()` operation eventually terminate. 
 
 ![[Dependable distributed system-1793789585449.webp|566]]
+#### Lamport's algorithm
+ The Lamport Algorithm for Distributed Mutual Exclusion is one of the most important classical methods in distributed systems for regulating access to a shared resource (Critical Section, or CS) using scalar logical timestamps.
+ In questo algoritmo, ogni processo $p_i$ del sistema mantiene due strutture fondamentali:
+ 
