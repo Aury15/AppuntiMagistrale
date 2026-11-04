@@ -835,4 +835,4 @@ Combining the different levels of Accuracy and Completeness, detectors are divid
 
 ![[Dependable distributed system-1793813898316.webp]]
 ###### Perfect failure detector
-They operate in synchronous systems with crash-stop failures.
+They operate in synchronous systems with crash-stop failures. Using its own clock and the bound of the synchrony model, a process can infer if another process is crashed. 
