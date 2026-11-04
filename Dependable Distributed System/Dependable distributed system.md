@@ -356,4 +356,5 @@ becomes 1/1/1900 rather than 1/1/2000)
 	- If the master crashes, another master is elected (in an unknown time);
 	- It is tolerant to arbitrary behavior (eg. slaves that send wrong values);
 	- Master process consider a certain number of clock values and these values do not differ between them over a certain threshold;
-
+>[!Observation] What does slowing down a clock mean? 
+>
