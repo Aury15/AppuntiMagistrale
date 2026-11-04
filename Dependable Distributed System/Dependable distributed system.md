@@ -660,3 +660,4 @@ The processes are organized in a logical ring topology (overlay network) using e
 - If the process receives the token but is _not_ interested in the CS, it simply **immediately** forwards it to the next process in the ring.
 
 ![[Dependable distributed system-1793810509841.webp]]
+![[Dependable distributed system-1793810667840.webp]]
