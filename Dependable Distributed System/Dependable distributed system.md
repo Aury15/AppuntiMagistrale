@@ -375,4 +375,6 @@ Internet. It synchronizes clients with UTC. NTP employs several security mechani
 ###### NTP Synchronizations models
 - **Multicast**: server periodically send its actual time to its leaves in the LAN. Leaves set their time using the received time assuming a certain delay. *It is used in quick LANs but it shows a low accuracy.*
 - **Procedure call**: server replies to request with its actual timestamp (like Christian's algorithm). *High accuracy and it is useful when it is not available hw multicast.*
-- Symmetrical: used to synchronize between pairs of time servers using message
+- **Symmetrical**: used to synchronize between pairs of time servers using messages containing timing information. *Only used in high level of hierarchy*.
+
+#### Time in asynchronous system 
