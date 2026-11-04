@@ -642,8 +642,11 @@ Example:
 ![[Dependable distributed system-1793809731647.webp]]![[Dependable distributed system-1793809735721.webp]]![[Dependable distributed system-1793809737748.webp]]![[Dependable distributed system-1793809741189.webp]]![[Dependable distributed system-1793809747758.webp]]![[Dependable distributed system-1793809783788.webp]]![[Dependable distributed system-1793809798764.webp]]![[Dependable distributed system-1793809811798.webp]]![[Dependable distributed system-1793809819636.webp]]
 
 ###### Pro/Cons
-- **Performance**: Per entrare nella CS servono esattamente **2 messaggi** (1 `REQ` e 1 `GRANT`), pari a un solo RTT (Round Trip Time). Per rilasciare la risorsa serve **1 messaggio** `REL`.
-- **Pro**: Protocollo estremamente leggero e facile da implementare.
-- **Contro**:
-    - Problemi di scalabilità se il traffico aumenta sul coordinatore.
-    - **Single Point of Failure (SPOF)**: Se il coordinatore va in crash, l'intero sistema di mutua esclusione si blocca.
+- **Performance**: Entering the CS requires exactly **2 messages** (1 `REQ` and 1 `GRANT`), equivalent to a single RTT (Round Trip Time). Releasing the resource requires **1 **REL` message.
+- **Pros**: Extremely lightweight and easy to implement protocol.
+- **Cons**:
+- Scalability issues if traffic increases on the coordinator.
+- **Single Point of Failure (SPOF)**: If the coordinator crashes, the entire mutual exclusion system crashes.
+
+#### Token-based Algorithm on Logical Ring
+
