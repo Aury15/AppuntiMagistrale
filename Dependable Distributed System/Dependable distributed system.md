@@ -941,15 +941,10 @@ This is the core mechanism that makes the algorithm adaptive:
 ###### Correctness 
  1. **Strong Completeness**
 	- **What this means:** _"If a process crashes, it stops sending messages. Consequently, the process will be suspected by every healthy process, and no process will change its mind again."
-
 	- **Explanation:** This property is **always true** from the beginning (it doesn't need the word "eventually"). If a node truly dies, it will no longer respond to heartbeat checks, so sooner or later all healthy nodes will notice its absence and permanently add it to the suspect list.
 
-### 2. Eventual Strong Accuracy
-
-- **What this means:** _"After time $T$, the system becomes synchronous (i.e., messages between healthy processes arrive within a guaranteed maximum time). If $p$ was suspected in error by $q$, then $q$ will revise its suspicion."
-
-- **Why is it "eventual"?** This is where the temporal aspect of $\diamond \mathcal{P}$ comes into play.
-
-- _Before time $T$_ (when the network is asynchronous and unpredictable), the system can make mistakes: a live node can be mistakenly suspected simply because the network delayed a message or because the timeout was set too short.
-
-- _After time $T$, the magic of **eventually** comes true_: the network stabilizes and becomes synchronous. Messages travel within a certain time limit. If $q had wrongly suspected a live node $p$, as soon as it receives a real message from $p$, it will realize its error and **revise its suspicion**.
+ 2. **Eventual Strong Accuracy**
+	- **What this means:** _"After time $T$, the system becomes synchronous (i.e., messages between healthy processes arrive within a guaranteed maximum time). If $p$ was suspected in error by $q$, then $q$ will revise its suspicion."
+	- **Why is it "eventual"?** This is where the temporal aspect of $\diamond \mathcal{P}$ comes into play.
+		- _Before time $T$_ (when the network is asynchronous and unpredictable), the system can make mistakes: a live node can be mistakenly suspected simply because the network delayed a message or because the timeout was set too short.
+		- _After time $T$, the magic of **eventually** comes true_: the network stabilizes and becomes synchronous. Messages travel within a certain time limit. If $q had wrongly suspected a live node $p$, as soon as it receives a real message from $p$, it will realize its error and **revise its suspicion**.
