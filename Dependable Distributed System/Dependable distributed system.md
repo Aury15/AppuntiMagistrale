@@ -836,3 +836,5 @@ Combining the different levels of Accuracy and Completeness, detectors are divid
 ![[Dependable distributed system-1793813898316.webp]]
 ###### Perfect failure detector
 They operate in synchronous systems with crash-stop failures. Using its own clock and the bound of the synchrony model, a process can infer if another process is crashed. 
+- _PFD1 (Strong Completeness)_: Every process that crashes is permanently detec Ogni processo che fa crash viene permanentemente rilevato da ogni processo corretto.
+- _PFD2 (Strong Accuracy)_: Se un processo $p$ viene rilevato come morto, allora $p$ è effettivamente andato in crash.
