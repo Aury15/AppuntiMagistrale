@@ -699,3 +699,10 @@ $$
 $$
 
 **So we obtain**
+
+
+
+
+- **Svantaggio principale**: Il token continua a girare incessantemente consumando risorse di rete e banda anche quando nessun processo è interessato ad accedere alla CS.
+- **Latenza**: Il tempo di attesa (ritardo) varia da 0 (il token arriva subito) fino a $N$ messaggi nel caso in cui il token sia appena passato e debba fare l'intero giro dell'anello prima di tornare disponibile.
+#### Quorum-based Algorithm – Maekawa’s voting algorithm
