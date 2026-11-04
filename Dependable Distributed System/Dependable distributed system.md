@@ -562,6 +562,22 @@ We keep the same setting as before: a set of processes $\Pi$, a single resource,
 ###### Process code
 $\begin{aligned} &\textbf{Init:} \\ &\quad \text{state} := \text{idle}; \\ &\quad \text{coordinator} := \text{getCoordinatorId()}; \\ & \\ &\textbf{upon event } \text{request}() \textbf{ do} \\ &\quad \text{state} := \text{waiting}; \\ &\quad \text{trigger } \text{pp2pSend}(\text{REQ}, i) \text{ to coordinator}; \\ & \\ &\textbf{upon event } \text{pp2pDeliver}(\text{GRANT\_CS}) \textbf{ do} \\ &\quad \text{state} := \text{CS}; \\ &\quad \text{trigger } \text{ok}(); \\ & \\ &\textbf{upon event } \text{release}() \textbf{ do} \\ &\quad \text{state} := \text{idle}; \\ &\quad \text{trigger } \text{pp2pSend}(\text{REL}, i) \text{ to coordinator}; \end{aligned}$
 
+Questo è lo pseudo-codice che gira su ogni processo generico $p_i$ che ha bisogno di accedere a una risorsa condivisa (Sezione Critica).
+- **`Init` (Inizializzazione):**
+    - `state = idle`: All'inizio, il processo è in uno stato "inattivo" (non ha bisogno della risorsa).
+    - `coordinator = getCoordinatorId()`: Il processo individua e memorizza l'identificativo del nodo che funge da coordinatore nel sistema.
+
+- **`upon event request()` (Quando l'applicazione richiede la risorsa):**
+    - `state = waiting`: Il processo cambia il suo stato in "in attesa".
+    - `trigger pp2pSend(REQ, i) to coordinator`: Invia un messaggio point-to-point di richiesta `REQ` (contenente il proprio ID $i$) al coordinatore.
+
+- **`upon event pp2pDeliver(GRANT_CS)` (Quando arriva il permesso dal coordinatore):**
+    - `state = CS`: Il processo entra nello stato di Sezione Critica (può usare la risorsa).
+    - `trigger ok()`: Notifica all'applicazione locale che ora è sicuri procedere.
+
+- **`upon event release()` (Quando l'applicazione ha finito di usare la risorsa):**
+    - `state = idle`: Il processo ritorna allo stato inattivo.
+    - `trigger pp2pSend(REL, i) to coordinator`: Invia un messaggio di rilascio `REL` al coordinatore per avvisarlo che ha liberato la risorsa.
 ###### Coordinator code
 $$
 \begin{aligned}
