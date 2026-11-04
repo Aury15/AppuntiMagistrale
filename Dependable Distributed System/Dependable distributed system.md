@@ -345,7 +345,7 @@ becomes 1/1/1900 rather than 1/1/2000)
 - **Structure**: Master-slave architecture. 
 - **Algorithm steps**: 
 	1. The master $p_m$ periodically polls the slaves, sending its own timestamp $t_1$ and receiving the nodes' local timestamps $t_2$ in return. 
-	2. The master calculates the differences $\Delta$ between its own clock and that of each process. 
+	2. The master calculates the differences $\Delta$ ($\Delta = \frac{(t_1 + t_3)}{2 - t_2}$ where $t_3$ is the local clock when the master ) between its own clock and that of each process. 
 	3. The master discards the values ​​of faulty processes (whose difference exceeds a threshold $\gamma$). 
 	4. It calculates the average of the valid values ​​and sends each process the algebraic correction to apply.
 - **Slowdown management**: To avoid jumping back in time (violating causality and monotonicity), excess clocks are not set to a past value, but are slowed down by temporarily hiding hardware clock interrupts.
