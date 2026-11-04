@@ -502,6 +502,12 @@ _Why is this rule necessary?_ Because the arrival of an ACK from another node gu
 
 *PICTURES OF THE EXAMPLE*
 
+###### Safety proof
+Supponiamo per assurdo che sia $p_i$ che $p_j$ riescano a entrare nella Sezione Critica.
+Per le regole dell'algoritmo di Lamport, affinché un processo possa entrare nella CS, devono essere vere contemporaneamente due cose:
+- Il processo deve aver ricevuto un `ACK` da _tutti_ gli altri nodi del sistema.
+- La sua richiesta deve avere il **timestamp più piccolo** in assoluto all'interno della coda locale ($Q$)
+
 ###### Properties of the algorithm
 - **Fairness (Absence of Starvation):** Requests are fulfilled strictly in the chronological order established by logical timestamps (_happened-before_ relationship). First come, first served.
 - **Fairness (Mutual Exclusion):** Two processes are guaranteed never to enter the CS at the same time, precisely because the combination of ordered timestamps and universal ACKs creates a global and consistent view of the queues on all nodes.
