@@ -414,6 +414,10 @@ $ts_e = L_i(e)$ is the “logical” timestamp assigned by a process $p_i$ to ev
 
 <mark style="background:#affad1">Example: </mark>![[Dependable distributed system-1793786065529.webp]]
 $e_i^j$ is $j-th$ event of process $p_i$, $L_i$ is the logical clock of $p_i$. 
+- **System Overview:** The diagram illustrates Lamport's Logical Clocks in a distributed system consisting of three processes ($p_1$, $p_2$, and $p_3$).
+- **Initial State:** All processes start with their logical clocks set to zero ($L_1 = 0$, $L_2 = 0$, $L_3 = 0$).
+- **Local Events & Internal Increments:** As time progresses locally within each process, events occur and local counters increment sequentially (e.g., $L_3$ goes from $1$ to $4$).
+- **Message Passing & Synchronization (Blue Arrows):** When a message is sent from one process to another, it carries the sender's current timestamp. Upon reception, the receiving process updates its own clock by taking the maximum between its current local clock and the incoming timestamp, then adding $1$ ($\max(\text{local}, \text{msg}) + 1$).
 
 $e_1^1 → e^2_1$ and timestamps reflect this property
 $e^1_1 || e^1_3$ and respective timestamps have the same value
