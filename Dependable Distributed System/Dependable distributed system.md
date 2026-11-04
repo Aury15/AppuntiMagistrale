@@ -462,8 +462,9 @@ Lets us consider a set of processes $\Pi ={p_1, ..., p_n}$ and a set of resource
 Processes need to access resources exclusively and we need to design a distributed
 abstraction that allows them to coordinate to get access to resources.
 ###### Events
-
-
+- `request()`: it issues a request to enter into the critical section;
+- `ok()`: it notifies the process that it can now access the critical section;
+- `release()`: it is invoked to leave the critical section and to allow someone else to enter.
 ###### Properties 
 - **Mutual exclusion:** at any time $t$, at most one process $p$ is running the critical section;
 - **No-deadlock:** there always exists a process $p$ able to enter the critical section;
