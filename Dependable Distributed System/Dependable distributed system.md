@@ -385,9 +385,13 @@ In an asynchronous distributed system, global **physical time is not directly ob
 Synchronizing physical clocks in distributed systems is complex, and accuracy depends heavily on estimating network communication delays, which are often difficult to calculate precisely. <mark style="background:#fff88f">The key insight</mark>: In many distributed applications, it is not essential to know the exact time an event occurred, but it is essential to determine with certainty the order in which events occurred. **Goal**: Find a reliable way to order events without having to rely on physical clock synchronization.
 
 #### Happened-before relation
-- [ ] Remark: 
-- [ ] We note with →i the ordering relation between events in a process pi
-- [ ] We note with → the happened-before between any pair of events
+
+![[<u>Remark</u>: 
+- We note with →i the ordering relation between events in a process pi
+- We note with → the happened-before between any pair of events]]
+
+![[]]
+
 Formal definition ($e \rightarrow e'$): Two events $e$ and $e'$ are related by the happened-before relation if one of the following conditions is true:
 1. **Same process**: $e$ and $e'$ occur in the same process $p_i$ and $e$ precedes $e'$ in time.
 2. **Communication**: $e$ corresponds to the sending of a message ($\text{send}(m)$) by one process and $e'$ corresponds to the reception/delivery of the same message ($\text{deliver}(m)$) by another process ($\text{send}(m) \rightarrow \text{deliver}(m)$). 
