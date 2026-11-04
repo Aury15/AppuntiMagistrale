@@ -457,4 +457,5 @@ Differently from Scalar Clock, Vector Clock allows to determine if two events ar
 
 #### Distributed mutual exclusion
 
+Lets us consider a set of processes $\Pi ={p_1, ...,}$
 ![[Dependable distributed system-1793788795390.webp|603]]
