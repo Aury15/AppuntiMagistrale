@@ -975,9 +975,9 @@ $$
 $$
 This algorithm implements a **Monarchical Leader Election** mechanism (`le`), which elects a unique leader among a set of processes $\Pi$ using a Perfect Failure Detector ($\mathcal{P}$). The core idea is that processes are ranked (e.g., by their identifier or priority), and the correct process with the highest rank is always chosen as the leader.
  1. **Initialization** (`Init`)
-- `suspected := \emptyset`: Initially, no processes are suspected of having crashed.
-- `leader := \bot`: The leader variable is undefined ($\bot$) at startup.
- 2. **Handling Process Crashes** (`\mathcal{P}, Crash \mid p`)
+- `suspected` $:= \emptyset$: Initially, no processes are suspected of having crashed.
+- `leader` $:= \bot$: The leader variable is undefined ($\bot$) at startup.
+ 1. **Handling Process Crashes** ($\mathcal{P}$, Crash $\mid p$)
 - When the underlying Perfect Failure Detector ($\mathcal{P}$) detects that a process $p$ has crashed, it triggers an event.
 - The algorithm catches this event and adds $p$ to the `suspected` set (`suspected := suspected \cup \{p\}`).
  3. **Continuous Guard** (`leader \neq maxrank(\Pi \setminus suspected)`)
