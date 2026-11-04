@@ -659,7 +659,7 @@ The processes are organized in a logical ring topology (overlay network) using e
 - When the token arrives, if the process was waiting, it enters the CS (notifying `ok()`). When it is finished (`release()`), it passes the token to the next node (`next`).
 - If the process receives the token but is _not_ interested in the CS, it simply **immediately** forwards it to the next process in the ring.
 
-![[Dependable distributed system-1793810509841.webp]]
+![[Dependable distributed system-1793810509841.webp]]we construct an overlay (i.e., a logical network) as a ring exploiting existing point-to point communication channels ◦ The ring is obtained by: ◦ storing in a local variable the name of the next process in the ring and ◦ allowing the communication only with the next
 ![[Dependable distributed system-1793810667840.webp|681]]$$
 \begin{aligned}
 &\textbf{Init} \\
