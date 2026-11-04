@@ -439,3 +439,5 @@ Each process $p_i$ maintains a Vector Clock $V_i$ and timestamps events by mean 
 - Generating an event: $p_i$ increments its component in the vector: $V_i[i] = V_i[i] + 1$.
 - **Sending**: The message is stamped by attaching the entire vector $ts = V_i$. 
 - **Receiving**: The receiving process updates each component of its vector by maximizing the received vector: $V_i[j] = \max(ts[j], V_i[j])$ for each $j = 1 \dots N$, and then increments its component.
+
+![[Dependable distributed system-1793787749252.webp]]
