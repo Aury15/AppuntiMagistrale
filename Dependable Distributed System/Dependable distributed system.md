@@ -799,5 +799,6 @@ Let's place processes in the matrix and compute $V_i$
 | 4          | $p_2, p_3, p_4$ |
 ![[Dependable distributed system-1793812092141.webp]]
 
->[!Warning]
+>[!Warning] 
+>Maekawa's algorithm is not deadlock-free!
 
