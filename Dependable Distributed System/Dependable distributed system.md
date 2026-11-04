@@ -456,3 +456,5 @@ A Vector Clock $V_i$:
 Differently from Scalar Clock, Vector Clock allows to determine if two events are concurrent or related by a happened-before relation.
 
 #### Distributed mutual exclusion
+
+![[Dependable distributed system-1793788795390.webp|603]]
