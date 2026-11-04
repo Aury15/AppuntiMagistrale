@@ -386,11 +386,7 @@ Synchronizing physical clocks in distributed systems is complex, and accuracy de
 
 #### Happened-before relation
 
-![[<u>Remark</u>: 
-- We note with →i the ordering relation between events in a process pi
-- We note with → the happened-before between any pair of events]]
-
-![[]]
+![[Remark]]
 
 Formal definition ($e \rightarrow e'$): Two events $e$ and $e'$ are related by the happened-before relation if one of the following conditions is true:
 1. **Same process**: $e$ and $e'$ occur in the same process $p_i$ and $e$ precedes $e'$ in time.
