@@ -930,10 +930,11 @@ This algorithm implements an **Eventually Perfect Failure Detector ($\diamond\ma
 This is the core mechanism that makes the algorithm adaptive:
 - **Checking for past mistakes (`alive \cap suspected \neq \emptyset`)**: If a process that was previously suspected of crashing successfully replies during the current interval (meaning it is actually in the `alive` set), it implies the timeout interval was too short for network conditions. Consequently, **the delay is increased** (`delay := delay + Δ`).
 - **Updating Suspicions (`forall p \in \Pi`)**:
-    - If a process $p$ is neither in `alive` nor already in `suspected`, it is added to the `suspected` set, and a `Suspect` indication is triggered (`trigger < $\diamond\mathcal{P}$, $\text{Suspect} \mid p >$).
-    - If a process was previously suspected but has now responded (meaning it is back in `alive`), it is removed from the `suspected` set, and a `Restore` indication is triggered (`trigger < \diamond\mathcal{P}, \text{Restore} \mid p >`).    
-- **Broadcasting Heartbeats (`HEARTBEATREQUEST`)**: The process sends a new heartbeat request to all nodes, resets the `alive` set to empty (`alive := \emptyset`), and restarts the timer with the updated (or maintained) `delay`.
+    - If a process $p$ is neither in `alive` nor already in `suspected`, it is added to the `suspected` set, and a `Suspect` indication is triggered (`trigger` < $\diamond\mathcal{P}$, $\text{Suspect} \mid p >$).
+    - If a process was previously suspected but has now responded (meaning it is back in `alive`), it is removed from the `suspected` set, and a `Restore` indication is triggered (`trigger`$< \diamond\mathcal{P}, \text{Restore} \mid p >$).    
+- **Broadcasting Heartbeats (`HEARTBEATREQUEST`)**: The process sends a new heartbeat request to all nodes, resets the `alive` set to empty (`alive`$:= \emptyset$), and restarts the timer with the updated (or maintained) `delay`.
 
  2. **Message Delivery** (`Deliver`)
 - When a node receives a `HEARTBEATREQUEST`, it immediately responds with a `HEARTBEATREPLY`.
-- When a monitoring node receives a `HEARTBEATREPLY` from $p$, it adds $p$ back into the `alive` set (`alive := alive \cup \{p\}`).
+- When a monitoring node receives a `HEARTBEATREPLY` from $p$, it adds $p$ back into the `alive` set (`alive` $:= alive \cup \{p\}$).
+
