@@ -382,4 +382,7 @@ In an asynchronous distributed system, global **physical time is not directly ob
 
 
 ## Logical Clocks and Distributed Mutual Exclusion
-Synchronizing physical clocks in distributed systems is complex, and accuracy depends heavily on estimating network communication delays, which are often difficult to calculate precisely. <mark style="background:#fff88f">The key insight</mark>: In many distributed applications, it is not essential to know the exact time an event occurred, but it is essential to determine with certainty the order in which events occurred.
+Synchronizing physical clocks in distributed systems is complex, and accuracy depends heavily on estimating network communication delays, which are often difficult to calculate precisely. <mark style="background:#fff88f">The key insight</mark>: In many distributed applications, it is not essential to know the exact time an event occurred, but it is essential to determine with certainty the order in which events occurred. **Goal**: Find a reliable way to order events without having to rely on physical clock synchronization.
+
+#### Happened-before relation
+Formal definition ($e \rightarrow e'$): Two events $e$ and $e'$ are related by the happened-before relation if one of the following conditions is true: Same process: $e$ and $e'$ occur in the same process $p_i$ and $e$ precedes $e'$ in time. Communication: $e$ corresponds to the sending of a message ($\text{send}(m)$) by one process and $e'$ corresponds to the reception/delivery of the same message ($\text{deliver}(m)$) by another process ($\text{send}(m) \rightarrow \text{deliver}(m)$). Transitivity: There exists an intermediate event $e''$ such that $e \rightarrow e''$ and $e'' \rightarrow e'$.
