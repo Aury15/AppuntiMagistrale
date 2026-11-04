@@ -877,3 +877,4 @@ This algorithm implements a **Perfect Failure Detector** ($\mathcal{P}$) using p
 * **Responding to Heartbeats (`HEARTBEATREQUEST` / `HEARTBEATREPLY`)**: 
   - When a process receives a `HEARTBEATREQUEST`, it immediately replies with a `HEARTBEATREPLY.
   - When a process receives a `HEARTBEATREPLY` from $p$, it adds $p$ back to the `alive` set (`alive := alive ∪ {p}`), confirming that $p$ is still operational.
+
