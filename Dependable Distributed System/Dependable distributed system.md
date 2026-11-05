@@ -1124,9 +1124,8 @@ BEB has three properties:
 - Perfect links;
 - Crash failures.
 ![[Dependable distributed system-1793875251900.webp]]
-BEB_Broadcast(m):
-    for each process p in Π:
-        pp2pSend(p, m)
+The important thing is that BEB doesn't use an inter-process re-transmission mechanism to recover messages that the sender failed to send before a crash. It simply sends the message to everyone via Perfect Links.
 
-upon pp2pDeliver(m):
-    BEB_Deliver(m)
+###### Why BEB is correct?
+
+The validi
