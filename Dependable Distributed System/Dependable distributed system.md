@@ -1135,3 +1135,6 @@ The no-creation assure that it must not be possible to deliver a message that no
 ![[Dependable distributed system-1793876650116.webp]]So we can notice: 
 1. BEB guarantees message delivery as long as the sender doesn't fail. If the sender is correct, it successfully sends the message to all processes, and thanks to Perfect Links, the correct recipients receive it.
 2. If the sender fails, the processes may disagree about whether the message was delivered or not.
+
+#### Reliable broadcast (RB)
+To overcome the BEB limitation we introduce **Reliable Broadcast**. **RB** mantiene le stesse proprietà di BEB, ma aggiunge una proprietà fondamentale: **Agreement**.
