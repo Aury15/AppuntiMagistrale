@@ -985,8 +985,7 @@ This algorithm implements a **Monarchical Leader Election** mechanism (`le`), wh
 - **Selecting the Leader**: It computes `maxrank(...)`, which identifies the process with the highest rank among the currently alive processes.
 - **Updating and Notifying**: If the current `leader` differs from this newly calculated highest-rank process, the variable is updated (`leader := maxrank(...)`), and a notification is broadcasted via the trigger `trigger `$< le, Leader \mid leader >$` to inform the system of the new leader.
 
-**example**
-
+![[Dependable distributed system-1793871318324.webp]]
 #### Eventual leader election $\Omega$
 
 In asynchronous or partially synchronous systems, it is not possible to guarantee a single, error-free leader from the outset. Therefore, the oracle $\Omega$ (_Eventual Leader Detector_) is introduced:
