@@ -1634,7 +1634,10 @@ We have a set of initial value $\in$ {0, 1} and every process has to decide the 
 | ----- | ----- | ----- | ----- | ----- | ----- |
 | 1     | 1     | 1     | 1     | x     | 1     |
 This problem has four properties:
-1. C1: *Termination*, every correct process eventually decides some value;
-2. C2: *Validity*, if a process decides v, then v was proposed by some process;
-3. C3: *Integrity*, no process decides twice;
-4. C4: *Agreement*, no two correct processes decode o
+1. **C1**: *Termination*, every correct process eventually decides some value;
+2. **C2**: *Validity*, if a process decides v, then v was proposed by some process;
+3. **C3**: *Integrity*, no process decides twice;
+4. **C4**: *Agreement*, no two correct processes decide differently.
+
+>[!Important] FLP impossibility result
+>No (deterministic) algorithm can guarantee to reach consensus in an asynchronous sys
