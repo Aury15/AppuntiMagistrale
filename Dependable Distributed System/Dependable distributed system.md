@@ -1237,3 +1237,4 @@ $$
 &\quad \quad \textbf{trigger } \langle beb, \text{Broadcast} \mid [\text{DATA}, s, m] \rangle;
 \end{aligned}
 $$
+###### Performance of Eager RB algorithm
