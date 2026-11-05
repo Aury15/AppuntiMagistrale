@@ -1131,3 +1131,5 @@ The important thing is that BEB doesn't use an inter-process re-transmission mec
 The validity ensure that if a correct process broadcast a message $m$ then all correct process eventually delivery $m$. Why? because the sender process send the message at all the processes using perfect links. If the sender is correct then can complete the delivery to everyone. Furthermore, Perfect Links guarantee delivery to the correct recipients. Therefore, validity derives directly from the reliable delivery of Perfect Links and from the fact that the sender sends the message to every process.
 The no-duplication ensure that a message can be delivered at most one time by the same process. We know that the message have unique identifier so the different messages must be distinguishable.
 The no-creation assure that it must not be possible to deliver a message that no process has ever sent.
+
+![[Dependable distributed system-1793876650116.webp]]
