@@ -1322,3 +1322,8 @@ Agreement requires propagation only if the message was delivered by a correct pr
 URB introduces a stronger property called **Uniform Agreement**: If any process, whether correct or failing, delivers a message $m$, then all correct processes must eventually deliver $m$.
 URB maintains the properties of BEB and RB, but replaces Agreement with Uniform Agreement.
 
+>[!important] Difference between RB and URB
+RB considers delivery made by a correct process. URB considers delivery made by any process, correct or faulty. For this reason, Uniform Agreement is a stronger property than Agreement.
+
+
+![[Dependable distributed system 1-1793891442619.webp|696]]![[Dependable distributed system 1-1793891478751.webp]]
