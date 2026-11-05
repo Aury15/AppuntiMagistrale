@@ -1422,3 +1422,8 @@ the majority requires at least three correct processes. Therefore:
 ![[Dependable distributed system 1-1793892399517.webp|601]]
 
 A majority allows for a large enough set of correct processes to ensure that the confirmations collected don't come exclusively from processes destined to fail. The idea is to use a quorum, i.e., a minimum number of processes that must confirm receipt of the message.
+
+| Implementation | Hypothesis               |
+| -------------- | ------------------------ |
+| Sync system    | Perfect Failure Detector |
+| Async system   | Correct processes majori |
