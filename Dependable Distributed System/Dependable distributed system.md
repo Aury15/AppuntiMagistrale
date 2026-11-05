@@ -267,7 +267,13 @@ A characteristic of this model is *amnesia*: a crashed process loses its interna
 **Synchronous systems**: enable timed failure detection, measuring transit delays, time-based coordination, worst-case performance guarantees and synchronised clocks. The major problem is the coverage of the synchrony assumption: it is hard to build a system in which the bounds hold with high probability. 
 **Asynchronous systems**: even without physical clocks, the passage of time can be measured through the transmission and delivery of messages: time is defined with respect to communication. This is *logical time*, and the resulting notion of clock is a logical clock.
 **Partial (eventual) synchrony**: distributed systems are usually synchronous most of the time, with periods of bounded asynchrony. This is captured by eventual synchrony: there is an unknown time t after which the system becomes synchronous. It does not mean that the whole system (hardware, software, network) is synchronous forever after t, nor that the system starts asynchronous and later becomes synchronous. What we need is a period of synchrony long enough for the algorithm to terminate.![[Dependable distributed system-1793621710737.webp|739]]
-## Abstra
+## Abstracting communication
+
+A link represents the network components of the distributed system: every pair of processes is connected by a bidirectional link. The physical topology (fully connected, bus, ring, switched network, ...) may be complex, in which case a routing algorithm realizes the abstraction. Under the crash-failure assumption we consider three links: **fair-loss, stubborn and perfect**.
+The system model is the following: two processes (sender and receiver); messages can be lost and take an unpredictable time to arrive; processes can crash; the time taken by a process to execute an operation is bounded (the bound may be unknown).
+
+
+>Remark Deliver is different from receive. A message is received at a port of the network and stored in a buffer; then an algorithm runs to make sure that the properties of the required link abstraction hold, and only afterwards is the message delivered.
 ## Time in distributed systems
 
 In a distributed system the processes run on different nodes interconnected by mean of a network (LAN, WLAN...). This processes cooperate to complete a computation and communicate only through message-based communications. Many applications require a perfect ordering between events and synchronization to terminate correctly. **So time is a critical factor for distributed system.** 
