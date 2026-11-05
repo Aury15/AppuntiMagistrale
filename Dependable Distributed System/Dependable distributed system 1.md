@@ -1535,13 +1535,9 @@ Each process maintains a set:
 $$  
 delivered := {}  
 $$
-This set stores the messages that the process has already delivered.
-It is used to ensure that a message is delivered only once.
-
-### Gossip Procedure
-
+This set stores the messages that the process has already delivered. It is used to ensure that a message is delivered only once.
+##### Gossip Procedure
 The procedure `gossip(msg)` sends the message to $k$ randomly selected processes.
-
 Conceptually:
 
 ```text
@@ -1549,96 +1545,72 @@ procedure gossip(msg):
     for each t in picktargets(k):
         trigger fl.Send(t, msg)
 ```
-
 The function `picktargets(k)` returns $k$ distinct processes selected randomly, excluding the process itself.
-
-### When a Process Broadcasts a Message
-
+##### When a Process Broadcasts a Message
 When a process invokes:
-
 ```text
 upon pb.Broadcast(m):
 ```
-
 the algorithm performs the following operations:
-
 1. Adds $m$ to the local `delivered` set.
-    
 2. Delivers the message locally by triggering `pb.Deliver(self, m)`.
-    
 3. Starts gossip dissemination by forwarding the message to randomly selected processes.
-    
 
 The message sent through the point-to-point links has the following structure:
-
 ```text
 [GOSSIP, self, m, R]
 ```
-
 Here:
-
 - `GOSSIP` identifies the type of message.
-    
 - `self` identifies the original sender.
-    
 - `m` is the broadcast message.
-    
 - `R` is the initial number of gossip rounds.
-    
-
 The original sender delivers its own message immediately and then starts the dissemination process.
-
-### When a Process Receives a Gossip Message
-
+##### When a Process Receives a Gossip Message
 When a process receives a gossip message:
-
 ```text
 upon fl.Deliver(p, [GOSSIP, s, m, r]):
 ```
-
 it checks whether the message $m$ has already been delivered.
 
 **Case 1: The message has not been delivered yet**
-
 If:
 
 $$  
 m \notin delivered  
 $$
-
 the process:
-
 1. Adds $m$ to its `delivered` set.
-    
 2. Delivers the message by triggering `pb.Deliver(s, m)`.
-    
 3. Checks whether there are still gossip rounds remaining.
-    
 
 If:
-
 $$  
 r > 1  
 $$
-
 the process forwards the message again using:
-
 ```text
 gossip([GOSSIP, s, m, r-1])
 ```
-
 The number of remaining rounds is therefore decreased by one.
 
 **Case 2: The message has already been delivered**
-
 If:
-
 $$  
 m \in delivered  
 $$
-
 the process ignores the message.
+It does not deliver it again and does not forward it again. This prevents duplicate deliveries and avoids unnecessary forwarding.
 
-It does not deliver it again and does not forward it again.
 
-This prevents duplicate deliveries and avoids unnecessary forwarding.
+#### Summary: Probabilistic Broadcast vs. Traditional Reliable Broadcast
+
+|Aspect|Traditional Reliable Broadcast|Probabilistic Broadcast|
+|---|---|---|
+|Delivery guarantee|Deterministic properties|Probabilistic guarantee|
+|Agreement|Guaranteed according to the abstraction|Not deterministically guaranteed|
+|Dissemination|Depends on the reliable broadcast algorithm|Randomized gossip|
+|Acknowledgments|May require significant communication|Does not require acknowledgments from every process|
+|Scalability|Can be affected by communication overhead|Designed to scale in large systems|
+|Main limitation|Communication and coordination costs|A small probability of incomplete dissemination|
+
