@@ -1629,3 +1629,6 @@ We have a set of initial value $\in$ {0, 1} and every process has to decide the 
 | ----- | ----- | ----- | ----- | ----- | ----- |
 | 0     | 1     | 0     | 1     | 0     | 0     |
 **Consensus Values**:
+
+
+
