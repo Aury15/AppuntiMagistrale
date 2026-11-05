@@ -1406,4 +1406,10 @@ When the algorithm starts, the local state is initialized as follows:
         - Adds $m$ to the `delivered` set ($\text{delivered} := \text{delivered} \cup \{m\}$).
         - Triggers the upper-layer delivery event $\langle urb, \text{Deliver} \mid s, m \rangle$.
 
-#### Uniform reliable broadcast (URB) implementation in asynchronous system
+###### Implementation in asynchronous system
+![[Dependable distributed system 1-1793892399517.webp]]
+
+>[!Warning]
+>We need to assume a majority of correct processes.
+
+
