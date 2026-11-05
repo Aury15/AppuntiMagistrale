@@ -1412,20 +1412,13 @@ In an asynchronous system, we can't know for sure whether a process has failed o
 >We need to assume a majority of correct processes.
 Supponiamo che il sistema contenga \(n\) processi.
 
-La maggioranza dei processi è corretta quando:
+The majority of processes is correct when: $\boxed{ \#Correct>\frac{n}{2} }$
+For <mark style="background:#affad1">example</mark>, if we have five processes: $\Pi=\{p_1,p_2,p_3,p_4,p_5\}$
+the majority requires at least three correct processes. Therefore:
+- 5 correct processes: majority respected;
+- 4 correct processes: majority respected;
+- 3 correct processes: majority respected;
+- 2 correct processes: majority not respected.
+![[Dependable distributed system 1-1793892399517.webp|601]]
 
-$[\boxed{ \#Correct>\frac{n}{2} }$]
-
-Per esempio, se abbiamo cinque processi:
-
-$\Pi=\{p_1,p_2,p_3,p_4,p_5\}$
-
-la maggioranza richiede almeno tre processi corretti.Quindi:
-- 5 processi corretti: maggioranza rispettata;
-- 4 processi corretti: maggioranza rispettata;
-- 3 processi corretti: maggioranza rispettata;
-- 2 processi corretti: maggioranza non rispettata.
-
-![[Dependable distributed system 1-1793892399517.webp]]
-
-
+A majority allows for a large enough set of correct processes to ensure that the confirmations collected don't come exclusively from processes destined to fail. The idea is to use a quorum, i.e., a minimum number of processes that must confirm receipt of the message.
