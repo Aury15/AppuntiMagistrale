@@ -1202,92 +1202,14 @@ Its key characteristic is "laziness": instead of eagerly re-broadcasting every m
 - **`beb` (Best-Effort Broadcast)**: A lower-level communication primitive that guarantees message delivery if the sender does not crash, but does not guarantee atomic agreement across all correct processes on its own.
 - **$\mathcal{P}$ (Perfect Failure Detector)**: A failure detector module that outputs permanent crash suspicions (never makes mistakes).
 
-### 1. Initialization
-
-When the initialization event
-
-⟨rb,Init⟩\langle rb, \text{Init} \rangle⟨rb,Init⟩
-
-occurs, the system sets the set of correct processes to all nodes by letting
-
-correct:=Πcorrect := \Picorrect:=Π
-
-, and initializes the message-tracking structure with empty sets for each process by setting
-
-from[p]:=[∅]Nfrom[p] := [\emptyset]^Nfrom[p]:=[∅]N
-
-.
-
-### 2. Initiating a Broadcast
-
-When a process wants to broadcast a message mmm via
-
-⟨rb,Broadcast∣m⟩\langle rb, \text{Broadcast} \mid m \rangle⟨rb,Broadcast∣m⟩
+ 1. **Initialization**: When the initialization event $\langle rb, \text{Init} \rangle$ occurs, the system sets the set of correct processes to all nodes by letting $correct := \Pi$, and initializes the message-tracking structure with empty sets for each process by setting $from[p] := [\emptyset]^N$
+ 2. **Initiating a Broadcast**: When a process wants to broadcast a message $m$ via$\langle rb, \text{Broadcast} \mid m \rangle$
 
 , it triggers a best-effort broadcast by encapsulating the message with its own identifier, activating the event
 
-⟨beb,Broadcast∣[Data,self,m]⟩\langle beb, \text{Broadcast} \mid [\text{Data}, \textit{self}, m] \rangle⟨beb,Broadcast∣[Data,self,m]⟩
+$$\langle beb, \text{Broadcast} \mid [\text{Data}, \textit{self}, m] \rangle$$
 
 . In this way, the message is sent only once without immediately forcing others to repeat it.
-
-### 3. Receiving a Message
-
-When a process receives a message via
-
-⟨beb,Deliver∣p,[Data,s,m]⟩\langle beb, \text{Deliver} \mid p, [\text{Data}, s, m] \rangle⟨beb,Deliver∣p,[Data,s,m]⟩
-
-, it performs a check to see if the message is new by checking the condition
-
-m∉from[s]m \notin from[s]m∈/from[s]
-
-. If the condition is true:
-
-1. The process locally delivers the message by triggering
-    
-    ⟨rb,Deliver∣s,m⟩\langle rb, \text{Deliver} \mid s, m \rangle⟨rb,Deliver∣s,m⟩
-    
-    .
-    
-2. It updates the history by adding the message with
-    
-    from[s]:=from[s]∪{m}from[s] := from[s] \cup \{m\}from[s]:=from[s]∪{m}
-    
-    .
-    
-3. It checks whether the original sender is considered incorrect by checking the condition
-    
-    s∉corrects \notin corrects∈/correct
-    
-    . If the sender turns out to have crashed, the current process takes responsibility for forwarding the message by triggering
-    
-    ⟨beb,Broadcast∣[Data,s,m]⟩\langle beb, \text{Broadcast} \mid [\text{Data}, s, m] \rangle⟨beb,Broadcast∣[Data,s,m]⟩
-    
-    .
-    
-
-### 4. Handling Process Crashes
-
-When the failure detector signals the crash of a process through the event
-
-⟨P,Crash∣p⟩\langle \mathcal{P}, \text{Crash} \mid p \rangle⟨P,Crash∣p⟩
-
-:
-
-1. The process is removed from the set of healthy nodes by updating
-    
-    correct:=correct∖{p}correct := correct \setminus \{p\}correct:=correct∖{p}
-    
-    .
-    
-2. The system loops through all messages previously received from that process by executing
-    
-    ∀m∈from[p]\forall m \in from[p]∀m∈from[p]
-    
-    and re-broadcasting them via
-    
-    ⟨beb,Broadcast∣[Data,p,m]⟩\langle beb, \text{Broadcast} \mid [\text{Data}, p, m] \rangle⟨beb,Broadcast∣[Data,p,m]⟩
-    
-    . This guarantees that if ppp crashed mid-transmission, its pending messages are recovered and propagated to all remaining correct processes.
 
 .![[Dependable distributed system-1793878585352.webp|749]]![[Dependable distributed system-1793878592836.webp|754]]![[Dependable distributed system-1793878600980.webp|761]]
 The idea behind the algorithm is:
