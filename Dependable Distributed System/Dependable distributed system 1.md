@@ -1435,6 +1435,6 @@ A majority allows for a large enough set of correct processes to ensure that the
 
 So far, we've studied algorithms that attempt to guarantee reliability properties. The problem is that these guarantees can be very costly when the process group becomes very large. Probabilistic Broadcast follows a different philosophy: It does not guarantee delivery of every message to every process, but it does attempt to guarantee a very high probability of delivery.
 **Properties**: 
-1. PB1: Probabilistic validity, there is a positive value $\epsilon$ such that when a correct process broadcasts a message $m$, the probability that every correct process eventually delivers $m$
-2. PB2
-3. PB3
+1. PB1: Probabilistic validity, there is a positive value $\epsilon$ such that when a correct process broadcasts a message $m$, the probability that every correct process eventually delivers $m$ is at least $1- \epsilon$ ;
+2. PB2: No duplication, no message is delivered more than once;
+3. PB3: No creation: if a process delivers a message $m$ with sender $s$, then $m$ was previously broadcast by process $s$.
