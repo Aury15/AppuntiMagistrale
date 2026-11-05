@@ -1612,3 +1612,7 @@ A majority allows for a large enough set of correct processes to ensure that the
 
 > [!question]
 > Can we devise a uniform reliable broadcast algorithm for a partially synchronous system (using an eventually perfect failure detector) but without the assumption of a majority of correct processes?
+
+---
+
+## Probabilistic broadcast
