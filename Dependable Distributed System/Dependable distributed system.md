@@ -1029,4 +1029,5 @@ $$
 - This reactive guard continuously monitors the set of currently trusted (non-suspected) processes: $\Pi \setminus \text{suspected}$.
 - **Selecting the New Leader**: It computes `maxrank(...)` to find the process with the highest rank among the active processes.
 - **Updating and Trusting**: If the calculated highest-rank process differs from the current `leader`, the local variable is updated, and a notification is sent out via `trigger < \Omega, Trust \mid leader >` to signal that the process now trusts this new leader.
-**example**
+
+![[Dependable distributed system-1793871932811.webp]]
