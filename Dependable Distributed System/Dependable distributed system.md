@@ -1128,4 +1128,4 @@ The important thing is that BEB doesn't use an inter-process re-transmission mec
 
 ###### Why BEB is correct?
 
-The validi
+The validity ensure that if a correct process broadcast a message $m$ then all correct process eventually delivery 
