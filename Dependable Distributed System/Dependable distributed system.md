@@ -1213,7 +1213,11 @@ Its key characteristic is "laziness": instead of eagerly re-broadcasting every m
 	1. The process is removed from the set of healthy nodes by updating $correct := correct \setminus \{p\}$.
 	2. The system loops through all messages previously received from that process by executing $\forall m \in from[p]$ and re-broadcasting them via $\langle beb, \text{Broadcast} \mid [\text{Data}, p, m] \rangle$. This guarantees that if $p$ crashed mid-transmission, its pending messages are recovered and propagated to all remaining correct processes.
 
-.![[Dependable distributed system-1793878585352.webp|749]]![[Dependable distributed system-1793878592836.webp|754]]![[Dependable distributed system-1793878600980.webp|761]]
+.![[Dependable distributed system-1793878585352.webp|749]]
+
+
+
+![[Dependable distributed system-1793878592836.webp|754]]![[Dependable distributed system-1793878600980.webp|761]]
 The idea behind the algorithm is:
 - Normally, a process does not retransmit messages it receives.
 - However, if it discovers that the original processing of a message has failed, it re-transmits the messages that process had already sent.
