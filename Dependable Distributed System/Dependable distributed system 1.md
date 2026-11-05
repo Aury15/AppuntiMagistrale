@@ -1329,29 +1329,14 @@ RB considers delivery made by a correct process. URB considers delivery made by 
 ![[Dependable distributed system 1-1793891442619.webp|696]]![[Dependable distributed system 1-1793891478751.webp|785]]
 L'obiettivo è verificare quali comportamenti siano ammessi dalle tre astrazioni. Il messaggio giallo rappresenta il messaggio la cui consegna viene analizzata. La slide evidenzia due situazioni:
 1. Prima situazione:
-
-Il messaggio giallo è stato inviato da \(p_1\).
-
-In questo caso, la situazione può rispettare BEB ma non necessariamente RB.
-
-Se \(p_1\) fallisce dopo aver inviato il messaggio soltanto ad alcuni processi, BEB permette che i processi abbiano ricevuto informazioni differenti.
-
-RB, invece, richiede Agreement se un processo corretto ha consegnato il messaggio.
-
-Seconda situazione:
-
-La slide mostra che, se il processo che ha consegnato il messaggio è destinato a fallire, la situazione può rispettare RB ma non URB.
-
-Questo perché RB non impone Agreement quando il messaggio è stato consegnato soltanto da un processo che poi fallisce.
-
-URB, invece, richiede che tutti i processi corretti consegnino il messaggio.
+ Il messaggio giallo è stato inviato da \(p_1\). In questo caso, la situazione può rispettare BEB ma non necessariamente RB. Se \(p_1\) fallisce dopo aver inviato il messaggio soltanto ad alcuni processi, BEB permette che i processi abbiano ricevuto informazioni differenti. RB, invece, richiede Agreement se un processo corretto ha consegnato il messaggio.
+ 
+ 2. Seconda situazione:
+La slide mostra che, se il processo che ha consegnato il messaggio è destinato a fallire, la situazione può rispettare RB ma non URB. Questo perché RB non impone Agreement quando il messaggio è stato consegnato soltanto da un processo che poi fallisce. URB, invece, richiede che tutti i processi corretti consegnino il messaggio.
 
 Il criterio da applicare agli esempi è sempre lo stesso:
-
 - BEB: verifica Validity, No Duplication e No Creation.
-    
 - RB: verifica anche Agreement.
-    
 - URB: verifica Uniform Agreement, che considera anche i processi faulty.
 ###### Implementation in a synchronous system
 $$
