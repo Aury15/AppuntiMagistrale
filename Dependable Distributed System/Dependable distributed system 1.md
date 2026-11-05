@@ -1438,3 +1438,4 @@ So far, we've studied algorithms that attempt to guarantee reliability propertie
 1. PB1: *Probabilistic validity*, there is a positive value $\epsilon$ such that when a correct process broadcasts a message $m$, the probability that every correct process eventually delivers $m$ is at least $1- \epsilon$ ;
 2. PB2: *No duplication*, no message is delivered more than once;
 3. PB3: *No creation*: if a process delivers a message $m$ with sender $s$, then $m$ was previously broadcast by process $s$.
+The system is not completely reliable. Unlike RB and URB, we cannot deterministically guarantee that all correct processes will deliver every message.
