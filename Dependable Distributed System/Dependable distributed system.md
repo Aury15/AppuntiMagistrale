@@ -1220,8 +1220,7 @@ The idea behind the algorithm is:
 Therefore, re-transmission occurs only when necessary. Hence the name Lazy.
 
 ###### Performance of lazy RB algorithm
- Best case
-1 BEB message per one RB message
+- <u>Best case</u>: 1 BEB message per one RB message;
+- <u>Worst case</u>: n-1 BEB message per one RB (this is the case with n-1 failures).
 
- Worst case
-n-1 BEB messages per one RB (this is the case with n-1 failures)
+
