@@ -1132,4 +1132,4 @@ The validity ensure that if a correct process broadcast a message $m$ then all c
 The no-duplication ensure that a message can be delivered at most one time by the same process. We know that the message have unique identifier so the different messages must be distinguishable.
 The no-creation assure that it must not be possible to deliver a message that no process has ever sent.
 
-![[Dependable distributed system-1793876650116.webp]]
+![[Dependable distributed system-1793876650116.webp]]So we can notice
