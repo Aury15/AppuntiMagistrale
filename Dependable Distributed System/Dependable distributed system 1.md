@@ -1309,8 +1309,7 @@ This feature incurs a higher communication cost than Lazy RB when there are no f
 ![[Dependable distributed system-1793890533236.webp|574]]
 #### Uniform reliable broadcast (URB)
 The agreement property only considers processes that don't fail. But what happens if a process delivers a message and then fails? Regular reliable broadcast does not require that all correct processes deliver that message.
-
->[!Example]
+><mark style="background:#affad1"> Example</mark>
 Consider three processes: $[p_1,p_2,p_3$]
 Suppose:
 1. $p_1$ broadcasts $m$.
@@ -1319,3 +1318,5 @@ Suppose:
 4. $p_1$ and $p_3$ have not delivered $m$.
 The Agreement property of RB is not violated! Why? Because the process that delivered the message, $p_2$, failed.
 Agreement requires propagation only if the message was delivered by a correct process. Therefore, other correct processes may never receive that message. But from an application perspective, this can be a problem: one process has already performed an operation that the others are unaware of.
+
+URB introduces a stronger property called **Uniform Agreement**.
