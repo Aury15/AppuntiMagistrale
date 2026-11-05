@@ -1326,4 +1326,4 @@ URB maintains the properties of BEB and RB, but replaces Agreement with Uniform 
 RB considers delivery made by a correct process. URB considers delivery made by any process, correct or faulty. For this reason, Uniform Agreement is a stronger property than Agreement.
 
 
-![[Dependable distributed system 1-1793891442619.webp|696]]![[Dependable distributed system 1-1793891478751.webp]]
+![[Dependable distributed system 1-1793891442619.webp|696]]![[Dependable distributed system 1-1793891478751.webp|785]]
