@@ -1106,4 +1106,4 @@ Let's remember some useful things for this chapter:
 	- *Failure Detector* (FD): component that allows you to suspect that a process has failed.
 	- *Leader Election*: procedure that allows processes to elect a leader.
 
-For a communication broadcast we can immagine a system with three processes: $\Pi = {[p_1, p_2, p_3]}$, if $p_1$ want to send a message $m$ to everyone,  it must make sure that it is received by $p_1, p_2, p_3$. We 
+For a communication broadcast we can immagine a system with three processes: $\Pi = {[p_1, p_2, p_3]}$, if $p_1$ want to send a message $m$ to everyone,  it must make sure that it is received by $p_1, p_2, p_3$. But we can ave no failures and crash failures so we reach the goal 
