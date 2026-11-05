@@ -832,8 +832,7 @@ Combining the different levels of Accuracy and Completeness, detectors are divid
 - **Q (Quasi-perfect Failure Detector)**: Weak completeness + Strong accuracy.
 - **W (Weak Failure Detector)**: Weak completeness + Weak accuracy.
 - The diamond versions ($\diamond P, \diamond S, \diamond Q, \diamond W$) indicate that the accuracy properties hold only partially (typical of partial synchrony).
-
-![[Dependable distributed system-1793813898316.webp]]
+![[Dependable distributed system-1793871629365.webp|607]]
 ###### Perfect failure detector
 They operate in synchronous systems with crash-stop failures. Using its own clock and the bound of the synchrony model, a process can infer if another process is crashed. 
 - _PFD1 (Strong Completeness)_: Every process that crashes is permanently detected by every correct process.
