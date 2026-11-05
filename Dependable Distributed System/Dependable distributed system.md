@@ -1151,3 +1151,5 @@ Why? Because $p_2$ is a correct process and has delivered $m_1$. Consequently, a
 >[!Warning]
 >**BEB** ensures the reliability of communication when the sender is correct. **RB** also ensures agreement between the correct processes on message delivery.
 
+![[Dependable distributed system-1793878442061.webp]]
+
