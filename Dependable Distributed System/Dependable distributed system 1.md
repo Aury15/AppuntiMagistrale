@@ -1432,3 +1432,5 @@ A majority allows for a large enough set of correct processes to ensure that the
 >Can we devise a uniform reliable broadcast algorithm for a partially synchronous system (using an eventually perfect failure detector) but without the assumption of a majority of correct processes?
 
 ## Probabilistic broadcast
+
+So far, we've studied algorithms that attempt to guarantee reliability properties. The problem is that these guarantees can be very costly when the process group becomes very large. Probabilistic Broadcast follows a different philosophy: It does not guarantee delivery of every message to every process, but it does attempt to guarantee a very high probability of delivery.
