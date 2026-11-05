@@ -1214,8 +1214,7 @@ Its key characteristic is "laziness": instead of eagerly re-broadcasting every m
 	2. The system loops through all messages previously received from that process by executing $\forall m \in from[p]$ and re-broadcasting them via $\langle beb, \text{Broadcast} \mid [\text{Data}, p, m] \rangle$. This guarantees that if $p$ crashed mid-transmission, its pending messages are recovered and propagated to all remaining correct processes.
 
 .![[Dependable distributed system-1793878585352.webp|749]]
-
-
+Consider the following sequence: $p_1$ performs an RB Broadcast of $m_1$, the message reaches $p_2$, subsequently $p_1$ performs an RB Broadcast of $m_2$, and before everyone has received the messages, $p_1$ crashes. Let us observe what happens. For $m_1$: $p_2$ has received $m_1$ and delivered it via RB; when $p_1$'s crash is detected, $p_2$ knows that $p_1$ originated $m_1$, and consequently, it retransmits $m_1$ via BEB, allowing other processes that had received $m_1$ to also participate in its dissemination. For $m_2$: the message was originated by $p_1$, but not all processes had received it yet; however, if at least one correct process had already received it, this process can retransmit it after the crash. The lesson to understand is that any process that has received the message becomes responsible for its further dissemination when the sender fails.
 
 ![[Dependable distributed system-1793878592836.webp|754]]![[Dependable distributed system-1793878600980.webp|761]]
 The idea behind the algorithm is:
