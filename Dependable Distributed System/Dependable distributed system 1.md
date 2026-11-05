@@ -1645,4 +1645,12 @@ This problem has four properties:
 #### A consensus implementation in synchronous systems: flooding consensus
 **Idea**: Imagine we have $N$ processes, each with its own proposal. For <mark style="background:#d3f8b6">example</mark>: $p_1: 5 \qquad p_2: 3 \qquad p_3: 7$. We want all correct processes to decide the same value. The idea of flooding consensus is that:
 1. Every process communicate its own proposal to everyone;
-2. Processes 
+2. The processes collect the proposals received;
+3. When they have enough information, they apply a deterministic function to choose the value to decide.
+4. Nel nostro esempio, supponiamo che la funzione scelta sia il minimo:
+
+$$  
+decision = \min(proposals)  
+$$
+
+Se tutti conoscono gli stessi valori, tutti ottengono:
