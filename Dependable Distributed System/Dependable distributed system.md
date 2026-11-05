@@ -1096,4 +1096,8 @@ Let's remember some useful things for this chapter:
 - When we define a communication abstraction, we need to specify which properties it must respect:
 	- Safety;
 	- Liveness.
-- Until now we studied point-to-point xc
+- Until now we studied point-to-point communication abstractions like:
+	- Fair-loss links;
+	- Stubborn links;
+	- Perfect links (reliable delivery, no duplication, no creation).
+- 
