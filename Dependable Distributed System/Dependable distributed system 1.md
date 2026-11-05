@@ -1647,4 +1647,4 @@ This problem has four properties:
 1. Every process communicate its own proposal to everyone;
 2. The processes collect the proposals received;
 3. When they have enough information, they apply a deterministic function to choose the value to decide.
-The rule for chose is "choose the min value of the "
+The rule for chose is "choose the min value of the proposal received", so in our example the chosen value is "3". 
