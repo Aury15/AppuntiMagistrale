@@ -1203,13 +1203,30 @@ Its key characteristic is "laziness": instead of eagerly re-broadcasting every m
 - **$\mathcal{P}$ (Perfect Failure Detector)**: A failure detector module that outputs permanent crash suspicions (never makes mistakes).
 
  1. **Initialization**: When the initialization event $\langle rb, \text{Init} \rangle$ occurs, the system sets the set of correct processes to all nodes by letting $correct := \Pi$, and initializes the message-tracking structure with empty sets for each process by setting $from[p] := [\emptyset]^N$
- 2. **Initiating a Broadcast**: When a process wants to broadcast a message $m$ via$\langle rb, \text{Broadcast} \mid m \rangle$
+ 2. **Initiating a Broadcast**: When a process wants to broadcast a message $m$ via $\langle rb, \text{Broadcast} \mid m \rangle$, it triggers a best-effort broadcast by encapsulating the message with its own identifier, activating the event $\langle beb, \text{Broadcast} \mid [\text{Data}, \textit{self}, m] \rangle$. In this way, the message is sent only once without immediately forcing others to repeat it.
+ 3.  **Receiving a Message**: When a process receives a message via $\langle beb, \text{Deliver} \mid p, [\text{Data}, s, m] \rangle$, it performs a check to see if the message is new by checking the condition $m \notin from[s]$. If the condition is true:
 
-, it triggers a best-effort broadcast by encapsulating the message with its own identifier, activating the event
-
-$$\langle beb, \text{Broadcast} \mid [\text{Data}, \textit{self}, m] \rangle$$
-
-. In this way, the message is sent only once without immediately forcing others to repeat it.
+	1. The process locally delivers the message by triggering
+	    
+	    $$\langle rb, \text{Deliver} \mid s, m \rangle$$
+	    
+	    .
+    
+5. It updates the history by adding the message with
+    
+    $$from[s] := from[s] \cup \{m\}$$
+    
+    .
+    
+6. It checks whether the original sender is considered incorrect by checking the condition
+    
+    $$s \notin correct$$
+    
+    . If the sender turns out to have crashed, the current process takes responsibility for forwarding the message by triggering
+    
+    $$\langle beb, \text{Broadcast} \mid [\text{Data}, s, m] \rangle$$
+    
+    .
 
 .![[Dependable distributed system-1793878585352.webp|749]]![[Dependable distributed system-1793878592836.webp|754]]![[Dependable distributed system-1793878600980.webp|761]]
 The idea behind the algorithm is:
