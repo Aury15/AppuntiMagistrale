@@ -1604,15 +1604,17 @@ It does not deliver it again and does not forward it again. This prevents duplic
 
 #### Summary: Probabilistic Broadcast vs. Traditional Reliable Broadcast
 
-|Aspect|Traditional Reliable Broadcast|Probabilistic Broadcast|
-|---|---|---|
-|Delivery guarantee|Deterministic properties|Probabilistic guarantee|
-|Agreement|Guaranteed according to the abstraction|Not deterministically guaranteed|
-|Dissemination|Depends on the reliable broadcast algorithm|Randomized gossip|
-|Acknowledgments|May require significant communication|Does not require acknowledgments from every process|
-|Scalability|Can be affected by communication overhead|Designed to scale in large systems|
-|Main limitation|Communication and coordination costs|A small probability of incomplete dissemination|
+| Aspect             | Traditional Reliable Broadcast              | Probabilistic Broadcast                             |
+| ------------------ | ------------------------------------------- | --------------------------------------------------- |
+| Delivery guarantee | Deterministic properties                    | Probabilistic guarantee                             |
+| Agreement          | Guaranteed according to the abstraction     | Not deterministically guaranteed                    |
+| Dissemination      | Depends on the reliable broadcast algorithm | Randomized gossip                                   |
+| Acknowledgments    | May require significant communication       | Does not require acknowledgments from every process |
+| Scalability        | Can be affected by communication overhead   | Designed to scale in large systems                  |
+| Main limitation    | Communication and coordination costs        | A small probability of incomplete dissemination     |
 
 ## Consensus
-
+<p align="justify">
 In the consensus problem a group of processes must agree on a value that has been proposed by one of them. Its an abstraction of a class of problems where processes start with their opinion and then converge on one of them. Its a fundamental problem. 
+</p>
+We have a set of intia
