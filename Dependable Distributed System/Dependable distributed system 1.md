@@ -1407,9 +1407,25 @@ When the algorithm starts, the local state is initialized as follows:
         - Triggers the upper-layer delivery event $\langle urb, \text{Deliver} \mid s, m \rangle$.
 
 ###### Implementation in asynchronous system
-![[Dependable distributed system 1-1793892399517.webp]]
-
+In an asynchronous system, we can't know for sure whether a process has failed or is simply very slow. Therefore, we can't use a Perfect Failure Detector in the same way. So we put a rule: 
 >[!Warning]
 >We need to assume a majority of correct processes.
+Supponiamo che il sistema contenga \(n\) processi.
+
+La maggioranza dei processi è corretta quando:
+
+$[\boxed{ \#Correct>\frac{n}{2} }$]
+
+Per esempio, se abbiamo cinque processi:
+
+$\Pi=\{p_1,p_2,p_3,p_4,p_5\}$
+
+la maggioranza richiede almeno tre processi corretti.Quindi:
+- 5 processi corretti: maggioranza rispettata;
+- 4 processi corretti: maggioranza rispettata;
+- 3 processi corretti: maggioranza rispettata;
+- 2 processi corretti: maggioranza non rispettata.
+
+![[Dependable distributed system 1-1793892399517.webp]]
 
 
