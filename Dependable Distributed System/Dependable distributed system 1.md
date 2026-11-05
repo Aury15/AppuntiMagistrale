@@ -1,3 +1,4 @@
+
 ## Distributed system 
 
 >[!definition] Distributed system
