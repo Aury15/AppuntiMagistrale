@@ -1443,4 +1443,26 @@ This solution is particularly interesting when the group is:
 - Very large.
 - Dynamic, meaning processes can join and leave the group.
 Imagine a network consisting of thousands or millions of devices. Sending a message to everyone and waiting for individual confirmation from each can become extremely expensive. To achieve high reliability, RBs and URBs may require re-transmission and acknowledgement mechanisms. As the number of processes increases, the number of ACKs also increases.
-The issue, therefore, is scalability. But there could be an ack implosion: indicates an excessive accumulation of confirmation messages.
+The issue, therefore, is scalability.
+#### ACK Implosion
+
+In traditional reliable broadcast protocols, when a process receives a message, it may send an acknowledgment (ACK) to the original sender to confirm that the message has been received.
+However, when the number of processes in the system becomes very large, this mechanism can create a scalability problem known as **ACK implosion**.
+Suppose a process broadcasts a message to $N$ processes. If every receiver sends an acknowledgment directly to the original sender, that sender may receive a very large number of ACK messages almost simultaneously.
+This can overload the sender and its communication resources.
+
+> [!important] ACK Implosion  
+> ACK implosion occurs when a large number of acknowledgment messages are sent to the same process, potentially overwhelming it and creating a communication bottleneck.
+
+#### ACK Tree
+One possible solution is to organize acknowledgments using a tree structure. Instead of sending every ACK directly to the original sender, processes are organized hierarchically:
+- The leaves of the tree represent processes that receive the broadcast message.
+- Each intermediate node collects acknowledgments from its children.
+- An intermediate node sends an aggregated acknowledgment to its parent.
+- Eventually, the root receives the aggregated information.
+For <mark style="background:#affad1">example</mark>, in a binary tree, each intermediate node can collect acknowledgments from two children and forward the result to its parent. This reduces the number of acknowledgment messages that the original sender must process directly.
+However, this solution introduces some disadvantages:
+- **Additional latency:** acknowledgments must travel through multiple levels of the tree.
+- **Tree maintenance:** the tree must be maintained as processes join or leave the system.
+- **Failure management:** if an intermediate node fails, the acknowledgment structure may need to be reorganized.
+The ACK Tree reduces the load on the original sender, but it introduces additional complexity.
