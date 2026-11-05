@@ -1213,9 +1213,27 @@ Therefore, re-transmission occurs only when necessary. Hence the name Lazy.
 - <u>Worst case</u>: n-1 BEB message per one RB (this is the case with n-1 failures).
 
 #### Reliable broadcast implementation in asynchronous system
+
+
 This algorithm is called ""Eager reliable broadcast". It doesn't use a failure detector, this is important because we are in an asynchronous system. The logic of this algorithm is very easy: every process that receive a message for the first time re-send this message (immediately) to all the processes. So we don't have to wait that a process fail and we don't have to know if a process is failed or either. This is where the name Eager comes from, meaning "immediate".
 **<mark style="background:rgba(5, 117, 197, 0.2)">Why does Eager RB guarantee Agreement?</mark>** Let's look at an example.
 We have three processes: $[ p_1,p_2,p_3$]
 Suppose $p_1$ sends $m_1$ to $p_2$, but fails before reaching $p_3$.
 With BEB, $p_2$ receives $m_1$. With Eager RB, however, $p_2$ doesn't just deliver it: it immediately retransmits it to everyone. So $p_3$ can receive $m_1$ even if $p_1$ has failed.
 **This is exactly the behavior we need to guarantee Agreement.**
+$$
+\begin{aligned}
+&\textbf{Algorithm 3.3: } \text{Eager Reliable Broadcast} \\
+&\textbf{Implements:} \text{ ReliableBroadcast, instance } rb. \\
+&\textbf{Uses:} \text{ BestEffortBroadcast, instance } beb. \\[0.8em]
+&\textbf{upon event } \langle rb, \text{Init} \rangle \textbf{ do} \\
+&\quad \text{delivered} := \emptyset; \\[0.8em]
+&\textbf{upon event } \langle rb, \text{Broadcast} \mid m \rangle \textbf{ do} \\
+&\quad \textbf{trigger } \langle beb, \text{Broadcast} \mid [\text{DATA}, \text{self}, m] \rangle; \\[0.8em]
+&\textbf{upon event } \langle beb, \text{Deliver} \mid p, [\text{DATA}, s, m] \rangle \textbf{ do} \\
+&\quad \textbf{if } m \notin \text{delivered} \textbf{ then} \\
+&\quad \quad \text{delivered} := \text{delivered} \cup \{m\}; \\
+&\quad \quad \textbf{trigger } \langle rb, \text{Deliver} \mid s, m \rangle; \\
+&\quad \quad \textbf{trigger } \langle beb, \text{Broadcast} \mid [\text{DATA}, s, m] \rangle;
+\end{aligned}
+$$
