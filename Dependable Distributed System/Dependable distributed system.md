@@ -277,10 +277,11 @@ The system model is the following: two processes (sender and receiver); messages
 > Deliver is different from receive. A message is received at a port of the network and stored in a buffer; then an algorithm runs to make sure that the properties of the required link abstraction hold, and only afterwards is the message delivered.
 
 ###### Fair-loss links
-
+Messages can get lost, but if a message is continuously re-transmitted, under certain conditions it is delivered.
 ###### Stubborn links
-
+They guarantee continuous re-transmission of messages until they are delivered, so the same message can be received multiple times.
 ###### Perfect links
+They ensure that messages are delivered reliably, without duplication and without creating non-existent messages.
 ## Time in distributed systems
 
 In a distributed system the processes run on different nodes interconnected by mean of a network (LAN, WLAN...). This processes cooperate to complete a computation and communicate only through message-based communications. Many applications require a perfect ordering between events and synchronization to terminate correctly. **So time is a critical factor for distributed system.** 
@@ -1095,4 +1096,4 @@ Let's remember some useful things for this chapter:
 - When we define a communication abstraction, we need to specify which properties it must respect:
 	- Safety;
 	- Liveness.
-- 
+- Until now we studied point-to-point xc
