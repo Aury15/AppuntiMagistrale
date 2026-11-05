@@ -1673,4 +1673,5 @@ The rule for chose is "choose the min value of the proposal received", so in our
 - **After round 2**: p1 passes on the 3 he received, p3 acquires it. Both have {3,5,7} → both decide **3**. ✔
 ![[Dependable distributed system 1-1793897512085.webp]]
 
-##### Correctn
+##### Correctness
+ <u>Validity</u> and <u>integrity</u> follow from the properties of the communication channels. <u>Termination</u>: at most after N rounds the processes decide (there are at most N −1 crashes, so some round has no new crash). Agreement: correct processes apply the same deterministic function to the same set of values
