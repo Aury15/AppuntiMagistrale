@@ -1403,7 +1403,5 @@ When the algorithm starts, the local state is initialized as follows:
 - **Delivering the Message:**
     $$\textbf{upon exists } (s, m) \in \text{pending} \text{ such that } \text{candeliver}(m) \land m \notin \text{delivered} \text{ do}$$
     - Once all correct nodes acknowledge a pending message and it hasn't been delivered yet:
-        
         - Adds $m$ to the `delivered` set ($\text{delivered} := \text{delivered} \cup \{m\}$).
-            
         - Triggers the upper-layer delivery event $\langle urb, \text{Deliver} \mid s, m \rangle$.
