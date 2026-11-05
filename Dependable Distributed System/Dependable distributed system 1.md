@@ -1685,57 +1685,32 @@ $$\begin{aligned} &\textbf{Algorithm 5.1: } \text{Flooding Consensus} \\ &\textb
 In the consensus the agreement property establish that: No correct process decides differently from another correct process. The key constraint here is the word **correct**. <mark style="background:#b1ffff">What happens if a process breaks down (crashes) shortly after making a decision</mark>, perhaps deciding on a value $v_1$, while the other correct processes decide on $v_2$? In regular consensus, the property is technically respected if the deviating process crashes and is no longer "correct," but in real distributed systems this creates serious consistency problems. So this algorithm introduces the **Uniform agreement:** <u>No process (whether it is correct or has crashed) can decide a different value than another.</u>
 
 $$\begin{aligned} &\textbf{Algorithm 5.3: } \text{Flooding Uniform Consensus} \\ &\textbf{Implements: } \text{UniformConsensus, instance } uc; \quad \textbf{Uses: } \text{BestEffort Broadcast, instance } beb; \text{ PerfectFD, instance } P \\ &\textbf{upon event } (uc, \text{Init}) \text{ do} \\ &\quad \text{correct} := \Pi; \quad \text{round} := 1; \quad \text{decision} := \bot; \quad \text{proposalset} := \emptyset; \quad \text{receivedfrom} := \emptyset; \\ &\textbf{upon event } (P, \text{Crash} \mid p) \text{ do} \\ &\quad \text{correct} := \text{correct} \setminus \{p\}; \\ &\textbf{upon event } (uc, \text{Propose} \mid v) \text{ do} \\ &\quad \text{proposalset} := \text{proposalset} \cup \{v\}; \\ &\quad \text{trigger } (beb, \text{Broadcast} \mid [\text{PROPOSAL}, 1, \text{proposalset}]); \\ &\textbf{upon event } (beb, \text{Deliver} \mid p, [\text{PROPOSAL}, r, ps]) \text{ such that } r = \text{round} \text{ do} \\ &\quad \text{receivedfrom} := \text{receivedfrom} \cup \{p\}; \\ &\quad \text{proposalset} := \text{proposalset} \cup ps; \\ &\textbf{upon } \text{correct} \subseteq \text{receivedfrom} \land \text{decision} = \bot \text{ do} \\ &\quad \text{if } \text{round} = N \text{ then} \\ &\qquad \text{decision} := \min(\text{proposalset}); \\ &\qquad \text{trigger } (uc, \text{Decide} \mid \text{decision}); \\ &\quad \text{else} \\ &\qquad \text{round} := \text{round} + 1; \quad \text{receivedfrom} := \emptyset; \\ &\qquad \text{trigger } (beb, \text{Broadcast} \mid [\text{PROPOSAL}, \text{round}, \text{proposalset}]). \end{aligned}$$
-### 1. Inizializzazione (`Init`)
+This algorithm implements uniform consensus in synchronous systems using a flooding strategy combined with a perfect failure detector ($P$) and best-effort broadcast ($beb$).
+### 1. Initializaton (`Init`)
+Upon initialization:
+- The `correct` set of processes is initialized to the full set $\Pi$.
+- The `round` counter starts at $1$, `decision` is set to $\bot$ (undecided), `proposalset` is empty, and `receivedfrom` is empty.
+ 2. Failure Detection (`Crash`)
+- When the perfect failure detector $P$ reports that a process $p$ has crashed, $p$ is removed from the `correct` set (`correct := correct \setminus \{p\}`).
+- Thanks to the strong completeness property of the failure detector, no correct process waits indefinitely for a message from a crashed process, because the failed process is eventually removed from the `correct` set.
+ 3. Proposing a Value (`Propose`)
+- When a value $v$ is proposed to the uniform consensus instance ($uc$), it is added to the local `proposalset`.
+- The process then triggers a best-effort broadcast (`beb`) to send the proposal set for round $1$ to all processes.
+ 4. Delivering Messages (`Deliver`)
+- Upon delivering a proposal message `[PROPOSAL, r, ps]` from process $p$ such that the round matches the current round ($r = \text{round}$):
+    - The sender $p$ is added to `receivedfrom` (`receivedfrom := receivedfrom \cup \{p\}`).
+    - The received proposal elements (`ps`) are merged into the local `proposalset` (`proposalset := proposalset \cup ps`).
+ 5. Round Progression and Decision (`upon correct ⊆ receivedfrom`)
+When a process has heard from all currently correct processes (`correct ⊆ receivedfrom`) and has not yet decided (`decision = \bot`):
+- **If `round = N` (Final Round):** The process computes the deterministic minimum of its accumulated proposal set (`decision := min(proposalset)`), triggers the decision event (`uc, Decide | decision`), and terminates. Uniform agreement is guaranteed because all processes that reach round $N$ share the exact same set of values in their `proposalset`.
+- **If `round < N` (Intermediate Round):** The process increments the round counter (`round := round + 1`), resets `receivedfrom` to empty, and broadcasts the updated `proposalset` for the next round via best-effort broadcast.
 
-All'avvio, ogni processo imposta lo stato iniziale:
-- L'insieme dei processi corretti `correct` viene inizializzato all'intero insieme Π\PiΠ.
-- Il contatore `round` parte da 111, la variabile `decision` è posta a ⊥\bot⊥ (non deciso), mentre `proposalset` e `receivedfrom` partono come insiemi vuoti.
+### Correctness & Performance Summary
+
+- **Validity and Integrity:** Follow directly from the algorithm logic and the properties of best-effort broadcast.
     
-    DDS-Lecture10-2026-2027.pdf
+- **Termination:** Ensured because all correct processes eventually reach round $N$ and decide in that round.
     
-
-### 2. Gestione dei Guasti (`Crash`)
-
-Quando il detector perfetto PPP rileva l'arresto di un processo ppp, si attiva l'evento corrispondente e ppp viene rimosso dall'insieme dei processi corretti (`correct := correct \setminus \{p\}`). Grazie alla completezza del detector, nessun processo corretto attenderà indefinitamente messaggi da un nodo morto.
-
-DDS-Lecture10-2026-2027.pdf+ 2
-
-### 3. Proposta del Valore (`Propose`)
-
-Quando un client propone un valore vvv tramite l'evento `Propose(v)`:
-
-- Il valore viene aggiunto al proprio `proposalset`.
+- **Uniform Agreement:** Holds because all processes reaching round $N$ possess the identical set of values in their `proposalset`.
     
-    DDS-Lecture10-2026-2027.pdf
-    
-- Viene trasmesso in broadcast a tutti i nodi per il primo round (`round = 1`) usando il servizio di Best-Effort Broadcast (bebbebbeb).
-    
-    DDS-Lecture10-2026-2027.pdf
-    
-
-### 4. Ricezione dei Messaggi (`Deliver`)
-
-Quando un processo riceve un messaggio di proposta per il round corrente (`r = round`):
-
-- Il mittente ppp viene aggiunto all'insieme dei nodi da cui si è ricevuto riscontro (`receivedfrom`).
-    
-    DDS-Lecture10-2026-2027.pdf
-    
-- L'insieme delle proposte ricevute (`ps`) viene unito al proprio `proposalset` accumulato.
-    
-    DDS-Lecture10-2026-2027.pdf
-    
-
-### 5. Controllo di Fine Round e Decisione (`upon correct ⊆ receivedfrom`)
-
-Questa è la guardia fondamentale dell'algoritmo: si attiva non appena il processo ha ricevuto i messaggi da **tutti** i nodi attualmente considerati corretti (`correct ⊆ receivedfrom`) e non ha ancora preso una decisione (`decision = \bot`). A questo punto:
-
-DDS-Lecture10-2026-2027.pdf
-
-- **Se ci si trova nell'ultimo round (`round = N`):** Il processo calcola deterministicamente il valore minimo dell'intero set accumulato (`decision := min(proposalset)`) e scatena l'evento di decisione `Decide(decision)`. Poiché tutti i processi corretti raggiungono il round NNN e possiedono lo stesso identico `proposalset`, la proprietà di _uniform agreement_ è rigorosamente garantita.
-    
-    DDS-Lecture10-2026-2027.pdf+ 2
-    
-- **Se non si è all'ultimo round (`round < N`):** Il round viene incrementato, l'insieme dei riscontri `receivedfrom` viene svuotato per il round successivo, e viene fatto un nuovo broadcast del `proposalset` aggiornato.
-    
-    DDS-Lecture10-2026-2027.pdf
+- **Performance:** Requires $N$ communication steps and $O(N^3)$ messages for all correct processes to decide.
