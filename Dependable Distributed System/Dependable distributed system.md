@@ -180,7 +180,7 @@ $$
 \end{aligned}
 $$
 ###### Algorithm: Job-Transformation by Buffering
-\begin{aligned}
+$$\begin{aligned}
 &\textbf{Algorithm: } \text{Job-Transformation by Buffering} \\
 &\textbf{Implements:} \text{ TransformationHandler, instance } th. \\
 &\textbf{Uses:} \text{ JobHandler, instance } jh. \\[0.8em]
@@ -201,7 +201,8 @@ $$
 &\quad \text{trigger } \langle jh, \text{Submit} \mid \text{job} \rangle; \\[0.8em]
 &\textbf{Upon event } \langle th, \text{Confirm} \mid \text{job} \rangle \textbf{ do} \\
 &\quad \text{handling} := \text{FALSE};
-\end{aligned}This algorithm maintains a buffer of size $M$ to temporarily store incoming jobs and send them one at a time to the underlying JobHandler ($jh$):
+\end{aligned}$$
+This algorithm maintains a buffer of size $M$ to temporarily store incoming jobs and send them one at a time to the underlying JobHandler ($jh$):
 - **Initialization (`Init`)**
     - The `top` and `bottom` indices are set to $1$, pointing to the insertion and extraction positions, respectively.
     - `handling := FALSE` indicates that the system is currently not processing any jobs.
