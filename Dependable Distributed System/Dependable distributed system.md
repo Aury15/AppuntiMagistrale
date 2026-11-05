@@ -1051,3 +1051,15 @@ upon event $\langle \Omega, \text{Init} \rangle$ do
     $\text{store}(\text{epoch})$;
     $\text{candidates} := \emptyset$;
     $\text{trigger} \langle \Omega, \text{Recovery} \rangle$;
+upon event $\langle \Omega, \text{Recovery} \rangle$ do
+    $\text{leader} := \text{maxrank}(\Pi)$;
+    $\text{trigger} \langle \Omega, \text{Trust} \mid \text{leader} \rangle$;
+    $\text{delay} := \Delta$;
+    $\text{retrieve}(\text{epoch})$;
+    $\text{epoch} := \text{epoch} + 1$;
+    $\text{store}(\text{epoch})$;
+    forall $p \in \Pi$ do
+        $\text{trigger} \langle fll, \text{Send} \mid p, [\text{HEARTBEAT}, \text{epoch}] \rangle$;
+    $\text{candidates} := \emptyset$;
+    $\text{starttimer}(\text{delay})$;
+\end{align}$$
