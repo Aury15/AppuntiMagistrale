@@ -1677,4 +1677,7 @@ The rule for chose is "choose the min value of the proposal received", so in our
  <u>Validity</u> and <u>integrity</u> follow from the properties of the communication channels. <u>Termination</u>: at most after N rounds the processes decide (there are at most N −1 crashes, so some round has no new crash). <u>Agreement</u>: correct processes apply the same deterministic function to the same set of values.
 
 ##### Performance
-- **Best case:** one communication 
+- **Best case:** one communication round;
+- **Worst case**: $N^2$ messages exchanged for each communication step and at most $N$ rounds $\rightarrow N^3$ messages
+
+#### Uniform consensus specification
