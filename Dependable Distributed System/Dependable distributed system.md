@@ -1152,6 +1152,33 @@ Why? Because $p_2$ is a correct process and has delivered $m_1$. Consequently, a
 >**BEB** ensures the reliability of communication when the sender is correct. **RB** also ensures agreement between the correct processes on message delivery.
 
 ###### Lazy reliable broadcast
+To understand why it is necessary, we must first remember the problem that RB is designed to solve: if a sender fails after sending a message to only some processes, we must ensure that the other correct processes can still receive it.
+Consideriamo nuovamente tre processi:
+
+\[ \Pi=\{p_1,p_2,p_3\} \]
+
+Supponiamo che \(p_1\) effettui il Broadcast di \(m_1\).
+
+Il processo \(p_1\) riesce a inviare il messaggio a \(p_2\), ma fallisce prima di inviarlo a \(p_3\).
+
+Con BEB, \(p_2\) riceve il messaggio, mentre \(p_3\) non lo riceve.
+
+Per rispettare Agreement, dobbiamo fare in modo che \(p_2\), dopo aver ricevuto il messaggio, possa aiutare gli altri processi a riceverlo.
+
+Ma quando deve farlo?
+
+Qui entra in gioco il Perfect Failure Detector.
+
+Il Perfect Failure Detector, indicato con \(P\), possiede due proprietà:
+
+- Strong completeness: ogni processo che fallisce viene prima o poi sospettato da tutti i processi corretti.
+    
+- Strong accuracy: nessun processo corretto viene mai sospettato.
+    
+
+In altre parole, quando il Failure Detector segnala il crash di un processo, possiamo essere certi che quel processo sia effettivamente fallito.
+
+Questo è possibile nel modello sincrono, in cui esistono limiti temporali conosciuti per la comunicazione e per l'esecuzione.
 ![[Dependable distributed system-1793878442061.webp]]
 
 ![[Dependable distributed system-1793878585352.webp|749]]![[Dependable distributed system-1793878592836.webp|754]]![[Dependable distributed system-1793878600980.webp|761]]
