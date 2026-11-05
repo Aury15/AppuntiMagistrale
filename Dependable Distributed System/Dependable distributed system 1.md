@@ -1319,4 +1319,6 @@ Suppose:
 The Agreement property of RB is not violated! Why? Because the process that delivered the message, $p_2$, failed.
 Agreement requires propagation only if the message was delivered by a correct process. Therefore, other correct processes may never receive that message. But from an application perspective, this can be a problem: one process has already performed an operation that the others are unaware of.
 
-URB introduces a stronger property called **Uniform Agreement**: If any process, whether correct or failing, delivers a message $m, then all correct processes must eventually deliver \(m\)
+URB introduces a stronger property called **Uniform Agreement**: If any process, whether correct or failing, delivers a message $m$, then all correct processes must eventually deliver $m$.
+URB maintains the properties of BEB and RB, but replaces Agreement with Uniform Agreement.
+
