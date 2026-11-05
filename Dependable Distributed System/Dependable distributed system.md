@@ -1153,7 +1153,8 @@ Why? Because $p_2$ is a correct process and has delivered $m_1$. Consequently, a
 ###### Lazy reliable broadcast
 To understand why it is necessary, we must first remember the problem that RB is designed to solve: if a sender fails after sending a message to only some processes, we must ensure that the other correct processes can still receive it.
 Consider a set of three processes: $$ \Pi = \{p_1, p_2, p_3\} $$ Suppose $p_1$ broadcasts a message $m_1$: * $p_1$ succeeds in sending the message to $p_2$, but **crashes** before it can transmit it to $p_3$. * With the **Best-Effort Broadcast (BEB)** abstraction: * $p_2$ receives and delivers $m_1$. * $p_3$ will never receive $m_1$.
-> [!warning] Agreement Violation > This situation violates the **Agreement** property of *Reliable Broadcast*: if a correct process ($p_2$) delivers a message, then all correct processes (and thus also $p_3$) must eventually deliver it. To honor the **Agreement**, process $p_2$, after receiving the message, must cooperate by forwarding $m_1$ to other processes to fill the gap left by the failed sender. 
+> [!warning] Agreement Violation
+>   This situation violates the **Agreement** property of *Reliable Broadcast*: if a correct process ($p_2$) delivers a message, then all correct processes (and thus also $p_3$) must eventually deliver it. To honor the **Agreement**, process $p_2$, after receiving the message, must cooperate by forwarding $m_1$ to other processes to fill the gap left by the failed sender. 
 
  **Role of the Perfect Failure Detector ($\mathcal{P}$**) 
  The key question is: *when should a process intervene to retransmit?* In a synchronous system, we rely on the oracle of the **Perfect Failure Detector** ($\mathcal{P}$), characterized by two formal properties: 1. **Strong Completeness**: $$ \forall p \in \Pi, \quad p \text{ crash} \implies \lozenge (\forall q \in \text{Correct}, \, q \text{ suspects } p) $$ Every process that fails is sooner or later permanently suspected (detected) by all correct processes. 2. **Strong Accuracy**: $$ \forall p \in \text{Correct}, \quad \forall q \in \Pi, \quad q \text{ never suspects } p $$ No correct process is ever wrongly suspected. 
@@ -1193,8 +1194,7 @@ $$
 \end{array}
 $$
 ![[Dependable distributed system-1793878585352.webp|749]]![[Dependable distributed system-1793878592836.webp|754]]![[Dependable distributed system-1793878600980.webp|761]]
-L'idea dell'algoritmo è:
-- Normalmente, un processo non ritrasmette i messaggi che riceve.
-- Se però scopre che il processo originario di un messaggio è fallito, ritrasmette i messaggi che quel processo aveva già inviato.
-Quindi la ritrasmissione avviene soltanto quando è necessaria.
-Da qui deriva il nome Lazy.
+The idea behind the algorithm is:
+- Normally, a process does not retransmit messages it receives.
+- However, if it discovers that the original processing of a message has failed, it re-transmits the messages that process had already sent.
+Therefore, re-transmission occurs only when necessary. Hence the name Lazy.
