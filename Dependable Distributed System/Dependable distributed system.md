@@ -1053,6 +1053,21 @@ $$
 &\qquad \text{trigger } \langle fll, \text{Send} \mid p, [\text{HEARTBEAT}, \text{epoch}] \rangle; \\
 &\quad \text{candidates} := \emptyset; \\
 &\quad \text{starttimer}(\text{delay});
+
+$$
+&\textbf{upon event } \langle \text{Timeout} \rangle \text{ do}[cite: 3] \\
+&\quad \text{newleader} := \text{select}(\text{candidates});[cite: 3] \\
+&\quad \textbf{if } \text{newleader} \neq \text{leader} \textbf{ then}[cite: 3] \\
+&\qquad \text{delay} := \text{delay} + \Delta;[cite: 3] \\
+&\qquad \text{leader} := \text{newleader};[cite: 3] \\
+&\qquad \text{trigger } \langle \Omega, \text{Trust} \mid \text{leader} \rangle;[cite: 3] \\
+&\quad \textbf{forall } p \in \Pi \text{ do}[cite: 3] \\
+&\qquad \text{trigger } \langle fll, \text{Send} \mid p, [\text{HEARTBEAT}, \text{epoch}] \rangle;[cite: 3] \\
+&\quad \text{candidates} := \emptyset;[cite: 3] \\
+&\quad \text{starttimer}(\text{delay}); \\[6pt]
+&\textbf{upon event } \langle fll, \text{Deliver} \mid q, [\text{HEARTBEAT}, ep] \rangle \text{ do}[cite: 3] \\
+&\quad \textbf{if exists } (s, e) \in \text{candidates} \text{ such that } s = q \land e < ep \textbf{ then}[cite: 3] \\
+&\qquad \text{candidates} := \text{candidates} \setminus \{(q, e)\};[cite: 3] \\
+&\quad \text{candidates} := \text{candidates} \cup (q, ep);[cite: 3]
 \end{aligned}
 $$
-
