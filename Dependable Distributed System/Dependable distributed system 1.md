@@ -1312,29 +1312,13 @@ The agreement property only considers processes that don't fail. But what happen
 
 <mark style="background:#affad1"> Esempio</mark>
 
-Consideriamo tre processi:
-
-\[ p_1,p_2,p_3 \]
+Consideriamo tre processi: $[ p_1,p_2,p_3$]
 
 Supponiamo che:
-
-1. \(p_1\) effettui il Broadcast di \(m\).
+1. $p_1$ effettui il Broadcast di $m$.
+2. $p_2$ riceva e consegni $m$.
+3. $p_2$ fallisca.
+4. $p_1$ e $p_3$ non abbiano consegnato \(m\).
     
-2. \(p_2\) riceva e consegni \(m\).
-    
-3. \(p_2\) fallisca.
-    
-4. \(p_1\) e \(p_3\) non abbiano consegnato \(m\).
-    
-
-La proprietà Agreement di RB non viene violata!
-
-Perché?
-
-Perché il processo che ha consegnato il messaggio, \(p_2\), è fallito.
-
-Agreement richiede la propagazione soltanto se il messaggio è stato consegnato da un processo corretto.
-
-Quindi gli altri processi corretti possono non ricevere mai quel messaggio.
-
-Ma dal punto di vista dell'applicazione, questo può essere un problema: un processo ha già eseguito un'operazione che gli altri non conoscono.
+La proprietà Agreement di RB non viene violata! Perché? Perché il processo che ha consegnato il messaggio, \(p_2\), è fallito.
+Agreement richiede la propagazione soltanto se il messaggio è stato consegnato da un processo corretto. Quindi gli altri processi corretti possono non ricevere mai quel messaggio. Ma dal punto di vista dell'applicazione, questo può essere un problema: un processo ha già eseguito un'operazione che gli altri non conoscono.
