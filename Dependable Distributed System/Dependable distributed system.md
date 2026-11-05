@@ -1094,10 +1094,14 @@ Let's remember some useful things for this chapter:
 - System model: the model that describes the system and his characteristics;
 - A distributed system is composed by many processes that communicate over a network. Processes can perform operations independently and do not necessarily share the same memory.
 - When we define a communication abstraction, we need to specify which properties it must respect:
-	- Safety;
-	- Liveness.
+	- *Safety*;
+	- *Liveness*.
 - Until now we studied point-to-point communication abstractions like:
-	- Fair-loss links;
-	- Stubborn links;
-	- Perfect links (reliable delivery, no duplication, no creation).
-- 
+	- *Fair-loss* links;
+	- *Stubborn* links;
+	- *Perfect* links (reliable delivery, no duplication, no creation).
+- The following were also addressed:
+	- *Physical clocks*: physical clocks used to measure time.
+	- *Logical clocks*: logical clocks used to establish an ordering of events.
+	- *Failure Detector* (FD): component that allows you to suspect that a process has failed.
+	- *Leader Election*: procedure that allows processes to elect a leader.
