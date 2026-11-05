@@ -1123,7 +1123,10 @@ BEB has three properties:
 - Asynchronous system;
 - Perfect links;
 - Crash failures.
+![[Dependable distributed system-1793875251900.webp]]
+BEB_Broadcast(m):
+    for each process p in Π:
+        pp2pSend(p, m)
 
-$$
-
-$$
+upon pp2pDeliver(m):
+    BEB_Deliver(m)
