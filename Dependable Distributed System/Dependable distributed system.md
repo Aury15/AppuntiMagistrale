@@ -1202,57 +1202,94 @@ Its key characteristic is "laziness": instead of eagerly re-broadcasting every m
 - **`beb` (Best-Effort Broadcast)**: A lower-level communication primitive that guarantees message delivery if the sender does not crash, but does not guarantee atomic agreement across all correct processes on its own.
 - **$\mathcal{P}$ (Perfect Failure Detector)**: A failure detector module that outputs permanent crash suspicions (never makes mistakes).
 
-**Detailed Event Breakdown**:
+### 1. Initialization
 
- 1. **Initialization** (`upon event <rb, Init>`)
-	- At startup, all processes are assumed to be correct (`correct := \Pi`).
-	- The history tracking array `from` is initialized to empty sets for all processes.
+When the initialization event
 
- 2. **Initiating a Broadcast** (`upon event <rb, Broadcast \mid m>`)
+⟨rb,Init⟩\langle rb, \text{Init} \rangle⟨rb,Init⟩
 
-Snippet di codice
+occurs, the system sets the set of correct processes to all nodes by letting
 
-```
-\textbf{trigger } \langle beb, \text{Broadcast} \mid [\text{Data}, \textit{self}, m] \rangle;
-```
+correct:=Πcorrect := \Picorrect:=Π
 
-- When a process wants to broadcast a message $m$ ($rb$-broadcast), it simply wraps it with its own identifier (`self`) and uses the underlying Best-Effort Broadcast ($beb$) to send it out once. It does _not_ immediately force everyone else to re-send it.
+, and initializes the message-tracking structure with empty sets for each process by setting
+
+from[p]:=[∅]Nfrom[p] := [\emptyset]^Nfrom[p]:=[∅]N
+
+.
+
+### 2. Initiating a Broadcast
+
+When a process wants to broadcast a message mmm via
+
+⟨rb,Broadcast∣m⟩\langle rb, \text{Broadcast} \mid m \rangle⟨rb,Broadcast∣m⟩
+
+, it triggers a best-effort broadcast by encapsulating the message with its own identifier, activating the event
+
+⟨beb,Broadcast∣[Data,self,m]⟩\langle beb, \text{Broadcast} \mid [\text{Data}, \textit{self}, m] \rangle⟨beb,Broadcast∣[Data,self,m]⟩
+
+. In this way, the message is sent only once without immediately forcing others to repeat it.
+
+### 3. Receiving a Message
+
+When a process receives a message via
+
+⟨beb,Deliver∣p,[Data,s,m]⟩\langle beb, \text{Deliver} \mid p, [\text{Data}, s, m] \rangle⟨beb,Deliver∣p,[Data,s,m]⟩
+
+, it performs a check to see if the message is new by checking the condition
+
+m∉from[s]m \notin from[s]m∈/from[s]
+
+. If the condition is true:
+
+1. The process locally delivers the message by triggering
+    
+    ⟨rb,Deliver∣s,m⟩\langle rb, \text{Deliver} \mid s, m \rangle⟨rb,Deliver∣s,m⟩
+    
+    .
+    
+2. It updates the history by adding the message with
+    
+    from[s]:=from[s]∪{m}from[s] := from[s] \cup \{m\}from[s]:=from[s]∪{m}
+    
+    .
+    
+3. It checks whether the original sender is considered incorrect by checking the condition
+    
+    s∉corrects \notin corrects∈/correct
+    
+    . If the sender turns out to have crashed, the current process takes responsibility for forwarding the message by triggering
+    
+    ⟨beb,Broadcast∣[Data,s,m]⟩\langle beb, \text{Broadcast} \mid [\text{Data}, s, m] \rangle⟨beb,Broadcast∣[Data,s,m]⟩
+    
+    .
     
 
-### 3. Receiving a Message (`upon event <beb, Deliver \mid p, [\text{Data}, s, m]>`)
+### 4. Handling Process Crashes
 
-Snippet di codice
+When the failure detector signals the crash of a process through the event
 
-```
-\textbf{if } m \notin from[s] \textbf{ then}
-    \textbf{trigger } \langle rb, \text{Deliver} \mid s, m \rangle;
-    from[s] := from[s] \cup \{m\};
-    \textbf{if } s \notin correct \textbf{ then}
-        \textbf{trigger } \langle beb, \text{Broadcast} \mid [\text{Data}, s, m] \rangle;
-```
+⟨P,Crash∣p⟩\langle \mathcal{P}, \text{Crash} \mid p \rangle⟨P,Crash∣p⟩
 
-- **First-time reception:** When a process receives a message $m$ originating from sender $s$ via $beb$, it checks if it has already processed it (`m \notin from[s]`).
+:
+
+1. The process is removed from the set of healthy nodes by updating
     
-- **Delivery:** If it's new, the process delivers the message locally ($rb$-deliver) and adds it to its local record `from[s]`.
+    correct:=correct∖{p}correct := correct \setminus \{p\}correct:=correct∖{p}
     
-- **Lazy Forwarding:** If the sender $s$ is **not** in the set of correct processes ($s \notin correct$, meaning $s$ has crashed), the current process takes over responsibility and re-broadcasts the message using $beb$ to ensure everyone else eventually gets it.
+    .
     
-
-### 4. Handling Process Crashes (`upon event <mathcal{P}, \text{Crash} \mid p>`)
-
-Snippet di codice
-
-```
-correct := correct \setminus \{p\};
-\textbf{forall } m \in from[p] \textbf{ do}
-    \textbf{trigger } \langle beb, \text{Broadcast} \mid [\text{Data}, p, m] \rangle;
-```
-
-- When the failure detector $\mathcal{P}$ detects that process $p$ has crashed:
+2. The system loops through all messages previously received from that process by executing
     
-    1. $p$ is removed from the `correct` set.
-        
-    2. The process iterates through all messages previously received from $p$ (`from[p]`) and **re-broadcasts** them via $beb$. This guarantees that if $p$ crashed mid-broadcast, its pending messages are salvaged and propagated to all remaining correct processes.![[Dependable distributed system-1793878585352.webp|749]]![[Dependable distributed system-1793878592836.webp|754]]![[Dependable distributed system-1793878600980.webp|761]]
+    ∀m∈from[p]\forall m \in from[p]∀m∈from[p]
+    
+    and re-broadcasting them via
+    
+    ⟨beb,Broadcast∣[Data,p,m]⟩\langle beb, \text{Broadcast} \mid [\text{Data}, p, m] \rangle⟨beb,Broadcast∣[Data,p,m]⟩
+    
+    . This guarantees that if ppp crashed mid-transmission, its pending messages are recovered and propagated to all remaining correct processes.
+
+.![[Dependable distributed system-1793878585352.webp|749]]![[Dependable distributed system-1793878592836.webp|754]]![[Dependable distributed system-1793878600980.webp|761]]
 The idea behind the algorithm is:
 - Normally, a process does not retransmit messages it receives.
 - However, if it discovers that the original processing of a message has failed, it re-transmits the messages that process had already sent.
