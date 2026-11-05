@@ -1109,3 +1109,8 @@ Let's remember some useful things for this chapter:
 For a communication broadcast we can immagine a system with three processes: $\Pi = {[p_1, p_2, p_3]}$, if $p_1$ want to send a message $m$ to everyone,  it must make sure that it is received by $p_1, p_2, p_3$. But we can ave no failures and crash failures so we reach the goal $\rightarrow$ <mark style="background:rgba(5, 117, 197, 0.2)">How can we ensure that processes have a consistent view of the messages received, even in the presence of failures?</mark>
 
 #### Best effort broadcast (BEB)
+
+Idea: When a process wants to send a message, the system tries to deliver it to all processes.
+The two main operations are:
+- `BEB_Broadcast(msg)`: Used by a process to broadcast a message to everyone.
+- `BEB_Deliver(msg)`: Used when a process receives and delivers the message to the application.
