@@ -1052,11 +1052,9 @@ $$
 &\quad \textbf{forall } p \in \Pi \text{ do} \\
 &\qquad \text{trigger } \langle fll, \text{Send} \mid p, [\text{HEARTBEAT}, \text{epoch}] \rangle; \\
 &\quad \text{candidates} := \emptyset; \\
-&\quad \text{starttimer}(\text{delay});
-
-$$
-&\textbf{upon event } \langle \text{Timeout} \rangle \text{ do}[cite: 3] \\
-&\quad \text{newleader} := \text{select}(\text{candidates});[cite: 3] \\
+&\quad \text{starttimer}(\text{delay}); \\
+&\textbf{upon event } \langle \text{Timeout} \rangle \text{ do} \\
+&\quad \text{newleader} := \text{select}(\text{candidates}); \\
 &\quad \textbf{if } \text{newleader} \neq \text{leader} \textbf{ then}[cite: 3] \\
 &\qquad \text{delay} := \text{delay} + \Delta;[cite: 3] \\
 &\qquad \text{leader} := \text{newleader};[cite: 3] \\
