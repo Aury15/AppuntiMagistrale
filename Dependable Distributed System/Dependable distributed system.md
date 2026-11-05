@@ -1212,4 +1212,5 @@ Therefore, re-transmission occurs only when necessary. Hence the name Lazy.
 - <u>Best case</u>: 1 BEB message per one RB message;
 - <u>Worst case</u>: n-1 BEB message per one RB (this is the case with n-1 failures).
 
-#### Reliable 
+#### Reliable broadcast implementation in asynchronous system
+This algorithm is called ""E
