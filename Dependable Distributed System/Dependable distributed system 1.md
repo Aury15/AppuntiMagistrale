@@ -1327,3 +1327,32 @@ RB considers delivery made by a correct process. URB considers delivery made by 
 
 
 ![[Dependable distributed system 1-1793891442619.webp|696]]![[Dependable distributed system 1-1793891478751.webp|785]]
+###### Implementation in a synchronous system
+$$
+\begin{aligned}
+&\textbf{Algorithm 3.4: } \text{All-Ack Uniform Reliable Broadcast.  } \\
+&\textbf{Implements:} \text{ UniformReliableBroadcast, instance } urb. \\
+&\textbf{Uses:} \text{ BestEffortBroadcast, instance } beb. \\
+&\quad \text{PerfectFailureDetector, instance } \mathcal{P}. \\[0.8em]
+&\textbf{upon event } \langle urb, \text{Init} \rangle \textbf{ do} \\
+&\quad \text{delivered} := \emptyset; \\
+&\quad \text{pending} := \emptyset; \\
+&\quad \text{correct} := \Pi; \\
+&\quad \textbf{forall } m \textbf{ do } \text{ack}[m] := \emptyset; \\[0.8em]
+&\textbf{upon event } \langle urb, \text{Broadcast} \mid m \rangle \textbf{ do} \\
+&\quad \text{pending} := \text{pending} \cup \{(\text{self}, m)\}; \\
+&\quad \textbf{trigger } \langle beb, \text{Broadcast} \mid [\text{DATA}, \text{self}, m] \rangle; \\[0.8em]
+&\textbf{upon event } \langle beb, \text{Deliver} \mid p, [\text{DATA}, s, m] \rangle \textbf{ do} \\
+&\quad \text{ack}[m] := \text{ack}[m] \cup \{p\}; \\
+&\quad \textbf{if } (s, m) \notin \text{pending} \textbf{ then} \\
+&\quad \quad \text{pending} := \text{pending} \cup \{(s, m)\}; \\
+&\quad \quad \textbf{trigger } \langle beb, \text{Broadcast} \mid [\text{DATA}, s, m] \rangle; \\[0.8em]
+&\textbf{upon event } \langle \mathcal{P}, \text{Crash} \mid p \rangle \textbf{ do} \\
+&\quad \text{correct} := \text{correct} \setminus \{p\}; \\[0.8em]
+&\textbf{function } \text{candeliver}(m) \textbf{ returns } \text{Boolean} \textbf{ is} \\
+&\quad \textbf{return } (\text{correct} \subseteq \text{ack}[m]); \\[0.8em]
+&\textbf{upon exists } (s, m) \in \text{pending} \textbf{ such that } \text{candeliver}(m) \land m \notin \text{delivered} \textbf{ do} \\
+&\quad \text{delivered} := \text{delivered} \cup \{m\}; \\
+&\quad \textbf{trigger } \langle urb, \text{Deliver} \mid s, m \rangle;
+\end{aligned}
+$$
