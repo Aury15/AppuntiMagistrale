@@ -1123,9 +1123,8 @@ BEB has three properties:
 - Asynchronous system;
 - Perfect links;
 - Crash failures.
-![[Dependable distributed system-1793875251900.webp]]
 The important thing is that BEB doesn't use an inter-process re-transmission mechanism to recover messages that the sender failed to send before a crash. It simply sends the message to everyone via Perfect Links.
-
+$$ \begin{array}{l} \hline \textbf{Algorithm 3.1:}\text{ Basic Broadcast} \\ \hline \textbf{Implements:} \\ \quad \text{BestEffortBroadcast, } \textbf{instance } beb. \\ \\ \textbf{Uses:} \\ \quad \text{PerfectPointToPointLinks, } \textbf{instance } pl. \\ \\ \textbf{upon event } \langle beb, \text{Broadcast} \mid m \rangle \textbf{ do} \\ \quad \textbf{forall } q \in \Pi \textbf{ do} \\ \quad\quad \textbf{trigger } \langle pl, \text{Send} \mid q, m \rangle; \\ \\ \textbf{upon event } \langle pl, \text{Deliver} \mid p, m \rangle \textbf{ do} \\ \quad \textbf{trigger } \langle beb, \text{Deliver} \mid p, m \rangle; \\ \hline \end{array} $$
 ###### Why BEB is correct?
 
 The validity ensure that if a correct process broadcast a message $m$ then all correct process eventually delivery $m$. Why? because the sender process send the message at all the processes using perfect links. If the sender is correct then can complete the delivery to everyone. Furthermore, Perfect Links guarantee delivery to the correct recipients. Therefore, validity derives directly from the reliable delivery of Perfect Links and from the fact that the sender sends the message to every process.
