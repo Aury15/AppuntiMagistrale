@@ -1140,10 +1140,14 @@ The no-creation assure that it must not be possible to deliver a message that no
 To overcome the BEB limitation we introduce **Reliable Broadcast**. **RB** retains the same properties as BEB, but adds a key property: **Agreement**. 
 **Agreement**: If a correct process delivers a message ($m$), then all correct processes eventually deliver ($m$). If even one correct process has delivered \(m\), then all other correct processes must eventually deliver it. It doesn't matter if the original sender subsequently fails. <mark style="background:#d3f8b6">This is a fundamental difference from BEB.</mark>
 
-Abbiamo: $[ p_1, p_2, p_3 ]$
-Il processo $p_1$ invia $m_1$, ma fallisce prima di completare l'invio.
-Con BEB:
-- $p_2$  consegna $m_1$;
-- $p_3$  non consegna $m_1$.
-Questo comportamento è ammesso da BEB, ma non da RB.
-Perché? Perché $p_2$  è un processo corretto e ha consegnato $m_1$. Di conseguenza, secondo Agreement, anche \(p_3\), se corretto, deve prima o poi consegnarlo. La proprietà di Agreement non significa che tutti i processi debbano consegnare ogni messaggio trasmesso da un processo che fallisce. Significa che, una volta che un processo corretto ha consegnato un messaggio, nessun altro processo corretto può rimanere senza consegnarlo.
+We have: $[ p_1, p_2, p_3 ]$
+Process $p_1$ sends $m_1$, but fails before completing the sending.
+With BEB:
+- $p_2$ delivers $m_1$;
+- $p_3$ does not deliver $m_1$.
+This behavior is permitted by BEB, but not by RB.
+Why? Because $p_2$ is a correct process and has delivered $m_1$. Consequently, according to Agreement, $p_3$, if correct, must also deliver it eventually. The **Agreement** property does not mean that all processes must deliver every message transmitted by a failing process. It means that, once a correct process has delivered a message, no other correct process can remain without delivering it.
+
+>[!Warning]
+>**BEB** ensures the reliability of communication when the sender is correct. **RB** also ensures agreement between the correct processes on message delivery.
+
