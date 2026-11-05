@@ -1238,4 +1238,7 @@ $$
 \end{aligned}
 $$
 ###### Performance of Eager RB algorithm
-<u>Best case = worst case</u> Why? because every process that receive the message for 
+<u>Best case = worst case</u> Why? because every process that receive the message for the first time re-transmits it. In a system with n processes, we have: 
+- An initial diffusion from the sender;
+- A diffusion from every other process that receive the message for the first time.
+So the to
