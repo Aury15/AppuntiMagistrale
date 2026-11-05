@@ -180,34 +180,28 @@ $$
 \end{aligned}
 $$
 ###### Algorithm: Job-Transformation by Buffering
-$$
 \begin{aligned}
 &\textbf{Algorithm: } \text{Job-Transformation by Buffering} \\
 &\textbf{Implements:} \text{ TransformationHandler, instance } th. \\
-&\textbf{Uses:} \text{ JobHandler, instance } jh. \\
-& \\
+&\textbf{Uses:} \text{ JobHandler, instance } jh. \\[0.8em]
 &\textbf{Upon event } \langle th, \text{Init} \rangle \textbf{ do} \\
 &\quad \text{top} := 1; \quad \text{bottom} := 1; \\
-&\quad \text{handling} := \text{FALSE}; \quad \text{buffer} := [\bot]^M; \\
-& \\
+&\quad \text{handling} := \text{FALSE}; \quad \text{buffer} := [\bot]^M; \\[0.8em]
 &\textbf{Upon event } \langle th, \text{Submit} \mid \text{job} \rangle \textbf{ do} \\
 &\quad \textbf{if } \text{bottom} + M = \text{top} \textbf{ then} \\
 &\quad \quad \text{trigger } \langle th, \text{Error} \mid \text{job} \rangle; \\
 &\quad \textbf{else} \\
 &\quad \quad \text{buffer}[\text{top} \bmod M + 1] := \text{job}; \\
 &\quad \quad \text{top} := \text{top} + 1; \\
-&\quad \quad \text{trigger } \langle th, \text{Confirm} \mid \text{job} \rangle; \\
-& \\
+&\quad \quad \text{trigger } \langle th, \text{Confirm} \mid \text{job} \rangle; \\[0.8em]
 &\textbf{Upon } \text{bottom} < \text{top} \land \text{handling} = \text{FALSE} \textbf{ do} \\
 &\quad \text{job} := \text{buffer}[\text{bottom} \bmod M + 1]; \\
 &\quad \text{bottom} := \text{bottom} + 1; \\
 &\quad \text{handling} := \text{TRUE}; \\
-&\quad \text{trigger } \langle jh, \text{Submit} \mid \text{job} \rangle; \\
-& \\
+&\quad \text{trigger } \langle jh, \text{Submit} \mid \text{job} \rangle; \\[0.8em]
 &\textbf{Upon event } \langle th, \text{Confirm} \mid \text{job} \rangle \textbf{ do} \\
 &\quad \text{handling} := \text{FALSE};
-\end{aligned}
-$$This algorithm maintains a buffer of size $M$ to temporarily store incoming jobs and send them one at a time to the underlying JobHandler ($jh$):
+\end{aligned}This algorithm maintains a buffer of size $M$ to temporarily store incoming jobs and send them one at a time to the underlying JobHandler ($jh$):
 - **Initialization (`Init`)**
     - The `top` and `bottom` indices are set to $1$, pointing to the insertion and extraction positions, respectively.
     - `handling := FALSE` indicates that the system is currently not processing any jobs.
