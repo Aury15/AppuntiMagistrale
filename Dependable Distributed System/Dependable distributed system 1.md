@@ -1674,4 +1674,7 @@ The rule for chose is "choose the min value of the proposal received", so in our
 ![[Dependable distributed system 1-1793897512085.webp]]
 
 ##### Correctness
- <u>Validity</u> and <u>integrity</u> follow from the properties of the communication channels. <u>Termination</u>: at most after N rounds the processes decide (there are at most N −1 crashes, so some round has no new crash). Agreement: correct processes apply the same deterministic function to the same set of values
+ <u>Validity</u> and <u>integrity</u> follow from the properties of the communication channels. <u>Termination</u>: at most after N rounds the processes decide (there are at most N −1 crashes, so some round has no new crash). <u>Agreement</u>: correct processes apply the same deterministic function to the same set of values.
+
+##### Performance
+- **Best case:** one communication 
