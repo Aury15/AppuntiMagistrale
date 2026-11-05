@@ -1628,7 +1628,9 @@ We have a set of initial value $\in$ {0, 1} and every process has to decide the 
 | $p_1$ | $p_2$ | $p_3$ | $p_4$ | $p_5$ | $p_6$ |
 | ----- | ----- | ----- | ----- | ----- | ----- |
 | 0     | 1     | 0     | 1     | 0     | 0     |
-**Consensus Values**:
+**Consensus Values**: (decided with a consensus protocol)
 
-
+| $p_1$ | $p_2$ | $p_3$ | $p_4$ | $p_5$ | $p_6$ |
+| ----- | ----- | ----- | ----- | ----- | ----- |
+| 1     | 1     | 1     | 1     | x     | 1     |
 
