@@ -1031,3 +1031,23 @@ $$
 - **Updating and Trusting**: If the calculated highest-rank process differs from the current `leader`, the local variable is updated, and a notification is sent out via `trigger < \Omega, Trust \mid leader >` to signal that the process now trusts this new leader.
 
 ![[Dependable distributed system-1793871932811.webp]]
+
+$$\begin{array}{l}
+\textbf{Algorithm 2.9:} \text{ Elect Lower Epoch} \\
+\hline
+\textbf{Implements:} \\
+\quad \text{EventualLeaderDetector, } \mathbf{instance}\ \Omega. \\[6pt]
+\textbf{Uses:} \\
+\quad \text{FairLossPointToPointLinks, } \mathbf{instance}\ fll. \\[6pt]
+\textbf{upon event } \langle \, \Omega, \text{Init} \, \rangle \textbf{ do} \\
+\quad \mathit{epoch} := 0; \\
+\quad \text{store}(\mathit{epoch}); \\
+\quad \text{candidates} := \emptyset; \\
+\quad \textbf{Ecco il codice formattato in Markdown e LaTeX, pronto per essere inserito all'interno delle tue note su Obsidian. 
+$\text{EventualLeaderDetector}$, instance $\Omega$.
+$\text{FairLossPointToPointLinks}$, instance $fll$[cite: 2].
+upon event $\langle \Omega, \text{Init} \rangle$ do
+    $\text{epoch} := 0$;
+    $\text{store}(\text{epoch})$;
+    $\text{candidates} := \emptyset$;
+    $\text{trigger} \langle \Omega, \text{Recovery} \rangle$;
