@@ -1073,6 +1073,7 @@ $$
 
 ## Broadcast communications
 
-Until now we studied how a process can communicate with another process, but now we want to study how a process can communicate with an entire group of processes. This type of communication is called *broadcast communications*. So, now, we want that a process can communicate with a group of processes 
-
+Until now we studied how a process can communicate with another process, but now we want to study how a process can communicate with an entire group of processes. This type of communication is called *broadcast communications*. So, now, we want that a process can communicate with a group of processes ensuring certain properties even when some processes may fail.
 ![[Dependable distributed system-1793873296104.webp]]
+
+Its optimal to 
