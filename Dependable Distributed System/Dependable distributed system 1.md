@@ -1190,6 +1190,7 @@ Suppose $p_1$ broadcasts a message $m_1$:
 - With the **Best-Effort Broadcast (BEB)** abstraction:
   - $p_2$ receives and delivers $m_1$.
   - $p_3$ will never receive $m_1$.
+
 > [!warning] Agreement Violation
 >   This situation violates the **Agreement** property of *Reliable Broadcast*: if a correct process ($p_2$) delivers a message, then all correct processes (and thus also $p_3$) must eventually deliver it. To honor the **Agreement**, process $p_2$, after receiving the message, must cooperate by forwarding $m_1$ to other processes to fill the gap left by the failed sender. 
 
@@ -1305,4 +1306,5 @@ This feature incurs a higher communication cost than Lazy RB when there are no f
 | Worst case         | \(n-1\) BEB per RB  | \(n\) BEB per RB         |
 | Communication cost | Depend on failure   | Consistent with failures |
 
-![[Dependable distributed system-1793890533236.webp|598]]
+![[Dependable distributed system-1793890533236.webp|574]]
+#### Uniform reliable broadcast (URB)
