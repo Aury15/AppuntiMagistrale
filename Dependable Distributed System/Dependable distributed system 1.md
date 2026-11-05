@@ -1439,3 +1439,8 @@ So far, we've studied algorithms that attempt to guarantee reliability propertie
 2. PB2: *No duplication*, no message is delivered more than once;
 3. PB3: *No creation*: if a process delivers a message $m$ with sender $s$, then $m$ was previously broadcast by process $s$.
 The system is not completely reliable. Unlike RB and URB, we cannot deterministically guarantee that all correct processes will deliver every message.
+This solution is particularly interesting when the group is:
+- Very large.
+- Dynamic, meaning processes can join and leave the group.
+Imagine a network consisting of thousands or millions of devices. Sending a message to everyone and waiting for individual confirmation from each can become extremely expensive. To achieve high reliability, RBs and URBs may require retransmission and acknowledgement mechanisms. As the number of processes increases, the number of ACKs also increases.
+The issue, therefore, is scalability.
