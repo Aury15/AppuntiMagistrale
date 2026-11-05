@@ -1495,21 +1495,14 @@ The two important parameters are:
 Increasing $k$ or $r$ generally increases the probability that the message reaches all processes, but also increases communication overhead.
 
 ###### Why Random Selection?
-Random selection allows the protocol to avoid maintaining a complete list of all processes that must receive the message.
-
-It also makes dissemination more scalable in large and dynamic distributed systems.
-
-However, random selection means that the same process may be contacted by multiple senders.
-
+Random selection allows the protocol to avoid maintaining a complete list of all processes that must receive the message. It also makes dissemination more scalable in large and dynamic distributed systems. However, random selection means that the same process may be contacted by multiple senders.
 Therefore, the number of distinct processes reached is not necessarily:
 
 $$  
 1+k+k^2+\cdots+k^r  
 $$
 
-This expression would represent the number of processes in a tree without overlapping recipients.
-
-In gossip dissemination, different processes may select the same targets, so the actual number of distinct processes reached depends on the random choices.
+This expression would represent the number of processes in a tree without overlapping recipients. In gossip dissemination, different processes may select the same targets, so the actual number of distinct processes reached depends on the random choices.
 
 > [!example] Simple Example  
 > Suppose each process forwards a message to $k=2$ randomly selected processes.
@@ -1522,3 +1515,130 @@ In gossip dissemination, different processes may select the same targets, so the
 >     
 > 
 > Some processes may receive the same message from multiple senders. The protocol must therefore prevent duplicate deliveries.
+
+#### Eager Probabilistic Broadcast
+
+The lecture presents an implementation of Probabilistic Broadcast based on gossip dissemination.
+The algorithm uses:
+- `pb`: the Probabilistic Broadcast abstraction.
+- `fl`: Fair-Loss Point-to-Point Links.
+- `delivered`: a local set containing all messages already delivered by the process.
+
+The algorithm uses the following parameters:
+- $k$: number of randomly selected targets.
+- $r$: number of remaining gossip rounds.
+- $s$: original sender of the message.
+- $p$: process from which the current message was received.
+
+##### Local State
+Each process maintains a set:
+$$  
+delivered := {}  
+$$
+This set stores the messages that the process has already delivered.
+It is used to ensure that a message is delivered only once.
+
+### Gossip Procedure
+
+The procedure `gossip(msg)` sends the message to $k$ randomly selected processes.
+
+Conceptually:
+
+```text
+procedure gossip(msg):
+    for each t in picktargets(k):
+        trigger fl.Send(t, msg)
+```
+
+The function `picktargets(k)` returns $k$ distinct processes selected randomly, excluding the process itself.
+
+### When a Process Broadcasts a Message
+
+When a process invokes:
+
+```text
+upon pb.Broadcast(m):
+```
+
+the algorithm performs the following operations:
+
+1. Adds $m$ to the local `delivered` set.
+    
+2. Delivers the message locally by triggering `pb.Deliver(self, m)`.
+    
+3. Starts gossip dissemination by forwarding the message to randomly selected processes.
+    
+
+The message sent through the point-to-point links has the following structure:
+
+```text
+[GOSSIP, self, m, R]
+```
+
+Here:
+
+- `GOSSIP` identifies the type of message.
+    
+- `self` identifies the original sender.
+    
+- `m` is the broadcast message.
+    
+- `R` is the initial number of gossip rounds.
+    
+
+The original sender delivers its own message immediately and then starts the dissemination process.
+
+### When a Process Receives a Gossip Message
+
+When a process receives a gossip message:
+
+```text
+upon fl.Deliver(p, [GOSSIP, s, m, r]):
+```
+
+it checks whether the message $m$ has already been delivered.
+
+**Case 1: The message has not been delivered yet**
+
+If:
+
+$$  
+m \notin delivered  
+$$
+
+the process:
+
+1. Adds $m$ to its `delivered` set.
+    
+2. Delivers the message by triggering `pb.Deliver(s, m)`.
+    
+3. Checks whether there are still gossip rounds remaining.
+    
+
+If:
+
+$$  
+r > 1  
+$$
+
+the process forwards the message again using:
+
+```text
+gossip([GOSSIP, s, m, r-1])
+```
+
+The number of remaining rounds is therefore decreased by one.
+
+**Case 2: The message has already been delivered**
+
+If:
+
+$$  
+m \in delivered  
+$$
+
+the process ignores the message.
+
+It does not deliver it again and does not forward it again.
+
+This prevents duplicate deliveries and avoids unnecessary forwarding.
