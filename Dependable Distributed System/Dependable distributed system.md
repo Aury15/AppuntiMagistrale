@@ -1077,4 +1077,5 @@ Until now we studied how a process can communicate with another process, but now
 ![[Dependable distributed system-1793873296104.webp]]
 
 Let's remember some useful things for this chapter:
-- System model: the model that des
+- System model: the model that describes the system and his characteristics;
+- A distributed system is composed by many processes that communicate over a network. The
