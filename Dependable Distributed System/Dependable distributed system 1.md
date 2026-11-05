@@ -1660,3 +1660,12 @@ The rule for chose is "choose the min value of the proposal received", so in our
 | 0 (init) | —       | —       | —       | {5}       | {3}       | {7}       |
 | 1        | {5}     | {3}     | {7}     | {3,5,7}   | {3,5,7}   | {3,5,7}   |
 | 2        | {3,5,7} | {3,5,7} | {3,5,7} | {3,5,7}   | {3,5,7}   | {3,5,7}   |
+**min{3,5,7} = 3**
+##### Esempio 2 
+**p2 sends 3 only to p1 and then crashes**: the message for p3 is not sent. This is legal in crash-stop (a process can crash at any time).
+
+|Round|p1 invia|p2 invia|p3 invia|Values p1|Values p2|Values p3|
+|---|---|---|---|---|---|---|
+|0|—|—|—|{5}|{3}|{7}|
+|1|{5}|{3} _solo a p1_|{7}|**{3,5,7}**|💥 crashato|**{5,7}**|
+|2|{3,5,7}|—|{5,7}|{3,5,7}|—|{3,5,7}|
