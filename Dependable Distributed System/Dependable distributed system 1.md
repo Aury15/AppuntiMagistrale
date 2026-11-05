@@ -1423,7 +1423,11 @@ the majority requires at least three correct processes. Therefore:
 
 A majority allows for a large enough set of correct processes to ensure that the confirmations collected don't come exclusively from processes destined to fail. The idea is to use a quorum, i.e., a minimum number of processes that must confirm receipt of the message.
 
-| Implementation | Hypothesis               |
-| -------------- | ------------------------ |
-| Sync system    | Perfect Failure Detector |
-| Async system   | Correct processes majori |
+| Implementation | Hypothesis                 |
+| -------------- | -------------------------- |
+| Sync system    | Perfect Failure Detector   |
+| Async system   | Correct processes majority |
+
+>[!Question] 
+>Can we devise a uniform reliable broadcast algorithm for a partially synchronous system (using an eventually perfect failure detector) but without the assumption of a majority of correct processes?
+
