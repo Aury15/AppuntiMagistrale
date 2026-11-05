@@ -1613,4 +1613,4 @@ It does not deliver it again and does not forward it again. This prevents duplic
 |Scalability|Can be affected by communication overhead|Designed to scale in large systems|
 |Main limitation|Communication and coordination costs|A small probability of incomplete dissemination|
 
-##
+## Consensus
