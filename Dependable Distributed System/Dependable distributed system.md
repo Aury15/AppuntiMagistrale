@@ -1141,8 +1141,9 @@ To overcome the BEB limitation we introduce **Reliable Broadcast**. **RB** retai
 **Agreement**: If a correct process delivers a message ($m$), then all correct processes eventually deliver ($m$). If even one correct process has delivered \(m\), then all other correct processes must eventually deliver it. It doesn't matter if the original sender subsequently fails. <mark style="background:#d3f8b6">This is a fundamental difference from BEB.</mark>
 
 Abbiamo: $[ p_1, p_2, p_3 ]$
-Il processo $(p_1$) invia $(m_1)$, ma fallisce prima di completare l'invio.
+Il processo $p_1$ invia $m_1$, ma fallisce prima di completare l'invio.
 Con BEB:
-- $(p_2$)  consegna \(m_1\);
-- $(p_1$)  non consegna \(m_1\).
+- $p_2$  consegna $m_1$;
+- $p_3$  non consegna $m_1$.
 Questo comportamento è ammesso da BEB, ma non da RB.
+Perché? Perché $p_2$  è un processo corretto e ha consegnato $m_1$. Di conseguenza, secondo Agreement, anche \(p_3\), se corretto, deve prima o poi consegnarlo. La proprietà di Agreement non significa che tutti i processi debbano consegnare ogni messaggio trasmesso da un processo che fallisce. Significa che, una volta che un processo corretto ha consegnato un messaggio, nessun altro processo corretto può rimanere senza consegnarlo.
