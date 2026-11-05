@@ -1073,3 +1073,6 @@ $$
 
 ## Broadcast communications
 
+
+
+![[Dependable distributed system-1793873296104.webp]]
