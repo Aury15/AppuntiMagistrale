@@ -1238,3 +1238,4 @@ $$
 \end{aligned}
 $$
 ###### Performance of Eager RB algorithm
+<u>Best case = worst case</u> Why? because every process that receive the message for 
