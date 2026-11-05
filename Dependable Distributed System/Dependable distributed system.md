@@ -678,11 +678,12 @@ The processes are organized in a logical ring topology (overlay network) using e
 &\textbf{next} = p_{i+1}mod (n) 
 \end{aligned}
 $$2. A token is created and propagated in the ring during the initialization phase (i.e., it is assigned to a process of the system). <mark style="background:#fff88f">WARNING: The token must be unique to guarantee mutual exclusion</mark>. Only one process (selected trough a deterministic function) can create the token during the init.
-![[Dependable distributed system-1793810978086.webp|673]]$$
+![[Dependable distributed system-1793810978086.webp|673]]
+$$
 \begin{aligned}
 &\textbf{Init} \\
-&\textbf{state} \text{= idle} \\
-&\textbf{next} = p_{i+1}mod (n) \\
+&\textbf{state} \text{= idle}\\
+&\textbf{next} = p_{i+1}mod (n)\\
 &\text{if self =} p_0 \\
 & \quad \quad \quad \text{trigger pp2pSend(TOKEN) to next} 
 \end{aligned}
