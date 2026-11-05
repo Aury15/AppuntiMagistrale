@@ -1,4 +1,7 @@
-
+---
+cssclasses:
+  - dds-notes
+---
 ## Distributed system 
 
 >[!definition] Distributed system
