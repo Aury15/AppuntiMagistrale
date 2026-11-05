@@ -1216,12 +1216,7 @@ Therefore, re-transmission occurs only when necessary. Hence the name Lazy.
 This algorithm is called ""Eager reliable broadcast". It doesn't use a failure detector, this is important because we are in an asynchronous system. The logic of this algorithm is very easy: every process that receive a message for the first time re-send this message (immediately) to all the processes. So we don't have to wait that a process fail and we don't have to know if a process is failed or either. This is where the name Eager comes from, meaning "immediate".
 <mark style="background:rgba(5, 117, 197, 0.2)">Perché Eager RB garantisce Agreement?</mark> Facciamo un esempio.
 Abbiamo tre processi: $[ p_1,p_2,p_3$]
-Supponiamo che $p_1$ invii \(m_1\) a \(p_2\), ma fallisca prima di raggiungere \(p_3\).
-
-Con BEB, \(p_2\) riceve \(m_1\).
-
-Con Eager RB, però, \(p_2\) non si limita a consegnarlo: lo ritrasmette immediatamente a tutti.
-
-Quindi \(p_3\) può ricevere \(m_1\) anche se \(p_1\) è fallito.
+Supponiamo che $p_1$ invii $m_1$ a $p_2$, ma fallisca prima di raggiungere $p_3$.
+Con BEB, $p_2$ riceve $m_1$. Con Eager RB, però, $p_2$ non si limita a consegnarlo: lo ritrasmette immediatamente a tutti. Quindi $p_3$ può ricevere $m_1$ anche se $p_1$ è fallito.
 
 Questo è esattamente il comportamento che ci serve per garantire Agreement.
