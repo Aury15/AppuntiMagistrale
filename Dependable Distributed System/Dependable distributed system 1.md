@@ -1373,53 +1373,35 @@ $$
 - **Uses:**
     - `BestEffortBroadcast`, instance `beb` (to disseminate messages across the network).
     - `PerfectFailureDetector`, instance $\mathcal{P}$ (to accurately track which processes are still alive and which have crashed).
-### State Variables (`Init`)
 
+**State Variables** (`Init`)
 When the algorithm starts, the local state is initialized as follows:
-
 - $\text{delivered} := \emptyset$: Stores messages that have already been delivered to the application layer.
-    
 - $\text{pending} := \emptyset$: Tracks messages that have been broadcast or received but are waiting for the safety condition to be met before final delivery.
-    
 - $\text{correct} := \Pi$: The set of all processes in the system ($\Pi$) currently presumed to be correct (non-faulty).
-    
 - $\text{ack}[m] := \emptyset$: For each message $m$, a set recording which processes have acknowledged or relayed it.
-    
 
-### Core Events & Logic
-
+ **Core Events & Logic**
 - **Initiating a Broadcast:**
-    
     $$\textbf{upon event } \langle urb, \text{Broadcast} \mid m \rangle \text{ do}$$
-    
     - Adds $(\text{self}, m)$ to the local `pending` set.
-        
     - Triggers a Best-Effort Broadcast (`beb`) to send the data payload `[DATA, self, m]` to all processes.
         
 - **Receiving via Best-Effort Broadcast:**
-    
     $$\textbf{upon event } \langle beb, \text{Deliver} \mid p, [\text{DATA}, s, m] \rangle \text{ do}$$
-    
     - Adds the sender $p$ to the acknowledgment set for message $m$ ($\text{ack}[m] := \text{ack}[m] \cup \{p\}$).
-        
     - If the message-sender pair $(s, m)$ is not yet in `pending`, it adds it and immediately relays it using `beb` to ensure network-wide propagation.
         
 - **Handling Process Crashes:**
-    
     $$\textbf{upon event } \langle \mathcal{P}, \text{Crash} \mid p \rangle \text{ do}$$
-    
     - When the failure detector $\mathcal{P}$ suspects/detects that process $p$ has crashed, $p$ is removed from the local `correct` set ($\text{correct} := \text{correct} \setminus \{p\}$). This ensures the algorithm stops waiting for acknowledgments from dead processes.
         
 - **Check for Delivery Readiness:**
-    
     $$\textbf{function } \text{candeliver}(m) \text{ returns } \text{Boolean} \text{ is}$$
-    
     - Returns `true` if and only if every process currently in the `correct` set has acknowledged message $m$ ($\text{correct} \subseteq \text{ack}[m])$.
         
 - **Delivering the Message:**
-    
     $$\textbf{upon exists } (s, m) \in \text{pending} \text{ such that } \text{candeliver}(m) \land m \notin \text{delivered} \text{ do}$$
-    
     - Once all correct nodes acknowledge a pending message and it hasn't been delivered yet:
         
         - Adds $m$ to the `delivered` set ($\text{delivered} := \text{delivered} \cup \{m\}$).
