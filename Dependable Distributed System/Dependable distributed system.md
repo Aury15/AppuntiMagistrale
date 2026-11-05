@@ -1158,25 +1158,20 @@ $$
 \hline
 \textbf{Implements:} \\
 \quad \text{ReliableBroadcast, } \textbf{instance } rb. \\
-\\
 \textbf{Uses:} \\
 \quad \text{BestEffortBroadcast, } \textbf{instance } beb; \\
 \quad \text{PerfectFailureDetector, } \textbf{instance } \mathcal{P}. \\
-\\
 \textbf{upon event } \langle rb, \text{Init} \rangle \textbf{ do} \\
 \quad correct := \Pi; \\
 \quad from[p] := [\emptyset]^N; \\
-\\
 \textbf{upon event } \langle rb, \text{Broadcast} \mid m \rangle \textbf{ do} \\
 \quad \textbf{trigger } \langle beb, \text{Broadcast} \mid [{Data}, \textit{self}, m] \rangle; \\
-\\
 \textbf{upon event } \langle beb, \text{Deliver} \mid p, [{Data}, s, m] \rangle \textbf{ do} \\
 \quad \textbf{if } m \notin from[s] \textbf{ then} \\
 \quad\quad \textbf{trigger } \langle rb, \text{Deliver} \mid s, m \rangle; \\
 \quad\quad from[s] := from[s] \cup \{m\}; \\
 \quad\quad \textbf{if } s \notin correct \textbf{ then} \\
 \quad\quad\quad \textbf{trigger } \langle beb, \text{Broadcast} \mid [{Data}, s, m] \rangle; \\
-\\
 \textbf{upon event } \langle \mathcal{P}, \text{Crash} \mid p \rangle \textbf{ do} \\
 \quad correct := correct \setminus \{p\}; \\
 \quad \textbf{forall } m \in from[p] \textbf{ do} \\
@@ -1217,4 +1212,4 @@ Therefore, re-transmission occurs only when necessary. Hence the name Lazy.
 - <u>Best case</u>: 1 BEB message per one RB message;
 - <u>Worst case</u>: n-1 BEB message per one RB (this is the case with n-1 failures).
 
-
+#### Reliable 
