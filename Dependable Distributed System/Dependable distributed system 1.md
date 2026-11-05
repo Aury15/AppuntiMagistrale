@@ -1405,3 +1405,5 @@ When the algorithm starts, the local state is initialized as follows:
     - Once all correct nodes acknowledge a pending message and it hasn't been delivered yet:
         - Adds $m$ to the `delivered` set ($\text{delivered} := \text{delivered} \cup \{m\}$).
         - Triggers the upper-layer delivery event $\langle urb, \text{Deliver} \mid s, m \rangle$.
+
+#### Uniform reliable broadcast (URB) implementation in asynchronous system
