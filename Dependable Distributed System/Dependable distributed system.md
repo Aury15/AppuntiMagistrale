@@ -1115,6 +1115,6 @@ The two main operations are:
 - `BEB_Broadcast(msg)`: Used by a process to broadcast a message to everyone.
 - `BEB_Deliver(msg)`: Used when a process receives and delivers the message to the application.
 BEB has three properties:
-1. **BEB1**: Validity, if a correct process broadcast a message $m$, then every correct process eventually delivers $m$
-2. **BEB2**
-3. **BEB3**
+1. **BEB1**: *Validity*, if a correct process broadcast a message $m$, then every correct process eventually delivers $m$;
+2. **BEB2**: *No duplication*, no message is delivered more than once;
+3. **BEB3**: *No creation*, if a process delivers a message $m$ with sender $s$, then $m$ was previously broadcast by process $s$
