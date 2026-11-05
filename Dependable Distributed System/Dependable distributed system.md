@@ -1204,19 +1204,11 @@ Its key characteristic is "laziness": instead of eagerly re-broadcasting every m
 
 **Detailed Event Breakdown**:
 
- 1. Initialization (`upon event <rb, Init>`)
+ 1. **Initialization** (`upon event <rb, Init>`)
+	- At startup, all processes are assumed to be correct (`correct := \Pi`).
+	- The history tracking array `from` is initialized to empty sets for all processes.
 
-
-correct := $\Pi$;
-from[p] := [\emptyset]^N;
-```
-
-- At startup, all processes are assumed to be correct (`correct := \Pi`).
-    
-- The history tracking array `from` is initialized to empty sets for all processes.
-    
-
-### 2. Initiating a Broadcast (`upon event <rb, Broadcast \mid m>`)
+ 2. **Initiating a Broadcast** (`upon event <rb, Broadcast \mid m>`)
 
 Snippet di codice
 
