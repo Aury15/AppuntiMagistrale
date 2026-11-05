@@ -1241,4 +1241,5 @@ $$
 <u>Best case = worst case</u> Why? because every process that receive the message for the first time re-transmits it. In a system with n processes, we have: 
 - An initial diffusion from the sender;
 - A diffusion from every other process that receive the message for the first time.
-So the to
+So the total number of broadcast operations is $n$. 
+This feature incurs a higher communication cost than Lazy RB when there are no failures. However, we don't need a Failure Detector.
