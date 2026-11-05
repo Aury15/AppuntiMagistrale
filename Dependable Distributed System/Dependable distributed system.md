@@ -1193,7 +1193,37 @@ $$
 \hline
 \end{array}
 $$
-![[Dependable distributed system-1793878585352.webp|749]]![[Dependable distributed system-1793878592836.webp|754]]![[Dependable distributed system-1793878600980.webp|761]]
+
+Consideriamo la sequenza:
+
+- \(p_1\) effettua RB Broadcast di \(m_1\).
+    
+- Il messaggio raggiunge \(p_2\).
+    
+- Successivamente \(p_1\) effettua RB Broadcast di \(m_2\).
+    
+- Prima che tutti abbiano ricevuto i messaggi, \(p_1\) fallisce.
+    
+
+Osserviamo cosa accade.
+
+Per \(m_1\):
+
+\(p_2\) ha ricevuto \(m_1\) e lo ha consegnato tramite RB.
+
+Quando viene rilevato il crash di \(p_1\), \(p_2\) sa che \(p_1\) aveva originato \(m_1\).
+
+Di conseguenza, ritrasmette \(m_1\) tramite BEB.
+
+Anche gli altri processi che avevano ricevuto \(m_1\) possono partecipare alla sua diffusione.
+
+Per \(m_2\):
+
+Il messaggio era stato originato da \(p_1\), ma non tutti i processi lo avevano ancora ricevuto.
+
+Se almeno un processo corretto lo aveva già ricevuto, questo processo può ritrasmetterlo dopo il crash.
+
+La lezione da comprendere è che il processo che ha ricevuto il messaggio diventa responsabile della sua ulteriore diffusione quando il mittente fallisce.![[Dependable distributed system-1793878585352.webp|749]]![[Dependable distributed system-1793878592836.webp|754]]![[Dependable distributed system-1793878600980.webp|761]]
 The idea behind the algorithm is:
 - Normally, a process does not retransmit messages it receives.
 - However, if it discovers that the original processing of a message has failed, it re-transmits the messages that process had already sent.
