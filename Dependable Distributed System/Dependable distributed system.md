@@ -1213,4 +1213,4 @@ Therefore, re-transmission occurs only when necessary. Hence the name Lazy.
 - <u>Worst case</u>: n-1 BEB message per one RB (this is the case with n-1 failures).
 
 #### Reliable broadcast implementation in asynchronous system
-This algorithm is called ""E
+This algorithm is called ""Eager reliable broadcast". It doesn't use a failure detector, this is important because we are in an asynchronous system. The logic of this algorithm is very easy: every process that receive a message for the first time re-send this messa
