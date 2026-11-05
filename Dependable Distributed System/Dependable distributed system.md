@@ -1196,25 +1196,18 @@ $$
 The **Lazy Reliable Broadcast** algorithm implements a reliable broadcast abstraction ($rb$) using a **Best-Effort Broadcast** ($beb$) protocol and a **Perfect Failure Detector** ($\mathcal{P}$).
 Its key characteristic is "laziness": instead of eagerly re-broadcasting every message to all processes immediately (which would consume high network bandwidth), processes only re-broadcast a message if its original sender is suspected or detected to have crashed. This ensures **Reliable Broadcast** properties (Validity, Agreement, Integrity) with lower message overhead under normal, crash-free conditions.
 
-## Components and State Variables
-
+ **Components and State Variables**:
 - **`correct`**: A set initialized to $\Pi$ (all processes in the system). It tracks which processes are currently believed to be correct (not crashed).
-    
 - **`from[p]`**: An array/dictionary mapping each process $p$ to a set of messages received from $p$. This prevents duplicate deliveries and keeps track of what has been heard from whom.
-    
 - **`beb` (Best-Effort Broadcast)**: A lower-level communication primitive that guarantees message delivery if the sender does not crash, but does not guarantee atomic agreement across all correct processes on its own.
-    
 - **$\mathcal{P}$ (Perfect Failure Detector)**: A failure detector module that outputs permanent crash suspicions (never makes mistakes).
-    
 
-## Detailed Event Breakdown
+**Detailed Event Breakdown**:
 
-### 1. Initialization (`upon event <rb, Init>`)
+ 1. Initialization (`upon event <rb, Init>`)
 
-Snippet di codice
 
-```
-correct := \Pi;
+correct := $\Pi$;
 from[p] := [\emptyset]^N;
 ```
 
