@@ -1643,3 +1643,4 @@ This problem has four properties:
 >No (deterministic) algorithm can guarantee to reach consensus in an asynchronous system, even if only one process may fail by crashing. 
 
 #### A consensus implementation in synchronous systems: flooding consensus
+**Idea**: Imagine we have $N$ processes, each with its own proposal. For <mark style="background:#d3f8b6">example</mark>: $p_1: 5 \qquad p_2: 3 \qquad p_3: 7$ 
