@@ -1079,4 +1079,7 @@ Until now we studied how a process can communicate with another process, but now
 Let's remember some useful things for this chapter:
 - System model: the model that describes the system and his characteristics;
 - A distributed system is composed by many processes that communicate over a network. Processes can perform operations independently and do not necessarily share the same memory.
-- When we define an 
+- When we define a communication abstraction, we need to specify which properties it must respect:
+	- Safety;
+	- Liveness.
+- 
