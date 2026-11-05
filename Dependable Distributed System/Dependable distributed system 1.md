@@ -1477,88 +1477,24 @@ The Probabilistic Broadcast abstraction provides two operations:
 - `Pb_Broadcast(m)`: used by a process to broadcast message $m$.
 - `Pb_Deliver(m)`: used to notify a process that message $m$ has been delivered
 
-The idea is to use **gossip-based dissemination**: instead of contacting every process directly, each process forwards the message to a limited number of randomly selected processes.
+##### Gossip Dissemination
 
-This reduces communication overhead and makes the protocol more scalable.
-
-### Interface
-
-The Probabilistic Broadcast abstraction provides two operations:
-
-- `Pb_Broadcast(m)`: used by a process to broadcast message $m$.
-    
-- `Pb_Deliver(m)`: used to notify a process that message $m$ has been delivered.
-    
-
-### Properties
-
-Probabilistic Broadcast provides the following properties.
-
-**Probabilistic Validity**
-
-If a correct process broadcasts a message $m$, then the probability that all correct processes eventually deliver $m$ is at least $1-\varepsilon$, for some positive value $\varepsilon$.
-
-In other words, the protocol aims to deliver the message to all correct processes with a very high probability, but it does not provide an absolute guarantee.
-
-For example, if $\varepsilon = 0.01$, the probability of successful dissemination is at least:
-
-$$  
-1-\varepsilon = 0.99  
-$$
-
-Therefore, the probability that all correct processes eventually deliver the message is at least $99%$.
-
-**No Duplication**
-
-A process delivers a given message at most once.
-
-Even if the same message is received multiple times from different processes, it is delivered only once.
-
-**No Creation**
-
-A process can deliver a message only if that message was previously broadcast by some process.
-
-The protocol cannot create messages that were never broadcast.
-
-> [!important] Difference from Reliable Broadcast  
-> Unlike traditional Reliable Broadcast, Probabilistic Broadcast does not guarantee deterministic Agreement or Uniform Agreement. Its dissemination guarantee is probabilistic.
-
----
-
-## Gossip Dissemination
-
-Probabilistic Broadcast commonly relies on a technique called **gossip dissemination**.
-
-The main idea is that each process forwards a received message to a limited number of randomly selected processes.
-
-Instead of sending a message to every process in the system, each process selects only $k$ targets.
-
-The dissemination proceeds in multiple rounds.
-
-### How Gossip Dissemination Works
+Probabilistic Broadcast commonly relies on a technique called **gossip dissemination**. The main idea is that each process forwards a received message to a limited number of randomly selected processes. Instead of sending a message to every process in the system, each process selects only $k$ targets. The dissemination proceeds in multiple rounds.
+###### How Gossip Dissemination Works
 
 Suppose a process wants to broadcast a message:
-
 1. The original process sends the message to $k$ randomly selected processes.
-    
 2. Each process that receives the message forwards it to another $k$ randomly selected processes.
-    
 3. This process continues for a limited number of rounds.
-    
 4. Eventually, the message spreads through a large portion of the system.
-    
 
 The two important parameters are:
-
 - $k$: the number of randomly selected processes contacted by each process.
-    
 - $r$: the maximum number of dissemination rounds.
-    
 
 Increasing $k$ or $r$ generally increases the probability that the message reaches all processes, but also increases communication overhead.
 
-### Why Random Selection?
-
+###### Why Random Selection?
 Random selection allows the protocol to avoid maintaining a complete list of all processes that must receive the message.
 
 It also makes dissemination more scalable in large and dynamic distributed systems.
