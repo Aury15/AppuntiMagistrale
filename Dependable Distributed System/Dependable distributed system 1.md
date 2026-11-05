@@ -1651,3 +1651,12 @@ Imagine we have $N$ processes, each with its own proposal. For <mark style="back
 2. The processes collect the proposals received;
 3. When they have enough information, they apply a deterministic function to choose the value to decide.
 The rule for chose is "choose the min value of the proposal received", so in our example the chosen value is "3". 
+
+##### Example 1 — nessun guasto
+:p1 = 5, p2 = 3, p3 = 
+
+| Round    | p1 send | p2 send | p3 send | Values p1 | Values p2 | Values p3 |
+| -------- | ------- | ------- | ------- | --------- | --------- | --------- |
+| 0 (init) | —       | —       | —       | {5}       | {3}       | {7}       |
+| 1        | {5}     | {3}     | {7}     | {3,5,7}   | {3,5,7}   | {3,5,7}   |
+| 2        | {3,5,7} | {3,5,7} | {3,5,7} | {3,5,7}   | {3,5,7}   | {3,5,7}   |
