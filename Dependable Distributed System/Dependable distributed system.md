@@ -1114,3 +1114,7 @@ Idea: When a process wants to send a message, the system tries to deliver it to 
 The two main operations are:
 - `BEB_Broadcast(msg)`: Used by a process to broadcast a message to everyone.
 - `BEB_Deliver(msg)`: Used when a process receives and delivers the message to the application.
+BEB has three properties:
+1. **BEB1**: Validity, if a correct process broadcast a message $m$, then every correct process eventually delivers $m$
+2. **BEB2**
+3. **BEB3**
