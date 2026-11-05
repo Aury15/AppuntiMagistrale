@@ -1620,6 +1620,9 @@ In the consensus problem a group of processes must agree on a value that has bee
 </p>
 We have a set of initial value $\in$ {0, 1} and every process has to decide the same value in {0,1}, based on the initial proposals.
 
-| $p_1$ | $p_2$ | $p_3$ | $p_4 |     |     |
-| ----- | ----- | ----- | ---- | --- | --- |
-|       |       |       |      |     |     |
+**Initial values**:
+
+| $p_1$ | $p_2$ | $p_3$ | $p_4$ | $p_5$ | $p_6$ |
+| ----- | ----- | ----- | ----- | ----- | ----- |
+| 0     | 1     | 0     | 1     | 0     | 0     |
+**Consensus Values**:
