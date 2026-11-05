@@ -1105,3 +1105,5 @@ Let's remember some useful things for this chapter:
 	- *Logical clocks*: logical clocks used to establish an ordering of events.
 	- *Failure Detector* (FD): component that allows you to suspect that a process has failed.
 	- *Leader Election*: procedure that allows processes to elect a leader.
+
+For a communication broadcast we can immagine a system with three processes: $\Pi = {p_1, p_2, p_3}$,
