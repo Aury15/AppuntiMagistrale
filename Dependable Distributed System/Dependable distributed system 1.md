@@ -1619,3 +1619,7 @@ It does not deliver it again and does not forward it again. This prevents duplic
 In the consensus problem a group of processes must agree on a value that has been proposed by one of them. Its an abstraction of a class of problems where processes start with their opinion and then converge on one of them. Its a fundamental problem. 
 </p>
 We have a set of initial value $\in$ {0, 1} and every process has to decide the same value in {0,1}, based on the initial proposals.
+
+| $p_1$ | $p_2$ | $p_3$ | $p_4 |     |     |
+| ----- | ----- | ----- | ---- | --- | --- |
+|       |       |       |      |     |     |
