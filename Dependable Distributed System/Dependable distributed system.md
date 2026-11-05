@@ -695,14 +695,14 @@ $$
 &\textbf{upon event } \text{request}() \textbf{ do} \\
 &\quad \text{state} := \text{waiting}; \\
 &\textbf{upon event } \text{pp2pDeliver}(\text{TOKEN}) \textbf{ do} \\
-&\quad \textbf{if } \text{state} = \text{waiting} \textbf{ then} \\
+&\quad \textbf{if } \text{state} = \text{waiting} \text{ then} \\
 &\quad \quad \text{state} := \text{CS}; \\
 &\quad \quad \text{trigger } \text{ok}(); \\
 &\quad \textbf{else} \\
 &\quad \quad \text{trigger } \text{pp2pSend}(\text{TOKEN}) \text{ to next}; \\
 &\textbf{upon event } \text{release}() \textbf{ do} \\
 &\quad \text{state} := \text{idle}; \\
-&\quad \text{trigger } \text{pp2pSend}(\text{TOKEN}) \text{ to next};
+&\quad \text{trigger } \text{pp2pSend}(\text{TOKEN}) \text{ to next}
 \end{aligned}
 $$
 
