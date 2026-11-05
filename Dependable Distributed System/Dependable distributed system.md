@@ -997,3 +997,38 @@ In asynchronous or partially synchronous systems, it is not possible to guarante
 There always exists at least one correct process, otherwise $\Omega$ cannot be built.
 **Crash-Recovery Implementation**: When considering systems with crash-recovery failures (nodes can restart), epoch-based algorithms (generation/restart numbers) and fair-loss links are used to make nodes exchange heartbeats associated with the active epoch, ultimately electing the leader with the correct epoch and rank.
 
+$$
+\begin{aligned}
+&\textbf{Algorithm 2.8: } \text{Monarchical Eventual Leader Detection} \\
+&\textbf{Implements:} \text{ EventualLeaderDetector, instance } \Omega. \\
+&\textbf{Uses:} \text{ EventuallyPerfectFailureDetector, instance } \diamond\mathcal{P}. \\
+& \\
+&\textbf{upon event } \langle \Omega, \text{Init} \rangle \textbf{ do} \\
+&\quad \text{suspected} := \emptyset; \\
+&\quad \text{leader} := \bot; \\
+& \\
+&\textbf{upon event } \langle \diamond\mathcal{P}, \text{Suspect} \mid p \rangle \textbf{ do} \\
+&\quad \text{suspected} := \text{suspected} \cup \{p\}; \\
+& \\
+&\textbf{upon event } \langle \diamond\mathcal{P}, \text{Restore} \mid p \rangle \textbf{ do} \\
+&\quad \text{suspected} := \text{suspected} \setminus \{p\}; \\
+& \\
+&\textbf{upon } \text{leader} \neq \text{maxrank}(\Pi \setminus \text{suspected}) \textbf{ do} \\
+&\quad \text{leader} := \text{maxrank}(\Pi \setminus \text{suspected}); \\
+&\quad \textbf{trigger } \langle \Omega, \text{Trust} \mid \text{leader} \rangle;
+\end{aligned}
+$$
+
+ 1. **Initialization** (`Init`)
+- `suspected := \emptyset`: Initially, no processes are suspected of having crashed.
+- `leader := \bot`: The local leader variable is undefined ($\bot$) at startup.
+
+ 2. **Handling Failure Detector Events** (`Suspect` / `Restore`)
+- **`upon event < \diamond\mathcal{P}, Suspect \mid p >`**: When the underlying Eventually Perfect Failure Detector ($\diamond\mathcal{P}$) suspects that a process $p$ has crashed, the algorithm adds $p$ to the `suspected` set (`suspected := suspected \cup \{p\}`).
+- **`upon event < \diamond\mathcal{P}, Restore \mid p >`**: If the failure detector later realizes it made a mistake and restores $p$, the algorithm removes $p$ from the `suspected` set (`suspected := suspected \setminus \{p\} psicologico`).
+
+ 3. **Continuous Guard and Trust** (`leader \neq maxrank(\Pi \setminus suspected)`)
+- This reactive guard continuously monitors the set of currently trusted (non-suspected) processes: $\Pi \setminus \text{suspected}$.
+- **Selecting the New Leader**: It computes `maxrank(...)` to find the process with the highest rank among the active processes.
+- **Updating and Trusting**: If the calculated highest-rank process differs from the current `leader`, the local variable is updated, and a notification is sent out via `trigger < \Omega, Trust \mid leader >` to signal that the process now trusts this new leader.
+**example**
