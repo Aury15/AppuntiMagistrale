@@ -1327,17 +1327,18 @@ RB considers delivery made by a correct process. URB considers delivery made by 
 
 
 ![[Dependable distributed system 1-1793891442619.webp|696]]![[Dependable distributed system 1-1793891478751.webp|785]]
-L'obiettivo è verificare quali comportamenti siano ammessi dalle tre astrazioni. Il messaggio giallo rappresenta il messaggio la cui consegna viene analizzata. La slide evidenzia due situazioni:
-1. Prima situazione:
- Il messaggio giallo è stato inviato da \(p_1\). In questo caso, la situazione può rispettare BEB ma non necessariamente RB. Se \(p_1\) fallisce dopo aver inviato il messaggio soltanto ad alcuni processi, BEB permette che i processi abbiano ricevuto informazioni differenti. RB, invece, richiede Agreement se un processo corretto ha consegnato il messaggio.
- 
- 2. Seconda situazione:
-La slide mostra che, se il processo che ha consegnato il messaggio è destinato a fallire, la situazione può rispettare RB ma non URB. Questo perché RB non impone Agreement quando il messaggio è stato consegnato soltanto da un processo che poi fallisce. URB, invece, richiede che tutti i processi corretti consegnino il messaggio.
+The goal is to verify which behaviors are allowed by the three abstractions. The yellow message represents the message whose delivery is being analyzed. The slide highlights two situations:
+1. **First situation**:
+The yellow message was sent by \(p_1\). In this case, the situation can respect BEB but not necessarily RB. If \(p_1\) fails after sending the message to only a few processes, BEB allows the processes to have received different information. RB, however, requires Agreement if a correct process delivered the message.
 
-Il criterio da applicare agli esempi è sempre lo stesso:
-- BEB: verifica Validity, No Duplication e No Creation.
-- RB: verifica anche Agreement.
-- URB: verifica Uniform Agreement, che considera anche i processi faulty.
+2. **Second situation**:
+The slide shows that, if the process that delivered the message is destined to fail, the situation can respect RB but not URB. This is because RB does not enforce Agreement when the message was delivered only by one process that subsequently fails. URB, however, requires all correct processes to deliver the message.
+
+**The criteria to be applied to the examples is always the same**:
+- *BEB*: checks Validity, No Duplication, and No Creation.
+- *RB*: also checks Agreement.
+- *URB*: Uniform Agreement verification, which also considers faulty processes.
+
 ###### Implementation in a synchronous system
 $$
 \begin{aligned}
@@ -1367,3 +1368,60 @@ $$
 &\quad \textbf{trigger } \langle urb, \text{Deliver} \mid s, m \rangle;
 \end{aligned}
 $$
+ **Overview & Dependencies**
+- **Implements:** `UniformReliableBroadcast`, instance `urb`. This guarantees that if _any_ process delivers a message (even if the sender crashes), _all_ correct processes eventually deliver it.
+- **Uses:**
+    - `BestEffortBroadcast`, instance `beb` (to disseminate messages across the network).
+    - `PerfectFailureDetector`, instance $\mathcal{P}$ (to accurately track which processes are still alive and which have crashed).
+### State Variables (`Init`)
+
+When the algorithm starts, the local state is initialized as follows:
+
+- $\text{delivered} := \emptyset$: Stores messages that have already been delivered to the application layer.
+    
+- $\text{pending} := \emptyset$: Tracks messages that have been broadcast or received but are waiting for the safety condition to be met before final delivery.
+    
+- $\text{correct} := \Pi$: The set of all processes in the system ($\Pi$) currently presumed to be correct (non-faulty).
+    
+- $\text{ack}[m] := \emptyset$: For each message $m$, a set recording which processes have acknowledged or relayed it.
+    
+
+### Core Events & Logic
+
+- **Initiating a Broadcast:**
+    
+    $$\textbf{upon event } \langle urb, \text{Broadcast} \mid m \rangle \text{ do}$$
+    
+    - Adds $(\text{self}, m)$ to the local `pending` set.
+        
+    - Triggers a Best-Effort Broadcast (`beb`) to send the data payload `[DATA, self, m]` to all processes.
+        
+- **Receiving via Best-Effort Broadcast:**
+    
+    $$\textbf{upon event } \langle beb, \text{Deliver} \mid p, [\text{DATA}, s, m] \rangle \text{ do}$$
+    
+    - Adds the sender $p$ to the acknowledgment set for message $m$ ($\text{ack}[m] := \text{ack}[m] \cup \{p\}$).
+        
+    - If the message-sender pair $(s, m)$ is not yet in `pending`, it adds it and immediately relays it using `beb` to ensure network-wide propagation.
+        
+- **Handling Process Crashes:**
+    
+    $$\textbf{upon event } \langle \mathcal{P}, \text{Crash} \mid p \rangle \text{ do}$$
+    
+    - When the failure detector $\mathcal{P}$ suspects/detects that process $p$ has crashed, $p$ is removed from the local `correct` set ($\text{correct} := \text{correct} \setminus \{p\}$). This ensures the algorithm stops waiting for acknowledgments from dead processes.
+        
+- **Check for Delivery Readiness:**
+    
+    $$\textbf{function } \text{candeliver}(m) \text{ returns } \text{Boolean} \text{ is}$$
+    
+    - Returns `true` if and only if every process currently in the `correct` set has acknowledged message $m$ ($\text{correct} \subseteq \text{ack}[m])$.
+        
+- **Delivering the Message:**
+    
+    $$\textbf{upon exists } (s, m) \in \text{pending} \text{ such that } \text{candeliver}(m) \land m \notin \text{delivered} \text{ do}$$
+    
+    - Once all correct nodes acknowledge a pending message and it hasn't been delivered yet:
+        
+        - Adds $m$ to the `delivered` set ($\text{delivered} := \text{delivered} \cup \{m\}$).
+            
+        - Triggers the upper-layer delivery event $\langle urb, \text{Deliver} \mid s, m \rangle$.
