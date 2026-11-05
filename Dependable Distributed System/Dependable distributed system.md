@@ -1137,4 +1137,5 @@ The no-creation assure that it must not be possible to deliver a message that no
 2. If the sender fails, the processes may disagree about whether the message was delivered or not.
 
 #### Reliable broadcast (RB)
-To overcome the BEB limitation we introduce **Reliable Broadcast**. **RB** mantiene le stesse proprietà di BEB, ma aggiunge una proprietà fondamentale: **Agreement**.
+To overcome the BEB limitation we introduce **Reliable Broadcast**. **RB** retains the same properties as BEB, but adds a key property: **Agreement**. 
+**Agreement**: If a correct process delivers a message \(m\), then all correct processes eventually deliver \(m\).
