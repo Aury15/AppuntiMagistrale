@@ -1647,10 +1647,4 @@ This problem has four properties:
 1. Every process communicate its own proposal to everyone;
 2. The processes collect the proposals received;
 3. When they have enough information, they apply a deterministic function to choose the value to decide.
-4. Nel nostro esempio, supponiamo che la funzione scelta sia il minimo:
-
-$$  
-decision = \min(proposals)  
-$$
-
-Se tutti conoscono gli stessi valori, tutti ottengono:
+The rule for chose is "choose the min value of the "
