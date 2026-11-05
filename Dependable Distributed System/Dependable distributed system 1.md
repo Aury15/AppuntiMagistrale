@@ -1614,3 +1614,5 @@ It does not deliver it again and does not forward it again. This prevents duplic
 |Main limitation|Communication and coordination costs|A small probability of incomplete dissemination|
 
 ## Consensus
+
+A group of processes must agree on a value that has been proposed by one of them. Its an abstraction of a class of problems where processes start with their opinion and then c
