@@ -1244,11 +1244,11 @@ $$
 So the total number of broadcast operations is $n$. 
 This feature incurs a higher communication cost than Lazy RB when there are no failures. However, we don't need a Failure Detector.
 
-|Caratteristica|Lazy RB|Eager RB|
-|---|---|---|
-|Sistema|Sincrono|Asincrono|
-|Failure Detector|Perfect FD|Non necessario|
-|Ritrasmissione|Solo quando necessaria|Ogni prima ricezione|
-|Best case|1 BEB per RB|\(n\) BEB per RB|
-|Worst case|\(n-1\) BEB per RB|\(n\) BEB per RB|
-|Costo di comunicazione|Dipende dai fallimenti|Costante rispetto ai fallimenti|
+| Charcteristic          | Lazy RB                | Eager RB                        |
+| ---------------------- | ---------------------- | ------------------------------- |
+| System                 | Sync                   | Async                           |
+| Failure Detector       | Perfect FD             | Not necessary                   |
+| Re-transmit            | Only when necessary    | At every first receive          |
+| Best case              | 1 BEB per RB           | \(n\) BEB per RB                |
+| Worst case             | \(n-1\) BEB per RB     | \(n\) BEB per RB                |
+| Costo di comunicazione | Dipende dai fallimenti | Costante rispetto ai fallimenti |
