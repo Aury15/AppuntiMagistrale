@@ -273,7 +273,14 @@ A link represents the network components of the distributed system: every pair o
 The system model is the following: two processes (sender and receiver); messages can be lost and take an unpredictable time to arrive; processes can crash; the time taken by a process to execute an operation is bounded (the bound may be unknown).
 
 
->Remark Deliver is different from receive. A message is received at a port of the network and stored in a buffer; then an algorithm runs to make sure that the properties of the required link abstraction hold, and only afterwards is the message delivered.
+>[!Remark]
+> Deliver is different from receive. A message is received at a port of the network and stored in a buffer; then an algorithm runs to make sure that the properties of the required link abstraction hold, and only afterwards is the message delivered.
+
+###### Fair-loss links
+
+###### Stubborn links
+
+###### Perfect links
 ## Time in distributed systems
 
 In a distributed system the processes run on different nodes interconnected by mean of a network (LAN, WLAN...). This processes cooperate to complete a computation and communicate only through message-based communications. Many applications require a perfect ordering between events and synchronization to terminate correctly. **So time is a critical factor for distributed system.** 
