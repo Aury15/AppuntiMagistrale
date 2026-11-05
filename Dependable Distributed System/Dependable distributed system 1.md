@@ -1640,4 +1640,6 @@ This problem has four properties:
 4. **C4**: *Agreement*, no two correct processes decide differently.
 
 >[!Important] FLP impossibility result
->No (deterministic) algorithm can guarantee to reach consensus in an asynchronous sys
+>No (deterministic) algorithm can guarantee to reach consensus in an asynchronous system, even if only one process may fail by crashing. 
+
+#### A consensus implementation in synchronous systems: flooding consensus
