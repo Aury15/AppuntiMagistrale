@@ -1128,4 +1128,4 @@ The important thing is that BEB doesn't use an inter-process re-transmission mec
 
 ###### Why BEB is correct?
 
-The validity ensure that if a correct process broadcast a message $m$ then all correct process eventually delivery 
+The validity ensure that if a correct process broadcast a message $m$ then all correct process eventually delivery $m$. Why? because the sender process send the message at all the processes using perfect links. If the sender is correct then can comple
