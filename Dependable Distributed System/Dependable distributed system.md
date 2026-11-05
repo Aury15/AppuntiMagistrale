@@ -1140,4 +1140,9 @@ The no-creation assure that it must not be possible to deliver a message that no
 To overcome the BEB limitation we introduce **Reliable Broadcast**. **RB** retains the same properties as BEB, but adds a key property: **Agreement**. 
 **Agreement**: If a correct process delivers a message ($m$), then all correct processes eventually deliver ($m$). If even one correct process has delivered \(m\), then all other correct processes must eventually deliver it. It doesn't matter if the original sender subsequently fails. <mark style="background:#d3f8b6">This is a fundamental difference from BEB.</mark>
 
-
+Abbiamo: $[ p_1, p_2, p_3 ]$
+Il processo $(p_1$) invia $(m_1)$, ma fallisce prima di completare l'invio.
+Con BEB:
+- $(p_2$)  consegna \(m_1\);
+- $(p_1$)  non consegna \(m_1\).
+Questo comportamento è ammesso da BEB, ma non da RB.
