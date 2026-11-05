@@ -1669,3 +1669,5 @@ The rule for chose is "choose the min value of the proposal received", so in our
 |0|—|—|—|{5}|{3}|{7}|
 |1|{5}|{3} _solo a p1_|{7}|**{3,5,7}**|💥 crashato|**{5,7}**|
 |2|{3,5,7}|—|{5,7}|{3,5,7}|—|{3,5,7}|
+- **After round 1**: p1 knows 3, p3 does not. If a decision were made here, p1 would decide **3** and p3 would decide **5** → **disagreement**, breach of agreement.
+- **After round 2**: p1 passes on the 3 he received, p3 acquires it. Both have {3,5,7} → both decide **3**. ✔
