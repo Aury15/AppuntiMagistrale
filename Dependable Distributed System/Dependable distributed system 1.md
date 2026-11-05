@@ -1308,3 +1308,4 @@ This feature incurs a higher communication cost than Lazy RB when there are no f
 
 ![[Dependable distributed system-1793890533236.webp|574]]
 #### Uniform reliable broadcast (URB)
+The agreement property only considers processes that don't fail. But what happen if a process send a message and then fails?
