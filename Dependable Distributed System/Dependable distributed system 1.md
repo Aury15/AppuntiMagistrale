@@ -1671,7 +1671,40 @@ The rule for chose is "choose the min value of the proposal received", so in our
 |2|{3,5,7}|—|{5,7}|{3,5,7}|—|{3,5,7}|
 - **After round 1**: p1 knows 3, p3 does not. If a decision were made here, p1 would decide **3** and p3 would decide **5** → **disagreement**, breach of agreement.
 - **After round 2**: p1 passes on the 3 he received, p3 acquires it. Both have {3,5,7} → both decide **3**. ✔
-![[Dependable distributed system 1-1793897512085.webp]]
+
+$$\begin{}
+\caption{Flooding Consensus ($p_i$)}
+\begin{algorithmic}[1]
+\State \textbf{init:} 
+    \State $\text{correct} := \Pi$
+    \State $\text{round} := 1$
+    \State $\text{decision} := \bot$
+    \State $\text{receivedfrom} := [\emptyset]^N$
+    \State $\text{proposals} := [\emptyset]^N$
+    \State $\text{receivedfrom}[0] := \Pi$
+\Upon{event $(P, \text{Crash} \mid p)$ do}
+    \State $\text{correct} := \text{correct} \setminus \{p\}$
+\Upon{event $(c, \text{Propose} \mid v)$ do}
+    \State $\text{proposals}[1] := \text{proposals}[1] \cup \{v\}$
+    \State $\text{trigger } (beb, \text{Broadcast} \mid [\text{PROPOSAL}, 1, \text{proposals}[1]])$
+\Upon{event $(beb, \text{Deliver} \mid p, [\text{PROPOSAL}, r, ps])$ do}
+    \State $\text{receivedfrom}[r] := \text{receivedfrom}[r] \cup \{p\}$
+    \State $\text{proposals}[r] := \text{proposals}[r] \cup ps$
+\Upon{$\text{correct} \subseteq \text{receivedfrom}[\text{round}] \land \text{decision} = \bot$ do}
+    \If{$\text{receivedfrom}[\text{round}] = \text{receivedfrom}[\text{round} - 1]$}
+        \State $\text{decision} := \min(\text{proposals}[\text{round}])$
+        \State $\text{trigger } (beb, \text{Broadcast} \mid [\text{DECIDED}, \text{decision}])$
+        \State $\text{trigger } (c, \text{Decide} \mid \text{decision})$
+    \Else
+        \State $\text{trigger } (beb, \text{Broadcast} \mid [\text{PROPOSAL}, \text{round} + 1, \text{proposals}[\text{round}]]$
+        \State $\text{round} := \text{round} + 1$
+    \EndIf
+\Upon{event $(beb, \text{Deliver} \mid p, [\text{DECIDED}, v])$ such that $p \in \text{correct} \land \text{decision} = \bot$ do}
+    \State $\text{decision} := v$
+    \State $\text{trigger } (beb, \text{Broadcast} \mid [\text{DECIDED}, \text{decision}])$
+    \State $\text{trigger } (c, \text{Decide} \mid \text{decision})$
+\end{algorithmic}
+\end{algorithm}$$
 
 ##### Correctness
  <u>Validity</u> and <u>integrity</u> follow from the properties of the communication channels. <u>Termination</u>: at most after N rounds the processes decide (there are at most N −1 crashes, so some round has no new crash). <u>Agreement</u>: correct processes apply the same deterministic function to the same set of values.
