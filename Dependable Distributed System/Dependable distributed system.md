@@ -1069,3 +1069,4 @@ $$
 &\quad \text{candidates} := \text{candidates} \cup (q, ep);
 \end{aligned}
 $$
+![[Dependable distributed system-1793872800867.webp]]![[Dependable distributed system-1793872820702.webp]]
