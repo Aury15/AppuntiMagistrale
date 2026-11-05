@@ -1539,7 +1539,6 @@ This set stores the messages that the process has already delivered. It is used 
 ##### Gossip Procedure
 The procedure `gossip(msg)` sends the message to $k$ randomly selected processes.
 Conceptually:
-
 ```text
 procedure gossip(msg):
     for each t in picktargets(k):
