@@ -682,10 +682,10 @@ $$2. A token is created and propagated in the ring during the initialization pha
 $$
 \begin{aligned}
 &\textbf{Init} \\
-&\textbf{state} \text{= idle}\\
-&\textbf{next} = p_{i+1}mod (n)\\
-&\text{if self =} p_0 \\
-& \quad \quad \quad \text{trigger pp2pSend(TOKEN) to next} 
+&\quad \textbf{state} := \text{idle} \\
+&\quad \textbf{next} := p_{(i+1) \bmod n} \\
+&\quad \textbf{if } \text{self} = p_0 \textbf{ then} \\
+&\quad \quad \textbf{trigger } \text{pp2pSend}(\text{TOKEN}) \textbf{ to } \textbf{next}
 \end{aligned}
 $$
 ![[Dependable distributed system-1793811185758.webp]]
@@ -694,14 +694,12 @@ $$
 \begin{aligned}
 &\textbf{upon event } \text{request}() \textbf{ do} \\
 &\quad \text{state} := \text{waiting}; \\
-& \\
 &\textbf{upon event } \text{pp2pDeliver}(\text{TOKEN}) \textbf{ do} \\
 &\quad \textbf{if } \text{state} = \text{waiting} \textbf{ then} \\
 &\quad \quad \text{state} := \text{CS}; \\
 &\quad \quad \text{trigger } \text{ok}(); \\
 &\quad \textbf{else} \\
 &\quad \quad \text{trigger } \text{pp2pSend}(\text{TOKEN}) \text{ to next}; \\
-& \\
 &\textbf{upon event } \text{release}() \textbf{ do} \\
 &\quad \text{state} := \text{idle}; \\
 &\quad \text{trigger } \text{pp2pSend}(\text{TOKEN}) \text{ to next};
@@ -717,17 +715,14 @@ $$
 &\quad \text{next} := p_{(i+1) \bmod N}; \\
 &\quad \textbf{if } \text{self} = p_0 \textbf{ then} \\
 &\quad \quad \text{trigger } \text{pp2pSend}(\text{TOKEN}) \text{ to next}; \\
-& \\
 &\textbf{upon event } \text{request}() \textbf{ do} \\
 &\quad \text{state} := \text{waiting}; \\
-& \\
 &\textbf{upon event } \text{pp2pDeliver}(\text{TOKEN}) \textbf{ do} \\
 &\quad \textbf{if } \text{state} = \text{waiting} \textbf{ then} \\
 &\quad \quad \text{state} := \text{CS}; \\
 &\quad \quad \text{trigger } \text{ok}(); \\
 &\quad \textbf{else} \\
 &\quad \quad \text{trigger } \text{pp2pSend}(\text{TOKEN}) \text{ to next}; \\
-& \\
 &\textbf{upon event } \text{release}() \textbf{ do} \\
 &\quad \text{state} := \text{idle}; \\
 &\quad \text{trigger } \text{pp2pSend}(\text{TOKEN}) \text{ to next};
