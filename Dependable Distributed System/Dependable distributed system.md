@@ -1151,6 +1151,7 @@ Why? Because $p_2$ is a correct process and has delivered $m_1$. Consequently, a
 >[!Warning]
 >**BEB** ensures the reliability of communication when the sender is correct. **RB** also ensures agreement between the correct processes on message delivery.
 
+###### Lazy reliable broadcast
 ![[Dependable distributed system-1793878442061.webp]]
 
 ![[Dependable distributed system-1793878585352.webp|749]]![[Dependable distributed system-1793878592836.webp|754]]![[Dependable distributed system-1793878600980.webp|761]]
