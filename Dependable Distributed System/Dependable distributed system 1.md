@@ -1643,6 +1643,8 @@ This problem has four properties:
 >No (deterministic) algorithm can guarantee to reach consensus in an asynchronous system, even if only one process may fail by crashing. 
 
 #### A consensus implementation in synchronous systems: flooding consensus
+**Basic idea**: the processes exchange their values and, when all the proposals of the correct processes are available, one value can be chosen. 
+Problem: because of failures some values can be lost, so processes could choose among different sets. Solution: a value is selected only when no failure happens during a round of communication.
 **Idea**: Imagine we have $N$ processes, each with its own proposal. For <mark style="background:#d3f8b6">example</mark>: $p_1: 5 \qquad p_2: 3 \qquad p_3: 7$. We want all correct processes to decide the same value. The idea of flooding consensus is that:
 1. Every process communicate its own proposal to everyone;
 2. The processes collect the proposals received;
