@@ -1833,4 +1833,8 @@ To maintain $P2c$, a proposer who wants to issue a proposal with number $n$ must
 		- _(a)_ $n$ is the number that appeared in the prepare request.
 		- _(b)_ $v$ is the value of the proposal with the highest number among all the values ​​returned in the acceptor responses (or the proposer's own value if none of the acceptors had previously accepted any proposals).
 	2. **Acceptor Acceptance:** If an acceptor receives an $(\text{ACCEPT}, n, v)$ request, it accepts the proposal unless it has already responded to a prepare request with a number **greater** than $n$.
-3. **Learning phase**:
+3. **Learning phase**: Whenever an acceptor accepts a proposal, it responds to all learners by sending $(\text{ACCEPT}, n, v)$. A learner receives $(\text{ACCEPT}, n, v)$ from a majority of acceptors, decides on the value $v$, and sends $(\text{DECIDE}, v)$ to all other learners. Learners who receive $(\text{DECIDE}, v)$ learn and officially record the decided value.
+
+**Liveness Issues and Solutions**: 
+- <u>Competing Proposers</u> (Livelock): If two competing proposers continuously issue increasing numbers of prepares ($n_1, n_2, n_3 \dots$), they can invalidate each other, blocking the algorithm from terminating (neither one succeeds in completing phase 2). 
+- <u>Practical Solution</u>: The proposers are "elected" or coordinated using an external Leader Election protocol. This way, the protocol operates as a 2-Phase Commit (or 3-Phase Commit in the event of leader failure).
