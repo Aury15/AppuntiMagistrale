@@ -1769,3 +1769,33 @@ The easiest way to solve the problem is to have a single acceptor:
 If the acceptor fails before communicating its decision, the system can no longer progress. There is no other acceptor that can replace it. Therefore, we need multiple acceptors so that the protocol can continue even if some of them fail.
 
 **The problem of having multiple acceptors**:
+
+Each proposer sends its proposal to a set of acceptors. However, messages do not necessarily arrive in the same order to all of them. 
+For <mark style="background:#affad1">example</mark>, suppose we have three proposers:
+
+$$
+P_1 \rightarrow v_1
+$$
+
+$$
+P_2 \rightarrow v_2
+$$
+
+$$
+P_3 \rightarrow v_3
+$$
+
+and three acceptors:
+$$
+A_1,\ A_2,\ A_3
+$$
+
+It could happen that:
+- $A_1$ receives $v_1$, $v_2$, and $v_3$;
+- $A_2$ receives $v_2$ and $v_1$;
+- $A_3$ receives only $v_3$.
+The problem is obvious: each acceptor can receive a different set of proposals and can receive them in a different order.
+
+How can we ensure that acceptors don't choose different values?
+
+This is the central question that led to the construction of Paxos.
