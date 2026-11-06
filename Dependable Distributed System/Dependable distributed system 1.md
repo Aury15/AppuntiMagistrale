@@ -1712,3 +1712,5 @@ When a process has heard from all currently correct processes (`correct ⊆ rece
 
 ## Paxos 
 
+The paxos family of algorithms was introduced to provide a viable solution to consensus in asynchronous settings:
+- Sa
