@@ -1833,4 +1833,4 @@ To maintain $P2c$, a proposer who wants to issue a proposal with number $n$ must
 		- _(a)_ $n$ is the number that appeared in the prepare request.
 		- _(b)_ $v$ is the value of the proposal with the highest number among all the values ​​returned in the acceptor responses (or the proposer's own value if none of the acceptors had previously accepted any proposals).
 	2. **Acceptor Acceptance:** If an acceptor receives an $(\text{ACCEPT}, n, v)$ request, it accepts the proposal unless it has already responded to a prepare request with a number **greater** than $n$.
-3. **Learning phase**
+3. **Learning phase**:
