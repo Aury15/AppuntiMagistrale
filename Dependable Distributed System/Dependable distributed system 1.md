@@ -1766,3 +1766,6 @@ The easiest way to solve the problem is to have a single acceptor:
 -  The acceptor choses the first proposed value it receives and informs everybody about its choice.
 
 **But there's a fundamental problem: what happens if the only acceptor crashes?**
+If the acceptor fails before communicating its decision, the system can no longer progress. There is no other acceptor that can replace it. Therefore, we need multiple acceptors so that the protocol can continue even if some of them fail.
+
+**The problem of having multiple acceptors**:
