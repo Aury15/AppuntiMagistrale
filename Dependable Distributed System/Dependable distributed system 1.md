@@ -1839,61 +1839,64 @@ To maintain $P2c$, a proposer who wants to issue a proposal with number $n$ must
 - <u>Competing Proposers</u> (Livelock): If two competing proposers continuously issue increasing numbers of prepares ($n_1, n_2, n_3 \dots$), they can invalidate each other, blocking the algorithm from terminating (neither one succeeds in completing phase 2). 
 - <u>Practical Solution</u>: The proposers are "elected" or coordinated using an external Leader Election protocol. This way, the protocol operates as a 2-Phase Commit (or 3-Phase Commit in the event of leader failure).
 $$
-\begin{algorithm}[H]
-\caption{Algoritmo Basic Paxos (Singolo Consenso)}
-\begin{algorithmic}[1]
-\State \textbf{Ruoli:} Proposers ($P$), Acceptors ($A$), Learners ($L$)
-\State \textbf{Variabili per Proposer $p$:} 
-\State \quad $n$: numero di proposta univoco (es. timestamp + ID del nodo)
-\State \quad $v$: valore da proporre
-\State \textbf{Variabili per Acceptor $a$:}
-\State \quad $max\_prep$: numero di prepare più alto visto finora (inizialmente $0$)
-\State \quad $accepted\_n$: numero della proposta accettata più alta (inizialmente $\perp$)
-\State \quad $accepted\_v$: valore della proposta accettata più alta (inizialmente $\perp$)
-\Statex
-\State \textbf{--- FASE 1a: PREPARE REQUEST ---}
-\State Il Proposer $p$ sceglie un nuovo $n$ univoco e invia a una maggioranza di Acceptors:
-\State \quad $\textbf{send}(\text{PREPARE}, n)$
-\Statex
-\State \textbf{--- FASE 1b: PROMISE RESPONSE (lato Acceptor $a$) ---}
-\Function{OnReceivePrepare}{$n$}
-    \If{$n > max\_prep$}
-        \State $max\_prep \leftarrow n$ \Comment{Aggiorna il limite massimo visto}
-        \State \textbf{send}(\text{ACK}, n, accepted\_n, accepted\_v) \to p \Comment{Promette di non accettare $n' < n$}
-    \Else
-        \State \textbf{send}(\text{NACK}, max\_prep) \to p \Comment{Rifiuta perché il numero è troppo vecchio}
-    \EndIf
-\EndFunction
-\Statex
-\State \textbf{--- FASE 2a: ACCEPT REQUEST (lato Proposer $p$) ---}
-\Function{OnReceiveMajorAcknowledgements}{Set di risposte ACK}
-    \If{ricevute risposte ACK da una \textbf{maggioranza} di Acceptors}
-        \State Scegli il valore $v$ associato al numero $n'$ più alto tra tutti gli ACK ricevuti.
-        \If{nessun acceptor ha accettato alcun valore in precedenza}
-            \State $v \leftarrow$ valore originario di $p$
-        \EndIf
-        \State Invia a una maggioranza di Acceptors:
-        \State \quad $\textbf{send}(\text{ACCEPT}, n, v)$
-    \EndIf
-\EndFunction
-\Statex
-\State \textbf{--- FASE 2b: ACCEPTED / COMMIT (lato Acceptor $a$) ---}
-\Function{OnReceiveAccept}{$n, v$}
-    \If{$n \ge max\_prep$}
-        \State $accepted\_n \leftarrow n$
-        \State $accepted\_v \leftarrow v$
-        \State \textbf{send}(\text{ACCEPTED}, n, v) $\to$ tutti i Learners $L$
-    \Else
-        \State \textbf{ignora} la richiesta (già promesso a un prepare più alto)
-    \EndIf
-\EndFunction
-\Statex
-\State \textbf{--- FASE DI APPRENDIMENTO (lato Learner $l$) ---}
-\Function{OnReceiveAccepted}{$n, v$}
-    \If{ricevuti messaggi $(\text{ACCEPTED}, n, v)$ da una \textbf{maggioranza} di Acceptors}
-        \State $decided\_value \leftarrow v$
-        \State \textbf{send}(\text{DECIDE}, v) $\to$ tutti gli altri Learners
-    \EndIf
-\EndFunction
-\end{algorithmic}
-\end{algorithm}$$
+\begin{aligned}
+&\textbf{Ruoli:} \quad \text{Proposers } (P), \ \text{Acceptors } (A), \ \text{Learners } (L) \\
+&\textbf{Stato Proposer } p: \quad n \text{ (numero di proposta univoco)}, \ v \text{ (valore proposto)} \\
+&\textbf{Stato Acceptor } a: \quad max\_prep \leftarrow 0, \ \text{accepted\_n} \leftarrow \bot, \ \text{accepted\_v} \leftarrow \bot
+\end{aligned}
+$$
+
+---
+
+### 1. Fase 1a: Prepare Request
+$$
+p \longrightarrow A_{\text{majority}}: \ \textbf{send}(\text{PREPARE}, n)
+$$
+
+### 2. Fase 1b: Promise Response (lato Acceptor $a$)
+$$
+\text{On receive } (\text{PREPARE}, n):
+$$
+$$
+\begin{cases} 
+\text{se } n > max\_prep \implies & max\_prep \leftarrow n \\
+& a \longrightarrow p: \ \textbf{send}(\text{ACK}, n, \text{accepted\_n}, \text{accepted\_v}) \\
+\text{altrimenti} \implies & a \longrightarrow p: \ \textbf{send}(\text{NACK}, max\_prep)
+\end{cases}
+$$
+
+### 3. Fase 2a: Accept Request (lato Proposer $p$)
+$$
+\text{On receive } \text{ACKs from a majority}:
+$$
+$$
+\begin{aligned}
+v &\leftarrow \text{valore associato al numero } n' \text{ più alto tra gli ACK ricevuti} \\
+\text{se } &\text{nessun acceptor ha accettato alcun valore}: \\
+&\quad v \leftarrow \text{valore originario di } p \\
+p &\longrightarrow A_{\text{majority}}: \ \textbf{send}(\text{ACCEPT}, n, v)
+\end{aligned}
+$$
+
+### 4. Fase 2b: Accepted / Commit (lato Acceptor $a$)
+$$
+\text{On receive } (\text{ACCEPT}, n, v):
+$$
+$$
+\begin{cases}
+\text{se } n \ge max\_prep \implies & \text{accepted\_n} \leftarrow n, \ \text{accepted\_v} \leftarrow v \\
+& a \longrightarrow L_{\text{all}}: \ \textbf{send}(\text{ACCEPTED}, n, v) \\
+\text{altrimenti} \implies & \text{ignora la richiesta (proposta obsoleta)}
+\end{cases}
+$$
+
+### 5. Fase di Apprendimento (lato Learner $l$)
+$$
+\text{On receive } (\text{ACCEPTED}, n, v) \text{ da una maggioranza di Acceptors}:
+$$
+$$
+\begin{aligned}
+\text{decided\_value} &\leftarrow v \\
+l &\longrightarrow L_{\text{others}}: \ \textbf{send}(\text{DECIDE}, v)
+\end{aligned}
+$$
