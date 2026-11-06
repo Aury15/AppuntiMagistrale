@@ -1743,9 +1743,6 @@ The processes:
 - They can restart after a crash.
 The messages: 
 - They can take an arbitrarily long time to be delivered;
-
-They can be duplicated;
-
-They can be lost;
-
-They are not corrupted.
+- They can be duplicated;
+- They can be lost;
+- They are not corrupted.
