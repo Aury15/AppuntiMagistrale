@@ -1816,27 +1816,17 @@ To ensure $P2b$, we keep the following invariant for any value $v$ and number $n
 	- $v$ is the value of the proposal with the highest number among all proposals numbered less than $n$ accepted by acceptors in $S$.
 
 To maintain $P2c$, a proposer who wants to issue a proposal with number $n$ must first discover (or promise to bind) the value of the highest proposal less than $n$ that is accepted (or will be accepted) by a majority of acceptors. The protocol is divided into two main phases (each consisting of a request and a response):
-1. FASE 1: Prepare / Promise
+1. **FASE 1: Prepare / Promise**
 	1. **Prepare Request:** Un proposer sceglie un nuovo numero di versione della proposta $n$ (univoco) e invia una richiesta di preparazione $(\text{PREPARE}, n)$ a una maggioranza di acceptor:
-	
 	    - _(a)_ Posso fare una proposta con numero $n$?
-	        
 	    - _(b)_ Se sì, mi suggerisci un valore per la mia proposta?
-        
 2. **Acceptor Response (Promise):** Quando un acceptor riceve $(\text{PREPARE}, n)$:
-    
     - Se $n$ è maggiore di qualsiasi numero di prepare ricevuto in precedenza, risponde con una **promessa** di non accettare più alcuna proposta numerata inferiore a $n$.
-        
     - Nella risposta, suggerisce il valore $v'$ della proposta con il numero più alto che ha accettato finora (se esiste), oppure $\perp$ (bottom/null) se non ha accettato nulla.
-        
     - Il messaggio di risposta è del tipo:
-        
         - $(\text{ACK}, n, n', v')$ se l'acceptor ha già accettato una proposta con numero $n'$ e valore $v'$.
-            
         - $(\text{ACK}, n, \perp, \perp)$ se non ha accettato alcuna proposta.
-            
     - **NACK:** Se l'acceptor riceve un prepare con un numero $n$ inferiore a un $n'$ a cui ha già risposto in precedenza, invia un rifiuto $(\text{NACK}, n')$ indicando che la proposta è troppo vecchia.
-        
 
 ### FASE 2: Accept / Accepted
 
