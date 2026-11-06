@@ -1814,3 +1814,5 @@ To ensure $P2b$, we keep the following invariant for any value $v$ and number $n
 - **P2c**: For any $v$ and $n$, if a proposal with value $v$ and number $n$ is issued, then there exists a set $S$ consisting of a majority of acceptors such that:
 	- No acceptor in $S$ has accepted any proposal numbered less than $n$, or
 	- $v$ is the value of the proposal with the highest number among all proposals numbered less than $n$ accepted by acceptors in $S$.
+
+##### 
