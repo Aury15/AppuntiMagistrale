@@ -1737,12 +1737,15 @@ The paxos family of algorithms was introduced to provide a viable solution to co
 Paxos does not contradict the FLP result. FLP says that we cannot guarantee termination in every possible asynchronous execution. Paxos guarantees safety and can progress when favorable conditions are met, such as when a proposer can communicate stably with a majority of acceptors.
 
 ##### System model
-The processes:
+<u>The processes</u>:
 - They can have arbitrary execution speeds;
 - They can fail by interrupting their execution (crashing);
 - They can restart after a crash.
-The messages: 
+<u>The messages</u>: 
 - They can take an arbitrarily long time to be delivered;
 - They can be duplicated;
 - They can be lost;
 - They are not corrupted.
+
+>[!Observation] 
+>
