@@ -1851,6 +1851,6 @@ Ordered communications add one or more ordering properties to reliable broadcast
 
 #### FIFO Broadcast
 **FIFO Broadcast** ensures that messages sent from the same sender are delivered to all processes in the same order in which they were issued. 
-Le proprietà del _FIFO Reliable Broadcast_ (istanza `frb`) estendono quelle del reliable broadcast standard:
-- **FRB1 - FRB4:** Soddisfano tutte le proprietà di base del reliable broadcast (Validità, Agreement, Integrità, Uniformità).
-- **FRB5 (FIFO delivery):** Se un processo $p$ emette il messaggio $m_1$ prima di $m_2$ ($\text{broadcast}(m_1) \to \text{broadcast}(m_2)$), allora nessun processo corretto consegna $m_2$ se non ha precedentemente consegnato $m_1$.
+The properties of the _FIFO Reliable Broadcast_ (`frb` instance) extend those of standard reliable broadcast:
+- **FRB1 - FRB4:** Satisfy all the basic properties of reliable broadcast (Validity, Agreement, Integrity, Uniformity).
+- **FRB5 (FIFO delivery):** If a process $p$ emits message $m_1$ before $m_2$ ($\text{broadcast}(m_1) \to \text{broadcast}(m_2)$), then no correct process will deliver $m_2$ if it has not previously delivered $m_1$.
