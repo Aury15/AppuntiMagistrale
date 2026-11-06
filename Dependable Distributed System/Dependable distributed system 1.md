@@ -1724,5 +1724,7 @@ Imagine three processes that must decide on a common value:
 - $p_3$ proposes $C$.
 We would like all correct processes to reach a decision, choosing one of the proposed values. FLP demonstrates that, in a completely asynchronous system, if even a single crash is possible, we cannot design an algorithm that guarantees termination in every possible execution. **Caution**: This does not mean that consensus is always impossible to achieve. It means that we cannot guarantee that it will be achieved in all executions allowed by the asynchronous model. We can still guarantee <u>safety properties</u>, such as that two processes do not decide on different values. **The problem is ensuring that sooner or later someone decides.**
 
-The paxos family of algorithms was introduced to provide a viable solution to consensus in asynchronous settings:
-- Sa
+The paxos family of algorithms was introduced to provide a viable solution to consensus in asynchronous settings. The goal is to allow multiple processes to agree on a value, even in the presence of arbitrary delays and crashes. 
+
+###### Properties of paxos's family
+- Safery is always guara
