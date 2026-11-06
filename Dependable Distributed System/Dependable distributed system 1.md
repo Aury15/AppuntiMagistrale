@@ -1828,8 +1828,9 @@ To maintain $P2c$, a proposer who wants to issue a proposal with number $n$ must
 			- $(\text{ACK}, n, \perp, \perp)$ if it has not accepted any proposals.
 		- **NACK:** If the acceptor receives a prepare with a number $n$ lower than a $n'$ to which it has already responded, it sends a rejection $(\text{NACK}, n')$ indicating that the proposal is too old.
 	
-2. PHASE 2: Accept / Accepted
+2. **PHASE 2: Accept / Accepted**
 	1. **Accept Request:** If the proposer receives responses (ACK) from a **majority** of acceptors, it can proceed to issue an accept request $(\text{ACCEPT}, n, v)$ where:
 		- _(a)_ $n$ is the number that appeared in the prepare request.
 		- _(b)_ $v$ is the value of the proposal with the highest number among all the values ​​returned in the acceptor responses (or the proposer's own value if none of the acceptors had previously accepted any proposals).
 	2. **Acceptor Acceptance:** If an acceptor receives an $(\text{ACCEPT}, n, v)$ request, it accepts the proposal unless it has already responded to a prepare request with a number **greater** than $n$.
+3. **Learning phase**
