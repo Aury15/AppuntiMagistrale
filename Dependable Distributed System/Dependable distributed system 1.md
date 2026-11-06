@@ -1844,3 +1844,13 @@ To maintain $P2c$, a proposer who wants to issue a proposal with number $n$ must
 
 In distributed systems, reliable broadcast ensures that all correct processes deliver the same set of messages, but does not impose any properties on the order of delivery.
 ⚠️ The Anomaly Problem: Without order guarantees, serious application inconsistencies can arise. For example, if a client first sends "reserve a seat" and then "cancel my reservation," but the messages are delivered reversed or processed by different servers in the wrong random order, the system risks canceling a reservation that never existed.
+Ordered communications add one or more ordering properties to reliable broadcast, and are mainly divided into three categories: 
+1. FIFO Order,
+2. Causal Order, 
+3. Total Order / Atomic Broadcast.
+
+#### FIFO Broadcast
+**FIFO Broadcast** ensures that messages sent from the same sender are delivered to all processes in the same order in which they were issued. 
+Le proprietà del _FIFO Reliable Broadcast_ (istanza `frb`) estendono quelle del reliable broadcast standard:
+- **FRB1 - FRB4:** Soddisfano tutte le proprietà di base del reliable broadcast (Validità, Agreement, Integrità, Uniformità).
+- **FRB5 (FIFO delivery):** Se un processo $p$ emette il messaggio $m_1$ prima di $m_2$ ($\text{broadcast}(m_1) \to \text{broadcast}(m_2)$), allora nessun processo corretto consegna $m_2$ se non ha precedentemente consegnato $m_1$.
