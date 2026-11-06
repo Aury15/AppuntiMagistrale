@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "df0cea42d2afd73b",
+        "id": "0b6449ba102507c0",
         "type": "tabs",
         "children": [
           {
-            "id": "c23242e956c0a2f8",
+            "id": "77adfa146b5254a9",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Machine Learning 1.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "Machine Learning 1"
+              "title": "Nuova scheda"
             }
           }
         ]
@@ -189,8 +185,16 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "c23242e956c0a2f8",
+  "active": "e085b63d3534c645",
   "lastOpenFiles": [
+    "Dependable Distributed System/Dependable distributed system.md",
+    "Dependable Distributed System/Dependable distributed system 1.pdf",
+    "Dependable Distributed System/Dependable distributed system 1.md",
+    "Dependable Distributed System/Dependable distributed system 1 (bella copia).pdf",
+    "Dependable Distributed System/Dependable distributed system 1 (bella copia).md",
+    "Machine Learning.md",
+    "Dependable Distributed System/Lezione 1.md",
+    "Dependable Distributed System",
     "Senza nome.md",
     "Machine Learning 1.md"
   ]
