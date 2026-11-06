@@ -1806,7 +1806,9 @@ To prevent acceptors from choosing different values, strict rules and invariants
 **Solution**: We keep track of the different proposals by assigning each one a unique proposal number (total sorting). A value is chosen when a single proposal with that value has been accepted by a <u>majority</u> of acceptors (**chosen proposal**). <mark style="background:rgba(173, 239, 239, 0.55)">We may allow multiple proposals to be accepted, but all accepted proposals must be of equal value.</mark>
 
 **Trial (P2)**: If a proposal with value $v$ is chosen, every higher-numbered proposal that is chosen has value $v$.
-Per garantire P2, passiamo attraverso due raffinamenti successivi:
-- **P2a:** Se una proposta con valore $v$ viene accettata, ogni proposta con numero superiore accettata da _qualsiasi_ acceptor ha valore $v$.
-    - _Problema:_ Cosa succede se un acceptor $c$ non vede una proposta accettata con valore $v$, e un nuovo proposer si risveglia proponendo un valore diverso $v'$ che $c$ è costretto ad accettare per P1?
-- **P2b:** Se una proposta con valore $v$ è scelta, ogni proposta con numero superiore **emessa da qualsiasi proposer** ha valore $v$.
+To ensure P2, we go through two successive refinements:
+- **P2a:** If a proposal with value $v$ is accepted, every higher-numbered proposal accepted by _any_ acceptor has value $v$.
+	- _Problem:_ What happens if an acceptor $c$ doesn't see an accepted proposal with value $v$, and a new proposer wakes up proposing a different value $v'$ that $c$ is forced to accept for P1?
+- **P2b:** If a proposal with value $v$ is chosen, every higher-numbered proposal **issued by any proposer** has value $v$.
+
+**Definitive trial, P2c**
