@@ -1712,7 +1712,21 @@ When a process has heard from all currently correct processes (`correct ⊆ rece
 
 ## Paxos 
 
-In an asynchronous system, it is not possible to always guarantee that consensus will be achieved if even a single process can crash. In an asynchronous system we cannot assume that processes have a predictable speed or that messages arrive within a maximum time. <u>The silence of a process does not prove that that process has failed.</u>
+>[!FLP] FLP
+>In an asynchronous system, it is not possible to always guarantee that consensus will be achieved if even a single process can crash. 
 
+In an asynchronous system we cannot assume that processes have a predictable speed or that messages arrive within a maximum time. <u>The silence of a process does not prove that that process has failed.</u>
+
+What does FLP claim?
+Imagine three processes that must decide on a common value:
+- $p_1$ proposes $A$;
+- $p_2$ proposes $B$;
+- $p_3$ proposes $C$.
+We would like all correct processes to reach a decision, choosing one of the proposed values.
+FLP demonstrates that, in a completely asynchronous system, if even a single crash is possible, we cannot design an algorithm that guarantees termination in every possible execution.
+
+Caution: This does not mean that consensus is always impossible to achieve. It means that we cannot guarantee that it will be achieved in all executions allowed by the asynchronous model.
+
+We can still guarantee safety properties, such as that two processes do not decide on different values. The problem is ensuring that sooner or later someone decides.
 The paxos family of algorithms was introduced to provide a viable solution to consensus in asynchronous settings:
 - Sa
