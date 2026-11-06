@@ -1854,3 +1854,28 @@ Ordered communications add one or more ordering properties to reliable broadcast
 The properties of the _FIFO Reliable Broadcast_ (`frb` instance) extend those of standard reliable broadcast:
 - **FRB1 - FRB4:** Satisfy all the basic properties of reliable broadcast (Validity, Agreement, Integrity, Uniformity).
 - **FRB5 (FIFO delivery):** If a process $p$ emits message $m_1$ before $m_2$ ($\text{broadcast}(m_1) \to \text{broadcast}(m_2)$), then no correct process will deliver $m_2$ if it has not previously delivered $m_1$.
+
+
+$$
+\begin{aligned}
+&\textbf{Algorithm 3.12: Broadcast with Sequence Number}\\[4pt]
+&\textbf{Implements: } \text{FIFOReliableBroadcast, instance } frb.\\
+&\textbf{Uses: } \text{ReliableBroadcast, instance } rb.\\[6pt]
+&\textbf{upon event } \langle frb, Init \rangle \textbf{ do}\\
+&\qquad lsn := 0;\\
+&\qquad pending := \emptyset;\\
+&\qquad next := [1]^N;\\[6pt]
+&\textbf{upon event } \langle frb, Broadcast \mid m \rangle \textbf{ do}\\
+&\qquad lsn := lsn + 1;\\
+&\qquad \textbf{trigger } \langle rb, Broadcast \mid [DATA, self, m, lsn] \rangle;\\[6pt]
+&\textbf{upon event } \langle rb, Deliver \mid p, [DATA, s, m, sn] \rangle \textbf{ do}\\
+&\qquad pending := pending \cup \{(s,m,sn)\};\\
+&\qquad \textbf{while there exists } (s,m,sn) \in pending
+\textbf{ such that } sn = next[s] \textbf{ do}\\
+&\qquad\qquad next[s] := next[s] + 1;\\
+&\qquad\qquad pending := pending \setminus \{(s,m,sn)\};\\
+&\qquad\qquad \textbf{trigger } \langle frb, Deliver \mid s,m \rangle.
+\end{aligned}
+$$
+
+
