@@ -1761,3 +1761,8 @@ Paxos does not contradict the FLP result. FLP says that we cannot guarantee term
 2. **Acceptors**: are the processes that participate in value selection. They receive proposals and can accept them. They are the heart of Paxos' security: the protocol must ensure that accepted proposals never lead to the choice of two different values; 
 3. **Learners**: passively assist to the decision and obtain the final decided value. They are not responsible for proposing or accepting the value: they observe the decisions reached by the acceptors. For <mark style="background:#affad1">example</mark>, when a learner receives confirmation that a majority of acceptors have accepted a proposal, it can conclude that the corresponding value has been chosen. 
 
+The easiest way to solve the problem is to have a single acceptor:
+-  A proposer sends a proposal to the acceptor;
+-  The acceptor choses the first proposed value it receives and informs everybody about its choice.
+
+But there's a fundamental problem: what happens if the only acceptor crashes?
