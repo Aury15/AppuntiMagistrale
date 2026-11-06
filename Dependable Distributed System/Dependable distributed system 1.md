@@ -1810,5 +1810,7 @@ To ensure P2, we go through two successive refinements:
 - **P2a:** If a proposal with value $v$ is accepted, every higher-numbered proposal accepted by _any_ acceptor has value $v$.
 	- _Problem:_ What happens if an acceptor $c$ doesn't see an accepted proposal with value $v$, and a new proposer wakes up proposing a different value $v'$ that $c$ is forced to accept for P1?
 - **P2b:** If a proposal with value $v$ is chosen, every higher-numbered proposal **issued by any proposer** has value $v$.
-
-**Definitive trial, P2c**
+To ensure $P2b$, we keep the following invariant for any value $v$ and number $n$:
+- **P2c**: For any $v$ and $n$, if a proposal with value $v$ and number $n$ is issued, then there exists a set $S$ consisting of a majority of acceptors such that:
+	- No acceptor in $S$ has accepted any proposal numbered less than $n$, or
+	- $v$ is the value of the proposal with the highest number among all proposals numbered less than $n$ accepted by acceptors in $S$.
