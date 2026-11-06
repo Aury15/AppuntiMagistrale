@@ -1827,13 +1827,9 @@ To maintain $P2c$, a proposer who wants to issue a proposal with number $n$ must
 			- $(\text{ACK}, n, n', v')$ if the acceptor has already accepted a proposal with number $n'$ and value $v'$.
 			- $(\text{ACK}, n, \perp, \perp)$ if it has not accepted any proposals.
 		- **NACK:** If the acceptor receives a prepare with a number $n$ lower than a $n'$ to which it has already responded, it sends a rejection $(\text{NACK}, n')$ indicating that the proposal is too old.
-
-2.  FASE 2: Accept / Accepted
-
-3. **Accept Request:** Se il proposer riceve risposte (ACK) da una **maggioranza** di acceptor, può procedere a emettere una richiesta di accettazione $(\text{ACCEPT}, n, v)$ dove:
-    
-    - _(a)_ $n$ è il numero apparso nella richiesta di prepare.
-        
-    - _(b)_ $v$ è il valore della proposta con il numero più alto tra tutti i valori restituiti nelle risposte degli acceptor (oppure il valore proprio del proposer se nessuno degli acceptor aveva accettato in precedenza alcuna proposta).
-        
-4. **Acceptor Acceptance:** Se un acceptor riceve una richiesta $(\text{ACCEPT}, n, v)$, accetta la proposta a meno che non abbia già risposto a una richiesta di prepare con un numero **maggiore** di $n$.
+	
+2. PHASE 2: Accept / Accepted
+	1. **Accept Request:** If the proposer receives responses (ACK) from a **majority** of acceptors, it can proceed to issue an accept request $(\text{ACCEPT}, n, v)$ where:
+		- _(a)_ $n$ is the number that appeared in the prepare request.
+		- _(b)_ $v$ is the value of the proposal with the highest number among all the values ​​returned in the acceptor responses (or the proposer's own value if none of the acceptors had previously accepted any proposals).
+	2. **Acceptor Acceptance:** If an acceptor receives an $(\text{ACCEPT}, n, v)$ request, it accepts the proposal unless it has already responded to a prepare request with a number **greater** than $n$.
