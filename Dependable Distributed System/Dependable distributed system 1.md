@@ -1712,5 +1712,7 @@ When a process has heard from all currently correct processes (`correct ⊆ rece
 
 ## Paxos 
 
+In an asynchronous system, it is not possible to always guarantee that consensus will be achieved if even a single process can crash. In an asynchronous system we cannot assume that processes have a predictable speed or that messages arrive within a maximum time. <u>The silence of a process does not prove that that process has failed.</u>
+
 The paxos family of algorithms was introduced to provide a viable solution to consensus in asynchronous settings:
 - Sa
