@@ -1794,8 +1794,4 @@ It could happen that:
 - $A_1$ receives $v_1$, $v_2$, and $v_3$;
 - $A_2$ receives $v_2$ and $v_1$;
 - $A_3$ receives only $v_3$.
-The problem is obvious: each acceptor can receive a different set of proposals and can receive them in a different order.
-
-How can we ensure that acceptors don't choose different values?
-
-This is the central question that led to the construction of Paxos.
+The problem is obvious: each acceptor can receive a different set of proposals and can receive them in a different order. <mark style="background:#b1ffff">How can we ensure that acceptors don't choose different values?</mark> This is the central question that led to the construction of Paxos.
