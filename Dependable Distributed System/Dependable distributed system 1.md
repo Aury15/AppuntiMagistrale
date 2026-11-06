@@ -1882,3 +1882,4 @@ The algorithm uses a local sequence counter and a pending data structure: Initia
 The underlying layer is activated by sending $\text{rb.Broadcast}([DATA, \text{self}, m, lsn])$. Deliver ($p, [DATA, s, m, sn]$):
 The message is inserted into $\text{pending}$. Using a while loop, messages are released and delivered (frb.Deliver) only when the sequence number $sn'$ exactly matches the expected value $\text{next}[s]$.
 
+![[Dependable distributed system 1-1793988432290.webp]]
