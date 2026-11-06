@@ -1789,7 +1789,7 @@ and three acceptors:
 $$
 A_1,\ A_2,\ A_3
 $$
-
+<u></u>
 It could happen that:
 - $A_1$ receives $v_1$, $v_2$, and $v_3$;
 - $A_2$ receives $v_2$ and $v_1$;
@@ -1803,3 +1803,4 @@ To prevent acceptors from choosing different values, strict rules and invariants
 
 **Trial (P1)**: An acceptor must accept the first proposal it receives.
 **Problem** (<u>Deadlock</u>): If multiple values ​​are proposed concurrently by different proposers, none could reach the required majority. An acceptor must be able to accept multiple proposals. 
+**Solution**: We keep track of the different proposals by assigning each one a unique proposal number (total sorting). A value is chosen when a single proposal with that value has been accepted by a <u>majority</u> of acceptors (**chosen proposal**). <mark style="background:rgba(173, 239, 239, 0.55)">We may allow multiple proposals to be accepted, but all accepted proposals must be of equal value.</mark>
