@@ -1727,4 +1727,5 @@ We would like all correct processes to reach a decision, choosing one of the pro
 The paxos family of algorithms was introduced to provide a viable solution to consensus in asynchronous settings. The goal is to allow multiple processes to agree on a value, even in the presence of arbitrary delays and crashes. 
 
 ###### Properties of paxos's family
-- Safery is always guara
+- **Safety** is always guaranteed.The protocol must not produce contradictory decisions, even when the network behaves badly.
+- **Liveness** is guaranteed only when the system behaves well for sufficiently long periods: in other words, when network conditions allow messages to flow and processes to complete the protocol phases.
