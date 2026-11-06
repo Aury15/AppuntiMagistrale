@@ -1840,4 +1840,6 @@ To maintain $P2c$, a proposer who wants to issue a proposal with number $n$ must
 - <u>Practical Solution</u>: The proposers are "elected" or coordinated using an external Leader Election protocol. This way, the protocol operates as a 2-Phase Commit (or 3-Phase Commit in the event of leader failure).
 
 
+## Ordered communication
+
 
