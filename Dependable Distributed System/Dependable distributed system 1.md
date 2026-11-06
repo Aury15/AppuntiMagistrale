@@ -1748,4 +1748,6 @@ Paxos does not contradict the FLP result. FLP says that we cannot guarantee term
 - They are not corrupted.
 
 >[!Observation] 
->
+>Since all agents may fail after a value is chosen and then restart, a solution is impossible unless some information can be remembered by an agent that has failed and restarted.
+
+#### The three roles of Paxos
