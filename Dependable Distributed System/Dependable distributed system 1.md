@@ -1709,3 +1709,4 @@ When a process has heard from all currently correct processes (`correct ⊆ rece
 - **Termination:** Ensured because all correct processes eventually reach round $N$ and decide in that round.
 - **Uniform Agreement:** Holds because all processes reaching round $N$ possess the identical set of values in their `proposalset`.
 - **Performance:** Requires $N$ communication steps and $O(N^3)$ messages for all correct processes to decide.
+
