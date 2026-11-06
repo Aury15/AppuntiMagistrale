@@ -1795,3 +1795,7 @@ It could happen that:
 - $A_2$ receives $v_2$ and $v_1$;
 - $A_3$ receives only $v_3$.
 The problem is obvious: each acceptor can receive a different set of proposals and can receive them in a different order. <mark style="background:#b1ffff">How can we ensure that acceptors don't choose different values?</mark> This is the central question that led to the construction of Paxos.
+
+#### Evolution of rules
+To prevent acceptors from choosing different values, strict rules and invariants are introduced.
+**Initial rule:** An acceptor can accept at most one value, and a value is chosen when a majority of acceptors accept it. The majority is required to ensure that only one value is accepted.
