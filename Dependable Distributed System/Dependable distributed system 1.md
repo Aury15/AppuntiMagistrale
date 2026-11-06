@@ -1752,6 +1752,12 @@ Paxos does not contradict the FLP result. FLP says that we cannot guarantee term
 
 #### The three roles of Paxos
 
-1. Proposers: are processes that can propose a value;
-2. Acceptors: are processes that must commit on a final decided value;
-3. Learners: 
+1. **Proposers**: are processes that can propose a value;
+	1. For example, we could have:
+			- proposer $P_1$ proposing the value $v_1$;
+			- proposer $P_2$ proposing the value $v_2$;
+			- proposer $P_3$ proposing the value $v_3$.
+	The proposer cannot directly impose its choice: it must participate in the protocol and obtain the necessary approval from the acceptors.
+	
+2. **Acceptors**: are processes that must commit on a final decided value;
+3. **Learners**: passively assist to the decision and obtain the final decided value.
