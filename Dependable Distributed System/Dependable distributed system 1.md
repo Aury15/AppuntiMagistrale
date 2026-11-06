@@ -1816,19 +1816,19 @@ To ensure $P2b$, we keep the following invariant for any value $v$ and number $n
 	- $v$ is the value of the proposal with the highest number among all proposals numbered less than $n$ accepted by acceptors in $S$.
 
 To maintain $P2c$, a proposer who wants to issue a proposal with number $n$ must first discover (or promise to bind) the value of the highest proposal less than $n$ that is accepted (or will be accepted) by a majority of acceptors. The protocol is divided into two main phases (each consisting of a request and a response):
-1. **FASE 1: Prepare / Promise**
-	1. **Prepare Request:** Un proposer sceglie un nuovo numero di versione della proposta $n$ (univoco) e invia una richiesta di preparazione $(\text{PREPARE}, n)$ a una maggioranza di acceptor:
-	    - _(a)_ Posso fare una proposta con numero $n$?
-	    - _(b)_ Se sì, mi suggerisci un valore per la mia proposta?
-2. **Acceptor Response (Promise):** Quando un acceptor riceve $(\text{PREPARE}, n)$:
-    - Se $n$ è maggiore di qualsiasi numero di prepare ricevuto in precedenza, risponde con una **promessa** di non accettare più alcuna proposta numerata inferiore a $n$.
-    - Nella risposta, suggerisce il valore $v'$ della proposta con il numero più alto che ha accettato finora (se esiste), oppure $\perp$ (bottom/null) se non ha accettato nulla.
-    - Il messaggio di risposta è del tipo:
-        - $(\text{ACK}, n, n', v')$ se l'acceptor ha già accettato una proposta con numero $n'$ e valore $v'$.
-        - $(\text{ACK}, n, \perp, \perp)$ se non ha accettato alcuna proposta.
-    - **NACK:** Se l'acceptor riceve un prepare con un numero $n$ inferiore a un $n'$ a cui ha già risposto in precedenza, invia un rifiuto $(\text{NACK}, n')$ indicando che la proposta è troppo vecchia.
+1. **PHASE 1: Prepare / Promise**
+	1. **Prepare Request:** A proposer chooses a new proposal version number $n$ (unique) and sends a prepare request $(\text{PREPARE}, n)$ to a majority of acceptors:
+		- _(a)_ Can I make a proposal with number $n$?
+		- _(b)_ If so, can you suggest a value for my proposal?
+	2. **Acceptor Response (Promise):** When an acceptor receives $(\text{PREPARE}, n)$:
+		- If $n$ is greater than any previously received prepare number, it responds with a **promise** to no longer accept any proposals numbered lower than $n$.
+		- In its response, it suggests the value $v'$ of the highest-numbered proposal it has accepted so far (if any), or $\perp$ (bottom/null) if it has accepted nothing.
+		- The response message is of the form:
+			- $(\text{ACK}, n, n', v')$ if the acceptor has already accepted a proposal with number $n'$ and value $v'$.
+			- $(\text{ACK}, n, \perp, \perp)$ if it has not accepted any proposals.
+		- **NACK:** If the acceptor receives a prepare with a number $n$ lower than a $n'$ to which it has already responded, it sends a rejection $(\text{NACK}, n')$ indicating that the proposal is too old.
 
-### FASE 2: Accept / Accepted
+2.  FASE 2: Accept / Accepted
 
 3. **Accept Request:** Se il proposer riceve risposte (ACK) da una **maggioranza** di acceptor, può procedere a emettere una richiesta di accettazione $(\text{ACCEPT}, n, v)$ dove:
     
