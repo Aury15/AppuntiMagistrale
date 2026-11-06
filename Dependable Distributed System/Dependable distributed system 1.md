@@ -1751,3 +1751,7 @@ Paxos does not contradict the FLP result. FLP says that we cannot guarantee term
 >Since all agents may fail after a value is chosen and then restart, a solution is impossible unless some information can be remembered by an agent that has failed and restarted.
 
 #### The three roles of Paxos
+
+1. Proposers: are processes that can propose a value;
+2. Acceptors: are processes that must commit on a final decided value;
+3. Learners: 
