@@ -1804,3 +1804,9 @@ To prevent acceptors from choosing different values, strict rules and invariants
 **Trial (P1)**: An acceptor must accept the first proposal it receives.
 **Problem** (<u>Deadlock</u>): If multiple values ​​are proposed concurrently by different proposers, none could reach the required majority. An acceptor must be able to accept multiple proposals. 
 **Solution**: We keep track of the different proposals by assigning each one a unique proposal number (total sorting). A value is chosen when a single proposal with that value has been accepted by a <u>majority</u> of acceptors (**chosen proposal**). <mark style="background:rgba(173, 239, 239, 0.55)">We may allow multiple proposals to be accepted, but all accepted proposals must be of equal value.</mark>
+
+**Trial (P2)**: If a proposal with value $v$ is chosen, every higher-numbered proposal that is chosen has value $v$.
+Per garantire P2, passiamo attraverso due raffinamenti successivi:
+- **P2a:** Se una proposta con valore $v$ viene accettata, ogni proposta con numero superiore accettata da _qualsiasi_ acceptor ha valore $v$.
+    - _Problema:_ Cosa succede se un acceptor $c$ non vede una proposta accettata con valore $v$, e un nuovo proposer si risveglia proponendo un valore diverso $v'$ che $c$ è costretto ad accettare per P1?
+- **P2b:** Se una proposta con valore $v$ è scelta, ogni proposta con numero superiore **emessa da qualsiasi proposer** ha valore $v$.
