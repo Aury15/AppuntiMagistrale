@@ -1798,4 +1798,8 @@ The problem is obvious: each acceptor can receive a different set of proposals a
 
 #### Evolution of rules
 To prevent acceptors from choosing different values, strict rules and invariants are introduced.
-**Initial rule:** An acceptor can accept at most one value, and a value is chosen when a majority of acceptors accept it. The majority is required to ensure that only one value is accepted.
+>[!Initial Rule]
+>**Initial rule:** An acceptor can accept at most one value, and a value is chosen when a majority of acceptors accept it. The majority is required to ensure that only one value is accepted.
+
+**Trial (P1)**: An acceptor must accept the first proposal it receives.
+**Problem** (<u>Deadlock</u>): If multiple values ​​are proposed concurrently by different proposers, none could reach the required majority. An acceptor must be able to accept multiple proposals. 
