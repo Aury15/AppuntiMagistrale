@@ -1765,4 +1765,4 @@ The easiest way to solve the problem is to have a single acceptor:
 -  A proposer sends a proposal to the acceptor;
 -  The acceptor choses the first proposed value it receives and informs everybody about its choice.
 
-But there's a fundamental problem: what happens if the only acceptor crashes?
+**But there's a fundamental problem: what happens if the only acceptor crashes?**
