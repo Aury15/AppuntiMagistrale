@@ -1728,4 +1728,4 @@ The paxos family of algorithms was introduced to provide a viable solution to co
 
 ###### Properties of paxos's family
 - **Safety** is always guaranteed.The protocol must not produce contradictory decisions, even when the network behaves badly.
-- **Liveness** is guaranteed only when the system behaves well for sufficiently long periods: in other words, when network conditions allow messages to flow and processes to complete the protocol phases.
+- **Liveness** is guaranteed only when the system behaves well for sufficiently long periods: in other words, when network conditions allow messages to flow and processes to complete the protocol phases. This property is connected to the partial synchrony.
