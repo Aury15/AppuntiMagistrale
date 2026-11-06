@@ -1842,4 +1842,5 @@ To maintain $P2c$, a proposer who wants to issue a proposal with number $n$ must
 
 ## Ordered communication
 
-
+In distributed systems, reliable broadcast ensures that all correct processes deliver the same set of messages, but does not impose any properties on the order of delivery.
+⚠️ The Anomaly Problem: Without order guarantees, serious application inconsistencies can arise. For example, if a client first sends "reserve a seat" and then "cancel my reservation," but the messages are delivered reversed or processed by different servers in the wrong random order, the system risks canceling a reservation that never existed.
