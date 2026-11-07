@@ -2076,4 +2076,8 @@ The agreement defines whether failed and successful processes must share the exa
 - **Non-Uniform Agreement (NUA):** $\text{If a successful process TODelivers a message } m, \text{then all successful processes will eventually deliver } m.$
 Let $M$ be the set of messages delivered by correct processes, and $M_p$ be the set of messages delivered by a generic process $p$ (possibly a failed one): With UA, the relation $M_p \subseteq M$ holds (correct processes agree perfectly on the set $M$, and failed processes can only deliver a subset of $M$ before crashing). With NUA, it is allowed that $M_p - M \neq \emptyset$ (a failed process may have delivered messages that correct processes will never see).
 ![[Dependable distributed system 1-1794064694938.webp]]
-
+###### Order properties
+Ordering determines how messages are sequenced. The slides compare four main variants: 
+1. **Strong Uniform Total Order (SUTO)** If a process delivers message $m$ before $m'$, then no process (correct or not) can deliver $m'$ until it has first delivered $m$. Characteristics: All processes see exactly the same message sequence prefix. If a process crashes, it has still followed the exact same sequence as the living ones until it crashed.
+2. **Weak Uniform Total Order (WUTO)** If process $p$ and process $q$ both deliver messages $m$ and $m'$, then $p$ delivers $m$ before $m'$ if and only if $q$ delivers $m$ before $m'$. Characteristics: There is no restriction on whether a process must deliver all the other processes' messages, but if two processes deliver the same subset of messages, they do so in the same order. After an omission, processes may have disjoint sets of delivered messages, as long as the relative order on the common messages is identical.
+3. The strong form of both of them
