@@ -2030,7 +2030,8 @@ Total order is orthogonal with respect to FIFO and Causal Order. Total order wou
 
 ###### Properties 
 - All processes agree on the same set of delivered messages.
+- All processes agree on the same delivery sequence.
+- The delivery action behaves like an atomic event: the message is delivered to everyone or no one, and any other messages are strictly ordered before or after it.
+###### Relationship between broadcast specifications
+![[Dependable distributed system 1-1794063748711.webp]]
 
-All processes agree on the same delivery sequence.
-
-The delivery action behaves like an atomic event: the message is delivered to everyone or no one, and any other messages are strictly ordered before or after it.
