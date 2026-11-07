@@ -1895,4 +1895,4 @@ A message $m_1$ has potentially caused a message $m_2$ ($m_1 \rightarrow m_2$) i
 
 ###### Properties 
 - CRB1-CRB4: Same as properties RB1-RB4 in (regular) reliable broadcast;
-- CRB5: Causal delivery, for any message $m_1$ that potentially caused a message $m_2$, $m_1 \rightarrow m_
+- CRB5: Causal delivery, for any message $m_1$ that potentially caused a message $m_2$, $m_1 \rightarrow m_2$, no process delivers $m_2$ unless it has already delivered $m_1$. 
