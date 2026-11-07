@@ -1933,7 +1933,7 @@ $$
 
 ![[Dependable distributed system 1-1794060669854.webp]]
 
-###### Safety property
+##### Safety property
 If two messages $m$ and $m'$ are related by a causal relationship $broadcast(m) \rightarrow broadcast(m')$, then each process must deliver $m$ before $m'$. Simply: if $m$ "generated" $m'$ (directly or indirectly), no process can ever deliver $m'$ by skipping or anticipating $m$. The causal order must be strictly preserved in the delivery. 
 If $m$ is the $k$-th message sent by process $p_i$, then $m.\text{VC}[i] = k-1$.
 <u>How it works:</u> When a process $p_i$ broadcasts a message, it attaches a clock vector $W$ (called $m.\text{VC}$) to it. <u>The meaning:</u> If that message is the $k$-th message emitted by $p_i$, the cell of the vector corresponding to $p_i$ will have the value $k-1$. This value acts as an "order label": it tells the recipient of the message how many previous messages that particular process had already emitted before this one.
@@ -1969,3 +1969,7 @@ Suppose that $m$ was issued by $p_i$ and that $m'$ was issued by a different pro
 $$m'.\text{VC}[i] \le V_k[i] \quad \implies \quad h \le V_k[i]$$
 3. **Interpretation of $V_k[i]$:** Within the system, $V_k[i] = h$ if and only if the The $h$-th message emitted by $p_i$ (i.e., our message $m$) was actually delivered by $p_k$.
 4. **Conclusion of Case 2:** Since the component in the vector of $m'$ requires that $V_k[i] \ge h$, process $p_k$ is forced to block $m'$ waiting for its local view to reach that value. Therefore, **$p_k$ can deliver $m'$ only after delivering $m$**.
+
+##### Liveness property
+Eventually each message will be delivered. Liveness is guaranteed by the following assumptions:
+- The n
