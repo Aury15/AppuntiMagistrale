@@ -1894,4 +1894,5 @@ A message $m_1$ has potentially caused a message $m_2$ ($m_1 \rightarrow m_2$) i
 ![[Dependable distributed system 1-1794059108083.webp]]
 
 ###### Properties 
-- CRB1-CRB4: Same as propertie
+- CRB1-CRB4: Same as properties RB1-RB4 in (regular) reliable broadcast;
+- CRB5: Causal delivery, for any message $m_1$ that potentially caused a message $m_2$, $m_1 \rightarrow m_
