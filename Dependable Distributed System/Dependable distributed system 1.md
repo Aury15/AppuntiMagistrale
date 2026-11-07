@@ -2071,3 +2071,7 @@ Each of these properties can be either Uniform or Non-Uniform.
 - A **uniform** property imposes restrictions on the behavior of all processes, including those that will crash.
 - A **non-uniform** property restricts the behavior of only the correct processes.
 ![[Dependable distributed system 1-1794064432960.webp]]
+L'accordo definisce se i processi falliti e quelli corretti devono condividere lo stesso identico set di messaggi consegnati:
+
+- **Uniform Agreement (UA):**  $\text{Se un processo (corretto o meno) TODeliver un messaggio } m, \text{ allora tutti i processi corretti consegneranno infine } m.$
+- **Non-Uniform Agreement (NUA):**  $\text{Se un processo corretto TODeliver un messaggio } m, \text{ allora tutti i processi corretti consegneranno infine } m.$
