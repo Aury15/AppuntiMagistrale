@@ -2053,3 +2053,7 @@ The diagram positions four different runs of a distributed system to show which 
 - **Execution 4 (In the middle, at the narrowest intersection):**
 	- _**Meaning**:_ This is the ideal and strongest case. It lies within the _Causal Reliable Broadcast_ **and is covered by Total Order**. It simultaneously satisfies causality, FIFO, and total order (often called _Causal Atomic Broadcast_).
 ![[Dependable distributed system 1-1794063846265.webp]]
+#### System model 
+- Process set: $\Pi = \{p_1, p_2, \dots, p_n\}$ (static set).
+- Communication channels: Perfect channels, meaning that messages exchanged between correct processes are delivered reliably without loss or corruption.
+- Time model: Asynchronous.Fault model: Crash fault model (processes can crash without sending corrupted messages).Execution representation: The space of feasible behaviors of the system is characterized by the set of possible executions $R$.
