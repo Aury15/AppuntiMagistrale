@@ -2035,22 +2035,21 @@ Total order is orthogonal with respect to FIFO and Causal Order. Total order wou
 ###### Relationship between broadcast specifications
 ![[Dependable distributed system 1-1794063748711.webp]]
 
-In the following image, we can see the Venn diagram representing the **hierarchy and intersection between the different ordering and reliability properties in distributed broadcast systems** (taken from Lesson 12 of _Dependable Distributed Systems_). It helps us understand the guarantees offered by the different abstractions and how they overlap with each other through four example executions.
+In the following image, we can see the Venn diagram representing the **hierarchy and intersection between the different ordering and reliability properties in distributed broadcast systems**. It helps us understand the guarantees offered by the different abstractions and how they overlap with each other through four example executions (taken from Lesson 12 of _Dependable Distributed Systems_).
 - **Reliable Broadcast (Larger Outer Circle):** This is the minimum level. It only guarantees that all messages are delivered correctly to everyone or no one, **without any ordering rules**.
 - **FIFO Reliable Broadcast (Middle Circle):** This adds the FIFO constraint (messages issued by the _same_ sender must be delivered in the order they were sent).
 - **Causal Reliable Broadcast (Smaller Inner Circle):** This is the most restrictive of the sender-based ordered broadcasts. Requires that the causal (cause-effect) order between messages be respected.
 The vertical green oval represents the Total Order property (or Atomic Broadcast, in which all processes deliver all messages in the exact same global order).
 The diagram positions four different runs of a distributed system to show which category they fall into:
 - **Execution 1 (In external Reliable Broadcast, outside Total** Order):
-	- **Meaning**: This is an execution that respects the basic rules of Reliable Broadcast, but does not satisfy either Total Order or the advanced FIFO/Causal ordering properties.
+	- ***Meaning***: This is an execution that respects the basic rules of Reliable Broadcast, but does not satisfy either Total Order or the advanced FIFO/Causal ordering properties.
 
 - **Execution 2 (Completely outside or at the margin):**
-	- **Meaning**: This is an execution that violates even the basic properties or fails to fall within the desired standard ordering categories (e.g., messages lost or delivered incorrectly compared to specifications).
+	- ***Meaning***: This is an execution that violates even the basic properties or fails to fall within the desired standard ordering categories (e.g., messages lost or delivered incorrectly compared to specifications).
 
 - **Execution 3 (At the intersection of Total Order and FIFO, but outside Causal):**
-- _Meaning:_ An execution that guarantees **Total Order** (everyone sees messages in the same sequence) and **FIFO Order** (messages from the same sender are in order), but does not respect global causality between different senders.
+	- **_Meaning**:_ An execution that guarantees **Total Order** (everyone sees messages in the same sequence) and **FIFO Order** (messages from the same sender are in order), but does not respect global causality between different senders.
 
 - **Execution 4 (In the middle, at the narrowest intersection):**
-
-- _Meaning:_ This is the ideal and strongest case. It lies within the _Causal Reliable Broadcast_ **and is covered by Total Order**. It simultaneously satisfies causality, FIFO, and total order (often called _Causal Atomic Broadcast_).
+	- _**Meaning**:_ This is the ideal and strongest case. It lies within the _Causal Reliable Broadcast_ **and is covered by Total Order**. It simultaneously satisfies causality, FIFO, and total order (often called _Causal Atomic Broadcast_).
 ![[Dependable distributed system 1-1794063846265.webp]]
