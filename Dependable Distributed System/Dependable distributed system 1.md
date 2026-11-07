@@ -1974,3 +1974,29 @@ $$m'.\text{VC}[i] \le V_k[i] \quad \implies \quad h \le V_k[i]$$
 Eventually each message will be delivered. Liveness is guaranteed by the following assumptions:
 - The number of broadcast events that precedes a certain event is finite;
 - Channels are reliable.
+$$
+\begin{aligned}
+&\textbf{Algorithm 3.13:} \text{ No-Waiting Causal Broadcast} \\[0.5em]
+&\textbf{Implements:} \quad \text{CausalOrderReliableBroadcast, instance } crb. \\
+&\textbf{Uses:} \quad \text{ReliableBroadcast, instance } rb. \\[0.8em]
+&\mathbf{upon \ event} \ \langle crb, Init \rangle \ \mathbf{do} \\
+&\quad delivered := \emptyset; \\
+&\quad past := []; \\[0.8em]
+&\mathbf{upon \ event} \ \langle crb, Broadcast \mid m \rangle \ \mathbf{do} \\
+&\quad \mathbf{trigger} \ \langle rb, Broadcast \mid [DATA, past, m] \rangle; \\
+&\quad append(past, (self, m)); \\[0.8em]
+&\mathbf{upon \ event} \ \langle rb, Deliver \mid p, [DATA, mpast, m] \rangle \ \mathbf{do} \\
+&\quad \mathbf{if} \ m \notin delivered \ \mathbf{do} \\
+&\quad\quad \mathbf{forall} \ (s, n) \in mpast \ \mathbf{do} \\
+&\quad\quad\quad \mathbf{if} \ n \notin delivered \ \mathbf{do} \\
+&\quad\quad\quad\quad \mathbf{trigger} \ \langle crb, Deliver \mid s, n \rangle; \\
+&\quad\quad\quad\quad delivered := delivered \cup \{n\}; \\
+&\quad\quad\quad\quad \mathbf{if} \ (s, n) \notin past \ \mathbf{do} \\
+&\quad\quad\quad\quad\quad append(past, (s, n)); \\
+&\quad\quad \mathbf{trigger} \ \langle crb, Deliver \mid p, m \rangle; \\
+&\quad\quad delivered := delivered \cup \{m\}; \\
+&\quad\quad \mathbf{if} \ (p, m) \notin past \ \mathbf{do} \\
+&\quad\quad\quad append(past, (p, m));
+\end{aligned}
+$$
+![[Dependable distributed system 1-1794062366984.webp]]
