@@ -2024,4 +2024,8 @@ order of messages
 
 ## Total order broadcast
 
-A total order reliable broadcast abstraction order <u>all</u> messages, even those from different senders and those that are note causally related. The total-order broadcast abstraction is sometimes also called **atomic broadcast**
+A total order reliable broadcast abstraction order <u>all</u> messages, even those from different senders and those that are note causally related. The total-order broadcast abstraction is sometimes also called **atomic broadcast**.
+Total order is orthogonal with respect to FIFO and Causal Order. Total order would accept indeed a computation in which a process $p_i$ sends n
+messages to a group, and each of the processes of the group delivers such
+messages in the reverse order of their sending.
+- The computation is totally ordered but it is not FIFO.
