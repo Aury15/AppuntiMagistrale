@@ -1939,4 +1939,5 @@ If $m$ is the $k$-th message sent by process $p_i$, then $m.\text{VC}[i] = k-1$.
 <u>How it works:</u> When a process $p_i$ broadcasts a message, it attaches a clock vector $W$ (called $m.\text{VC}$) to it. <u>The meaning:</u> If that message is the $k$-th message emitted by $p_i$, the cell of the vector corresponding to $p_i$ will have the value $k-1$. This value acts as an "order label": it tells the recipient of the message how many previous messages that particular process had already emitted before this one.
 
 >[!Definitions] Casual distance
->Let two broadcast events $b$ and $b'$ with $b \rightarrow b'$. These events have a **casual distance k** if $\exists$ a sequence of $k$ broadcast 
+>Let two broadcast events $b$ and $b'$ with $b \rightarrow b'$. These events have a **casual distance k** if $\exists$ a sequence of $k$ broadcast events $b_1, ..., b_k$ such that:
+>	- $\forall I \in {1, ...k$ 
