@@ -2018,3 +2018,6 @@ $$
 No-Waiting avoids having messages wait in a blocking queue: if a message arrives "early" bringing with it the history (mpast) of causally previous messages that the recipient does not yet have, the algorithm unpacks the history, delivers the missing messages in the correct order and discards any subsequent duplicates.
 
 ###### Casual order is not enough strong to avoid anomalies
+![[Dependable distributed system 1-1794063162496.webp]]
+Same initial state, different final state at the two sites. To have the same final state we need to ensure that the order of deliveries is the same at each
+process.
