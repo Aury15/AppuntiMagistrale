@@ -2070,5 +2070,4 @@ The formal specification of Total Order Broadcast consists of four fundamental p
 Each of these properties can be either Uniform or Non-Uniform. 
 - A **uniform** property imposes restrictions on the behavior of all processes, including those that will crash.
 - A **non-uniform** property restricts the behavior of only the correct processes.
-
-
+![[Dependable distributed system 1-1794064432960.webp]]
