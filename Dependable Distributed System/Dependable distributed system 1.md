@@ -1905,4 +1905,6 @@ A message $m_1$ has potentially caused a message $m_2$ ($m_1 \rightarrow m_2$) i
 **Local order**: if a process delivers a message $m_a$ before sending a message $m_b$, then no correct process deliver $m_b$ if it has not already delivered $m_a$.
 
 
+![[Dependable distributed system 1-1794059567279.webp]]
+![[Dependable distributed system 1-1794059581268.webp]]
 
