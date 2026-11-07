@@ -1933,3 +1933,4 @@ $$
 
 ![[Dependable distributed system 1-1794060669854.webp]]
 
+###### Prope
