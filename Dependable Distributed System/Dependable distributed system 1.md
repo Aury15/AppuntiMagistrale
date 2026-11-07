@@ -1902,6 +1902,7 @@ A message $m_1$ has potentially caused a message $m_2$ ($m_1 \rightarrow m_2$) i
 >Casual order $\implies$ FIFO order
 >Fifo order $\not\implies$ Casual order
 >Casual order = FIFO order + local order.
+**Local order**: if a process delivers a message $m_a$ before sending a message $m_b$, then no correct process deliver $m_b$ if it has not already delivered $m_a$.
 
-Local order: if a process delivers a message $m_a$ before sending a message $m_b$, t
+
 
