@@ -2024,4 +2024,4 @@ order of messages
 
 ## Total order broadcast
 
-A total order reliable broadcast abstraction order <u><\u>
+A total order reliable broadcast abstraction order <u>all</u> messages, even those from different senders and those that are note causally related. 
