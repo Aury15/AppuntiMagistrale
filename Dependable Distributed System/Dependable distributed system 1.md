@@ -2075,3 +2075,5 @@ The agreement defines whether failed and successful processes must share the exa
 - **Uniform Agreement (UA):** $\text{If a process (successful or not) TODelivers a message } m, \text{then all successful processes will eventually deliver } m.$
 - **Non-Uniform Agreement (NUA):** $\text{If a successful process TODelivers a message } m, \text{then all successful processes will eventually deliver } m.$
 Let $M$ be the set of messages delivered by correct processes, and $M_p$ be the set of messages delivered by a generic process $p$ (possibly a failed one): With UA, the relation $M_p \subseteq M$ holds (correct processes agree perfectly on the set $M$, and failed processes can only deliver a subset of $M$ before crashing). With NUA, it is allowed that $M_p - M \neq \emptyset$ (a failed process may have delivered messages that correct processes will never see).
+![[Dependable distributed system 1-1794064694938.webp]]
+
