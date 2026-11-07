@@ -1934,4 +1934,4 @@ $$
 ![[Dependable distributed system 1-1794060669854.webp]]
 
 ###### Safety property
-If two messages $m$ and $m'$ are related by a causal relationship $broadcast(m) \rightarrow broadcast(m')$, then each process must deliver $m$ before $m'$.
+If two messages $m$ and $m'$ are related by a causal relationship $broadcast(m) \rightarrow broadcast(m')$, then each process must deliver $m$ before $m'$. Simply: if $m$ "generated" $m'$ (directly or indirectly), no process can ever deliver $m'$ by skipping or anticipating $m$. The causal order must be strictly preserved in the delivery.
