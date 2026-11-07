@@ -1908,3 +1908,26 @@ A message $m_1$ has potentially caused a message $m_2$ ($m_1 \rightarrow m_2$) i
 ![[Dependable distributed system 1-1794059567279.webp]]
 ![[Dependable distributed system 1-1794059581268.webp]]
 
+$$
+\begin{aligned}
+&\textbf{Algorithm 3.15:} \text{ Waiting Causal Broadcast} \\[0.5em]
+&\textbf{Implements:} \quad \text{CausalOrderReliableBroadcast, instance } crb. \\
+&\textbf{Uses:} \quad \text{ReliableBroadcast, instance } rb. \\[0.8em]
+&\mathbf{upon \ event} \ \langle crb, Init \rangle \ \mathbf{do} \\
+&\quad V := [0]^N; \\
+&\quad lsn := 0; \\
+&\quad pending := \emptyset; \\[0.8em]
+&\mathbf{upon \ event} \ \langle crb, Broadcast \mid m \rangle \ \mathbf{do} \\
+&\quad W := V; \\
+&\quad W[rank(self)] := lsn; \\
+&\quad lsn := lsn + 1; \\
+&\quad \mathbf{trigger} \ \langle rb, Broadcast \mid [DATA, W, m] \rangle; \\[0.8em]
+&\mathbf{upon \ event} \ \langle rb, Deliver \mid p, [DATA, W, m] \rangle \ \mathbf{do} \\
+&\quad pending := pending \cup \{(p, W, m)\}; \\
+&\quad \mathbf{while} \ \text{exists } (p', W', m') \in pending \ \text{such that } W' \le V \ \mathbf{do} \\
+&\quad\quad pending := pending \setminus \{(p', W', m')\}; \\
+&\quad\quad V[rank(p')] := V[rank(p')] + 1; \\
+&\quad\quad \mathbf{trigger} \ \langle crb, Deliver \mid p', m' \rangle;
+\end{aligned}
+$$
+
