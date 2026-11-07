@@ -1950,22 +1950,22 @@ The base case considers two messages $m$ and $m'$ such that $broadcast(m) \right
 
 Depending on who sends the messages, the proof is divided into two distinct cases:
 
-###### Caso 1: I messaggi sono emessi dallo _stesso processo_ ($p_i$)
+###### Case 1: Messages are emitted by the _same process_ ($p_i$)
 
-Supponiamo che sia $m$ che $m'$ siano stati inviati dallo stesso processo $p_i$, e che $p_j$ sia il processo ricevente.
+Suppose both $m$ and $m'$ were sent by the same process $p_i$, and that $p_j$ is the receiving process.
 
-1. **Aggiornamento del Vettore (_Vector Clock_):** Dalla linea 3 della procedura di broadcast dell'Algoritmo 3.15, quando un processo emette un messaggio, incrementa la propria componente nel vettore:
-    $$m'.\text{VC}[i] := m.\text{VC}[i] + 1$$
-    Se $m$ è l'$h$-esimo messaggio inviato da $p_i$, allora il suo orologio sarà $m.\text{VC}[i] = h - 1$, mentre per il messaggio successivo sarà $m'.\text{VC}[i] = h$.
-2. **Condizione di Consegna (Delivery Condition):** Un processo ricevente $p_j$ può consegnare il messaggio $m'$ solo se il suo vettore locale $V_j$ soddisfa la condizione di dominanza causale:
-$$\forall x \in \{1, \dots, n\}, \ m'.\text{VC}[x] \le V_j[x] \quad \text{e in particolare} \quad m'.\text{VC}[i] \le V_j[i]$$
-    
-3. **Il Meccanismo di Sblocco:** Nel vettore di $m'$ la componente $i$-esima vale $h$ ($m'.\text{VC}[i] = h$). Affinché la disuguaglianza $h \le V_j[i]$ sia vera, il vettore locale del ricevente deve avere $V_j[i] \ge h$. La proprietà dei vettori di orologio stabilisce che $V_j[i] = h$ **se e solo se** il ricevente ha già consegnato tutti i primi $h$ messaggi inviati da $p_i$ (incluso $m$, che era l'$h$-esimo).
-4. **Conclusione del Caso 1:** Di conseguenza, il processo $p_j$ **non potrà mai consegnare $m'$ se prima non ha consegnato $m$**.
-###### Caso 2: I messaggi sono emessi da _processi distinti_ ($p_i$ e $p_j$)
-Supponiamo che $m$ sia stato emesso da $p_i$ e che $m'$ sia stato emesso da un processo differente $p_j$ _dopo_ che $p_j$ ha consegnato $m$. Il ricevente finale è un generico processo $p_k[cite: 60]$.
-1. **Relazione causale e Vector Clocks:** Poiché $broadcast(m) \rightarrow broadcast(m')$ e $m'$ viene emesso dopo la consegna di $m$ (con $m$ che era l'$h$-esimo messaggio di $p_i$, cioè $m.\text{VC}[i] = h-1$), per la regola di aggiornamento dei vettori di orologio avremo che il nuovo messaggio eredita e aggiorna la componente.$$m'.\text{VC}[i] = h$$
-2. **Verifica della Condizione nel Ricevente ($p_k$):** Il processo $p_k$ riceve $m'$ e deve verificare la condizione di consegna:
-    $$m'.\text{VC}[i] \le V_k[i] \quad \implies \quad h \le V_k[i]$$
-3. **Interpretazione di $V_k[i]$:** All'interno del sistema, $V_k[i] = h$ se e solo se il $h$-esimo messaggio emesso da $p_i$ (ovvero il nostro messaggio $m$) è stato effettivamente consegnato da $p_k$.
-4. **Conclusione del Caso 2:** Dato che la componente nel vettore di $m'$ richiede che $V_k[i] \ge h$, il processo $p_k$ è costretto a bloccare $m'$ in attesa che la sua vista locale raggiunga quel valore. Pertanto, **$p_k$ può consegnare $m'$ solo dopo aver consegnato $m$**[cite: 60].
+1. **Vector Clock Update (_Vector Clock_):** From line 3 of the broadcast procedure of Algorithm 3.15, when a process emits a message, it increments its component in the vector:
+$$m'.\text{VC}[i] := m.\text{VC}[i] + 1$$
+If $m$ is the $h$-th message sent by $p_i$, then its clock will be $m.\text{VC}[i] = h - 1$, while for the next message it will be $m'.\text{VC}[i] = h$.
+2. **Delivery Condition:** A receiving process $p_j$ can deliver message $m'$ only if its local vector $V_j$ satisfies the causal dominance condition:
+$$\forall x \in \{1, \dots, n\}, \ m'.\text{VC}[x] \le V_j[x] \quad \text{and in particular} \quad m'.\text{VC}[i] \le V_j[i]$$
+
+3. **The Unlocking Mechanism:** In the vector of $m'$, the $i$-th component is $h$ ($m'.\text{VC}[i] = h$). For the inequality $h \le V_j[i]$ to be true, the recipient's local vector must have $V_j[i] \ge h$. The clock vector property states that $V_j[i] = h$ **if and only if** the recipient has already delivered all the first $h$ messages sent by $p_i$ (including $m$, which was the $h$-th).
+4. **Conclusion of Case 1:** Consequently, process $p_j$ **can never deliver $m'$ unless it has first delivered $m$**.
+###### Case 2: Messages are issued by _distinct processes_ ($p_i$ and $p_j$)
+Suppose that $m$ was issued by $p_i$ and that $m'$ was issued by a different process $p_j$ _after_ $p_j$ delivered $m$. The final recipient is a generic process $p_k[cite: 60]$.
+1. **Causal Relationship and Vector Clocks:** Since $broadcast(m) \rightarrow broadcast(m')$ and $m'$ is emitted after the delivery of $m$ (with $m$ being the $h$-th message of $p_i$, i.e. $m.\text{VC}[i] = h-1$), by the clock vector update rule we have that the new message inherits and updates the component.$$m'.\text{VC}[i] = h$$
+2. **Condition Verification at Receiver ($p_k$):** Process $p_k$ receives $m'$ and must verify the delivery condition:
+$$m'.\text{VC}[i] \le V_k[i] \quad \implies \quad h \le V_k[i]$$
+3. **Interpretation of $V_k[i]$:** Within the system, $V_k[i] = h$ if and only if the The $h$-th message emitted by $p_i$ (i.e., our message $m$) was actually delivered by $p_k$.
+4. **Conclusion of Case 2:** Since the component in the vector of $m'$ requires that $V_k[i] \ge h$, process $p_k$ is forced to block $m'$ waiting for its local view to reach that value. Therefore, **$p_k$ can deliver $m'$ only after delivering $m$**.
