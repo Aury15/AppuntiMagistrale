@@ -2080,4 +2080,4 @@ Let $M$ be the set of messages delivered by correct processes, and $M_p$ be the 
 Ordering determines how messages are sequenced. The slides compare four main variants: 
 1. **Strong Uniform Total Order (SUTO)** If a process delivers message $m$ before $m'$, then no process (correct or not) can deliver $m'$ until it has first delivered $m$. Characteristics: All processes see exactly the same message sequence prefix. If a process crashes, it has still followed the exact same sequence as the living ones until it crashed.
 2. **Weak Uniform Total Order (WUTO)** If process $p$ and process $q$ both deliver messages $m$ and $m'$, then $p$ delivers $m$ before $m'$ if and only if $q$ delivers $m$ before $m'$. Characteristics: There is no restriction on whether a process must deliver all the other processes' messages, but if two processes deliver the same subset of messages, they do so in the same order. After an omission, processes may have disjoint sets of delivered messages, as long as the relative order on the common messages is identical.
-3. The strong form of both of them
+3. The strong non-uniform and weak
