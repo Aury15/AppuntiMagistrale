@@ -2015,3 +2015,4 @@ $$
 			2. The algorithm reads the mpast packet, notices that $m_1$ has not yet been delivered ($n \notin delivered$), and applies the recursive rule: it delivers $m_1$ first, and then immediately delivers $m_2$. 
 			3. This way, the causal order is respected without $p_2$ having to block execution waiting for a lost message: $m_2$ also took care of delivering its "ancestor" $m_1$.
 		3. The late arrival of $m_1$ on $p_2$: Subsequently, the "slow" and direct copy of $m_1$ still reaches $p_2$. Since $p_2$ has already delivered $m_1$ thanks to $m_2$, the "if m not in delivered" check causes $p_2$ to discard the duplicate.
+No-Waiting avoids having messages wait in a blocking queue: if a message arrives "early" bringing with it the history (mpast) of causally previous messages that the recipient does not yet have, the algorithm unpacks the history, delivers the missing messages in the correct order and discards any subsequent duplicates.
