@@ -1933,4 +1933,5 @@ $$
 
 ![[Dependable distributed system 1-1794060669854.webp]]
 
-###### Prope
+###### Safety property
+If two messages $m$ and $m'$ are related by a causal relationship $broadcast(m) \rightarrow broadcast(m')$, then each process must deliver $m$ before $m'$.
