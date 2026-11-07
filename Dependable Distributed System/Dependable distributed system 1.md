@@ -1899,4 +1899,9 @@ A message $m_1$ has potentially caused a message $m_2$ ($m_1 \rightarrow m_2$) i
 
 >[!Observations] 
 >Casual broadcast = reliable broadcast + casual order;
->Casual order $\implies$ FIF
+>Casual order $\implies$ FIFO order
+>Fifo order $\not\implies$ Casual order
+>Casual order = FIFO order + local order.
+
+Local order: if a process delivers a message $m_a$ before sending a message $m_b$, t
+
