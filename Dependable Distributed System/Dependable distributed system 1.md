@@ -1972,4 +1972,5 @@ $$m'.\text{VC}[i] \le V_k[i] \quad \implies \quad h \le V_k[i]$$
 
 ##### Liveness property
 Eventually each message will be delivered. Liveness is guaranteed by the following assumptions:
-- The n
+- The number of broadcast events that precedes a certain event is finite;
+- Channels are reliable.
