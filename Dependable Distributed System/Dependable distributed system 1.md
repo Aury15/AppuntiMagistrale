@@ -1886,5 +1886,12 @@ The message is inserted into $\text{pending}$. Using a while loop, messages are 
 In the diagram, process $P_1$ transmits two messages in sequence:$m_1$ with local sequence number $lsn = 1$ ($\langle P_1, m_1, 1 \rangle$)$m_2$ with local sequence number $lsn = 2$ ($\langle P_1, m_2, 2 \rangle$)Each process maintains a next vector indicating the sequence number of the next message it expects to receive from each sender (initially set to $1$) and a dangling data structure to accumulate early-arrived messages.What happens in individual processesProcess $P_3$ (Arrival in order):First receives $m_1$ ($sn = 1$), which exactly matches the expected value in next [P1]. It is delivered immediately (Deliver), and next [P1] is incremented to $2$. Next, it receives $m_2$ ($sn = 2$), which corresponds to the new expected value. It is delivered immediately, bringing $3$ next to it. Process $P_2$ (Out of Order Arrival): Due to network delays, $m_2$ ($sn = 2$) arrives at $P_2$ before $m_1$ ($sn = 1$). Since $P_2$ expects the message with $sn = 1$ (next [P1] = 1), the arrival of $อง$ with $sn = 2$ violates the FIFO rule if delivered immediately. The algorithm intervenes by inserting $m_2$ into the pending message queue: $\text{Pending} = \{\langle p_1, m_2, 2 \rangle\}$. When $m_1$ ($sn = 1$) finally arrives, $P_2$ delivers it immediately and updates next[P1] to $2$. At this point, the control loop (while the algorithm is running) detects that there is a message in the Pending queue with $sn' = \text{next}[s]$ (i.e., $m_2$ with $sn = 2$). $P_2$ removes $m_2$ from Pending, delivers it, and updates next [P1] to $3$.
 
 #### Casual order broadcast
+Causal order extends the concept of ordering by capturing the cause-effect (happened-before) dependency relationships between messages.
+A message $m_1$ has potentially caused a message $m_2$ ($m_1 \rightarrow m_2$) if at least one of the following conditions is true: 
+- The same process $p$ emits $m_1$ before $m_2$.
+- A process $p$ delivers $m_1$ and subsequently emits $m_2$. 
+- There exists an intermediate message $m'$ such that $m_1 \rightarrow m'$ and $m'$ $\rightarrow m_2$ (transitive property).
+![[Dependable distributed system 1-1794059108083.webp]]
 
-A message $m_1$ has potentially caused a message $m_2$ ($m_1 \rightarrow m_2$) if at least one of the following conditions is true: The same process $p$ emits $m_1$ before $m_2$. A process $p$ delivers $m_1$ and subsequently emits $m_2$. There exists an intermediate message $m'$ such that $m_1 \rightarrow m'$ and $m'$ $\rightarrow m_2$ (transitive property).
+###### Properties 
+- CRB1-CRB4: Same as propertie
