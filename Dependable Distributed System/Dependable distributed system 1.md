@@ -1940,4 +1940,5 @@ If $m$ is the $k$-th message sent by process $p_i$, then $m.\text{VC}[i] = k-1$.
 
 >[!Definitions] Casual distance
 >Let two broadcast events $b$ and $b'$ with $b \rightarrow b'$. These events have a **casual distance k** if $\exists$ a sequence of $k$ broadcast events $b_1, ..., b_k$ such that:
->	- $\forall I \in {1, ...k$ 
+>	- $\forall I \in {1, ...k} b_i \rightarrow b_{i+1} \and (\not\exists) m* | b_i \rightarrow m* \rightarrow b_{i+1}$ 
+>	- 
