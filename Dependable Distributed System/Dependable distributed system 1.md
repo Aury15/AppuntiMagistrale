@@ -2035,3 +2035,7 @@ Total order is orthogonal with respect to FIFO and Causal Order. Total order wou
 ###### Relationship between broadcast specifications
 ![[Dependable distributed system 1-1794063748711.webp]]
 
+
+
+
+![[Dependable distributed system 1-1794063846265.webp]]
