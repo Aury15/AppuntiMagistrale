@@ -2035,7 +2035,11 @@ Total order is orthogonal with respect to FIFO and Causal Order. Total order wou
 ###### Relationship between broadcast specifications
 ![[Dependable distributed system 1-1794063748711.webp]]
 
-
+Questo diagramma di Venn rappresenta la **gerarchia e l'intersezione tra le diverse proprietà di ordinamento e affidabilità nei sistemi di broadcast distribuiti** (tratto dalla Lezione 12 di _Dependable Distributed Systems_). Serve a capire quali garanzie offrono le diverse astrazioni e come si sovrappongono tra loro attraverso quattro esecuzioni di esempio.
+- **Reliable Broadcast (Cerchio esterno più grande):** È il livello minimo. Garantisce solo che tutti i messaggi siano consegnati correttamente a tutti o a nessuno, **senza alcuna regola sull'ordine**.
+- **FIFO Reliable Broadcast (Cerchio intermedio):** Aggiunge il vincolo FIFO (i messaggi emessi dallo _stesso_ mittente devono essere consegnati nell'ordine in cui sono stati inviati).
+- **Causal Reliable Broadcast (Cerchio interno più piccolo):** È il più restrittivo tra i broadcast ordinati basati sul mittente. Richiede che venga rispettato l'ordine causale (causa-effetto) tra i messaggi.
+L'ovale verde verticale rappresenta la proprietà di **Total Order** (o _Atomic Broadcast_, in cui tutti i processi consegnano _tutti_ i messaggi nello stesso identico ordine globale).
 
 
 ![[Dependable distributed system 1-1794063846265.webp]]
