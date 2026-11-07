@@ -2021,3 +2021,7 @@ No-Waiting avoids having messages wait in a blocking queue: if a message arrives
 ![[Dependable distributed system 1-1794063162496.webp]]
 Same initial state, different final state at the two sites. To have the same final state we need to ensure that the order of deliveries is the same at each process. Note that ensuring the same delivery order at each replicas does not consider the sending
 order of messages
+
+## Total order broadcast
+
+A total order reliable broadcast abstraction order <u><\u>
