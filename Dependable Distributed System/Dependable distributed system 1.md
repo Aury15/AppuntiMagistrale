@@ -2071,7 +2071,7 @@ Each of these properties can be either Uniform or Non-Uniform.
 - A **uniform** property imposes restrictions on the behavior of all processes, including those that will crash.
 - A **non-uniform** property restricts the behavior of only the correct processes.
 ![[Dependable distributed system 1-1794064432960.webp]]
-L'accordo definisce se i processi falliti e quelli corretti devono condividere lo stesso identico set di messaggi consegnati:
-
-- **Uniform Agreement (UA):**  $\text{Se un processo (corretto o meno) TODeliver un messaggio } m, \text{ allora tutti i processi corretti consegneranno infine } m.$
-- **Non-Uniform Agreement (NUA):**  $\text{Se un processo corretto TODeliver un messaggio } m, \text{ allora tutti i processi corretti consegneranno infine } m.$
+The agreement defines whether failed and successful processes must share the exact same set of delivered messages:
+- **Uniform Agreement (UA):** $\text{If a process (successful or not) TODelivers a message } m, \text{then all successful processes will eventually deliver } m.$
+- **Non-Uniform Agreement (NUA):** $\text{If a successful process TODelivers a message } m, \text{then all successful processes will eventually deliver } m.$
+- Let $M$ be the set of messages delivered by correct processes, and $M_p$ be the set of messages delivered by a generic process $p$ (possibly a failed one): With UA, the relation $$M_p \subseteq M$$ holds (correct processes agree perfectly on the set $$M$$, and failed processes can only deliver a subset of $$M$$ before crashing). With NUA, it is allowed that $$M_p - M \neq \emptyset$$ (a failed process may have delivered messages that correct processes will never see).
