@@ -2061,4 +2061,14 @@ The diagram positions four different runs of a distributed system to show which 
 - **Execution representation**: The space of feasible behaviors of the system is characterized by the set of possible executions $R$.
 
 ###### Properties
+The formal specification of Total Order Broadcast consists of four fundamental pillars, briefly referred to as $\text{TO}(V, I, A, O)$: 
+1. **Validity** ($V$): Ensures that messages sent by the correct processes are ultimately delivered. 
+2. **Integrity** ($I$): Ensures that there are no spurious, duplicate, or invented messages; every delivered message has been previously issued. 
+3. **Agreement** ($A$): Imposes constraints on the set of messages that must be delivered. 
+4. **Order** ($O$): Imposes constraints on the sequence in which messages are delivered.
+
+Each of these properties can be either Uniform or Non-Uniform. 
+- A **uniform** property imposes restrictions on the behavior of all processes, including those that will crash.
+- A **non-uniform** property restricts the behavior of only the correct processes.
+
 
