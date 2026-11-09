@@ -2091,13 +2091,15 @@ Combining the agreement property  ($UA$ vs $NUA$) and the order properties ($\te
 - The strongest one: $TO(UA, SUTO)$
 - The weakest one: $TO(NUA, WNUTO)$
 
-### Le 8 Combinazioni Dettagliate
 
-#### 1. $\text{TO(UA, SUTO)}$ — La più forte in assoluto
+##### The 8 combinations
 
-- **Composizione:** Uniform Agreement + Strong Uniform Total Order.
-    
-- **Cosa significa:** È la specifica più rigida e sicura. Tutti i processi (anche quelli che poi subiranno un crash) concordano esattamente sullo stesso insieme di messaggi consegnati (UA) e li ricevono rigorosamente nello stesso identico ordine sequenziale e con lo stesso prefisso (SUTO). Nessun processo vedrà mai una divergenza, neanche prima di morire.
+###### ###### 1. $\text{TO(UA, SUTO)}$ 
+
+- **Composition:** Uniform Agreement + Strong Uniform Total Order.
+
+- **What it means:** This is the most rigid and secure specification. All processes (even those that will later crash) agree on exactly the same set of delivered messages (UA) and receive them in the exact same sequential order and with the same prefix (SUTO). No process will ever see a divergence, not even before it dies.
+- 
     
 
 #### 2. $\text{TO(UA, WUTO)}$
