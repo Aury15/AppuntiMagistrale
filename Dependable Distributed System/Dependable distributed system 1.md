@@ -2178,20 +2178,12 @@ $$
 Non appena il buffer `unordered` non è vuoto e il processo non è già in attesa di una decisione precedente (`wait = FALSE`):
 
 - Il processo imposta `wait := TRUE` per bloccare nuove proposte nello stesso round.
-    
-    DDS-Lecture13-2026-2027.pdf
-    
 - Inizializza una nuova istanza di consenso per il round corrente (`c.round`).
-    
-    DDS-Lecture13-2026-2027.pdf
-    
 - Propone al sistema di consenso l'intero contenuto del proprio buffer non ordinato: `trigger (c.round, Propose | unordered)`.
     
-    DDS-Lecture13-2026-2027.pdf
     
 - _Nota:_ Grazie a questa fase, tutti i nodi proporranno i messaggi che hanno accumulato, e il modulo di consenso garantirà che tutti i processi concordino su una lista comune di messaggi da ordinare per questo round.
     
-    DDS-Lecture13-2026-2027.pdf
     
 
 ### 5. Decisione e Consegna (`Decide`)
