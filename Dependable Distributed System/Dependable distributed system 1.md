@@ -2334,5 +2334,9 @@ The abstraction of a **distributed register** serves to hide this complexity, of
 >[!definitions] Register
 >A register is a shared variable accessed by processes through *read* and *write* operations.
 >	-`read()`: return the current value $v$ of the register without modify the content of the register;
->	-`write()`: write the value $v$ in the register and return $true$ ($ack$) at the e
+>	-`write()`: write the value $v$ in the register and return $true$ ($ack$) at the end of the operations. 
+>The register stores positive integers and is initialized to $0$. 
+
+
+
 
