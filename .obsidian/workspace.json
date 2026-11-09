@@ -4,18 +4,20 @@
     "type": "split",
     "children": [
       {
-        "id": "484969ec3ef57ed6",
+        "id": "f0af47fb25a5685d",
         "type": "tabs",
         "children": [
           {
-            "id": "a73c43ecf9d870a5",
+            "id": "e9cd9c676de23f16",
             "type": "leaf",
             "state": {
-              "type": "pdf",
+              "type": "markdown",
               "state": {
-                "file": "Dependable Distributed System/Dependable distributed system 1.pdf"
+                "file": "Dependable Distributed System/Dependable distributed system 1.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-file-text",
+              "icon": "lucide-file",
               "title": "Dependable distributed system 1"
             }
           }
@@ -188,8 +190,9 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "a73c43ecf9d870a5",
+  "active": "e9cd9c676de23f16",
   "lastOpenFiles": [
+    "Dependable Distributed System/Dependable distributed system 1.pdf",
     "Machine Learning.md",
     "immagini DS/Dependable distributed system-1793878442061.webp",
     "immagini DS/Dependable distributed system-1793788692222.webp",
@@ -208,7 +211,6 @@
     "Dependable Distributed System/Dependable distributed system 1 (bella copia).md",
     "Dependable Distributed System/Dependable distributed system 1 (bella copia).pdf",
     "Dependable Distributed System/Dependable distributed system.md",
-    "Dependable Distributed System/Dependable distributed system 1.pdf",
     "Dependable Distributed System/Lezione 1.md",
     "Dependable Distributed System",
     "Senza nome.md",
