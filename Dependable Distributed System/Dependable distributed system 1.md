@@ -2337,7 +2337,12 @@ The abstraction of a **distributed register** serves to hide this complexity, of
 >	-`write()`: write the value $v$ in the register and return $true$ ($ack$) at the end of the operations. 
 >The register stores positive integers and is initialized to $0$. 
 >A process cannot invoke a new operation before the previously invoked one has returned a response. 
->- $(X,Y)$: Denotes a register to which $X$ processes can write and from which $Y$ processes can read (e.g., $(1,1)$ or $(1,N)$).
+>$(X,Y)$: Denotes a register to which $X$ processes can write and from which $Y$ processes can read (e.g., $(1,1)$ or $(1,N)$).
+>- **(1,1)** denotes a register where only a process can write and only a process can read. It is a priori known which process can write and which can read;
+>- **(1,N)** denotes a register where a single process, a priori known, can write, and N processes can read.
+
+#### Operations
+
 
 
 
