@@ -2385,4 +2385,6 @@ There are two main levels of guarantee for registers in a concurrent environment
 		- A read operation that is *not* concurrent with any write returns the last written value. 
 		- A read operation that is *concurrent* with one or more writes may return the last written value *or* one of the values ​​written concurrently.
 	![[Dependable distributed system 1-1794231774237.webp]]
-- **Atomic register $(1,N)$:** 
+- **Atomic register $(1,N)$:** Atomic registers, by contrast, impose a rigid, sequential global order, eliminating any ambiguity and ensuring that everyone sees the same timeline.
+	- *Termination*. If a correct process invokes an operation, then the operation eventually receives the corresponding confirmation. Validity. A read operation returns the last value written or the value concurrently being written.
+	- **Ordering:** If a read operation returns a value $v_1$ and a subsequent read operation (in terms of time) returns $v_2$, then the write operation that introduced $v_2$ cannot have occurred before the write operation that introduced $v_1$. It is not permitted to "go back in time" by observing write operations in an order that is the reverse of the sequence actually experienced by the clients.
