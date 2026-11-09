@@ -2247,4 +2247,12 @@ To tolerate process crashes, a logical object must have several physical replica
 
 #### Consistency criteria
 
-A consistency criteria defines the formal c
+A **consistency criterion** defines the formal contract between the programmer and the replication system regarding the results returned by operations. These criteria fall into two broad categories:
+1. **Strong Consistency:**
+	* Linearizability
+	* Sequential consistency
+2. **Weak Consistency:**
+	* Causal consistency
+The primary difference between the various criteria lies in how they define the "most recent" state visible to the client.
+
+####
