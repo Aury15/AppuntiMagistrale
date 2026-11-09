@@ -2297,4 +2297,15 @@ $$
 \end{aligned}
 $$
 
-###### 
+When the **primary node crashes**, a new leader must be elected from among the backup replicas. Three critical scenarios must be analyzed:
+
+* **Scenario 1: The primary fails *after* sending the response to the client.**
+* *Cases:* Either the client received the response (all is well), or the response was lost in transit, prompting the client to retransmit the request after a timeout. 
+* *Solution:* The new primary identifies the request as already processed (using a unique ID) and sends the response directly, without re-executing the update on the replicas.
+
+* **Scenario 2: The primary fails *before* sending the update messages.**
+* *Solution:* The client receives no response, times out, and retransmits the request to the new primary, which treats it as an entirely new request.
+
+* **Scenario 3: The primary fails *after* sending the updates but *before* receiving all acknowledgments (ACKs).**
+* *Problem:* A violation of atomicity (the update has reached only some of the backups). 
+* *Solution:* This requires rigorous consensus mechanisms to ensure that the update is either applied by all replicas or by none at all before the transition to a new primary takes place.
