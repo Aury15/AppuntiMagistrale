@@ -2105,35 +2105,23 @@ Combining the agreement property  ($UA$ vs $NUA$) and the order properties ($\te
 - **Composition:** Uniform Agreement + Strong Non-Uniform Total Order.
 - **What this means:** The message agreement is strong and uniform (all correct processes receive the exact same set of messages), but the strong non-uniform total order (SUTO) rule is only guaranteed for processes that remain _correct_. Faulty processes before the crash may violate the strict prefix constraint.
 
-#### 4. $\text{TO(UA, WNUTO)}$
-
+###### 4. $\text{TO(UA, WNUTO)}$
 - **Composition:** Uniform Agreement + Weak Non-Uniform Total Order.
-
 - **What this means:** The set of delivered messages is guaranteed to be uniform among all healthy processes (UA), but weak ordering (agreeing on the relative order of shared messages) is required only among healthy processes (WNUTO).
 
-#### 5. $\text{TO(NUA, SUTO)}$
+###### 5. $\text{TO(NUA, SUTO)}$
+- **Composition:** Non-Uniform Agreement + Strong Uniform Total Order.
+- **What this means:** The agreement is non-uniform (if a correct process delivers a message, all correct processes do so, but failed processes can have different $M_p$ sets). Conversely, the ordering rule is strong and uniform (SUTO): the order in which messages are passed is strictly constrained for everyone.
 
-- **Composizione:** Non-Uniform Agreement + Strong Uniform Total Order.
-    
-- **Cosa significa:** L'accordo è non-uniforme (se un processo corretto consegna un messaggio, tutti i corretti lo fanno, ma i processi falliti possono avere insiemi $M_p$ diversi). Di contro, la regola di ordinamento è forte e uniforme (SUTO): l'ordine con cui i messaggi vengono transitati è rigidamente vincolato per chiunque.
-    
+###### 6. $\text{TO(NUA, WUTO)}$
+- **Composition:** Non-Uniform Agreement + Weak Uniform Total Order.
+- **What this means:** The agreement is limited to correct processes only (NUA), and the ordering is weak but uniform (WUTO): processes that share the delivery of $m$ and $m'$ respect the same relative order, but tolerances are accepted for the anomalous behavior of failed nodes.
 
-#### 6. $\text{TO(NUA, WUTO)}$
+###### 7. $\text{TO(NUA, SNUTO)}$
+- **Composition:** Non-Uniform Agreement + Strong Non-Uniform Total Order.
+- **What this means:** Both the Agreement and the Strong Order lose their total uniformity: they serve as a hard guarantee for the _correct_ processes of the network, while nodes that crash may show discrepancies in both messages and order before shutting down.
 
-- **Composizione:** Non-Uniform Agreement + Weak Uniform Total Order.
-    
-- **Cosa significa:** L'accordo è limitato ai soli processi corretti (NUA) e l'ordinamento è debole ma uniforme (WUTO): i processi che condividono la consegna di $m$ e $m'$ rispettano lo stesso ordine relativo, ma si accettano tolleranze sui comportamenti anomali dei nodi che falliscono.
-    
+###### 8. $\text{TO(NUA, WNUTO)}$ — The weakest of all
+- **Composition:** Non-Uniform Agreement + Weak Non-Uniform Total Order.
+- **What this means:** This is the minimal Total Order specification. All guarantees (both message agreement and relative ordering) are constrained **exclusively** for correct processes. If a process fails, there are no formal restrictions on what messages it saw or in what order it printed them before the crash; the important thing is that the "healthy" part of the distributed system sees things consistently.
 
-#### 7. $\text{TO(NUA, SNUTO)}$
-
-- **Composizione:** Non-Uniform Agreement + Strong Non-Uniform Total Order.
-    
-- **Cosa significa:** Sia l'accordo (Agreement) che l'ordinamento forte (Strong Order) perdono il carattere di uniformità totale: valgono come garanzia ferrea per i processi _corretti_ della rete, mentre i nodi che incorrono in un crash possono mostrare discrepanze sia sui messaggi che sull'ordine prima di spegnersi.
-    
-
-#### 8. $\text{TO(NUA, WNUTO)}$ — La più debole in assoluto
-
-- **Composizione:** Non-Uniform Agreement + Weak Non-Uniform Total Order.
-    
-- **Cosa significa:** È la specifica minimale di Total Order. Tutte le garanzie (sia l'accordo sui messaggi che l'ordinamento relativo) sono vincolate **esclusivamente ai processi corretti**. Se un processo fallisce, non ci sono restrizioni formali su quali messaggi abbia visto o in quale ordine li abbia stampati prima del crash; l'importante è che la fetta "sana" del sistema distribuito veda le cose in modo coerente.
