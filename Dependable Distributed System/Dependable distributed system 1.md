@@ -2156,43 +2156,24 @@ $$
 &\quad round := round + 1; \\
 &\quad wait := FALSE;
 \end{aligned}
-$$$
- 1. Inizializzazione dello Stato (`Init`)
+$$
+1. Inizializzazione dello Stato (`Init`)
+	All'avvio, ogni processo imposta le proprie variabili locali:
+	- `unordered := ∅`: Un insieme (buffer) che raccoglie i messaggi ricevuti dal livello affidabile ma non ancora ordinati e consegnati.
+	- `delivered := ∅`: L'insieme di tutti i messaggi che sono già stati ordinati e consegnati definitivamente all'applicazione.
+	- `round := 1`: Un contatore che identifica l'istanza corrente del protocollo di consenso.
+	- `wait := FALSE`: Un flag booleano che indica se il processo è attualmente in attesa che un'istanza di consenso giunga a una decisione.
 
-All'avvio, ogni processo imposta le proprie variabili locali:
+ 2. Richiesta di Broadcast (`tob, Broadcast`)
+	Quando un'applicazione richiede di inviare un messaggio mmm con ordinamento totale:
+	- Il processo attiva semplicemente un broadcast affidabile sottostante: `trigger (rb, Broadcast | m)`. In questo modo, il messaggio viene propagato in modo robusto a tutti i nodi della rete attraverso il modulo rbrbrb.
 
-- `unordered := ∅`: Un insieme (buffer) che raccoglie i messaggi ricevuti dal livello affidabile ma non ancora ordinati e consegnati.
-    
-- `delivered := ∅`: L'insieme di tutti i messaggi che sono già stati ordinati e consegnati definitivamente all'applicazione.
-    
-- `round := 1`: Un contatore che identifica l'istanza corrente del protocollo di consenso.
-    
-- `wait := FALSE`: Un flag booleano che indica se il processo è attualmente in attesa che un'istanza di consenso giunga a una decisione.
-    
+ 3. Ricezione del Messaggio (`rb, Deliver`)
+	Quando il livello di Reliable Broadcast consegna un messaggio mmm inviato da un processo ppp:
+	- L'algoritmo verifica se il messaggio non è stato già consegnato in precedenza (`m ∉ delivered`).
+	- Se è un messaggio nuovo, viene inserito nel buffer dei messaggi in attesa di ordinamento: `unordered := unordered ∪ {(p, m)}`.
 
-DDS-Lecture13-2026-2027.pdf
-
-### 2. Richiesta di Broadcast (`tob, Broadcast`)
-
-Quando un'applicazione richiede di inviare un messaggio mmm con ordinamento totale:
-
-- Il processo attiva semplicemente un broadcast affidabile sottostante: `trigger (rb, Broadcast | m)`. In questo modo, il messaggio viene propagato in modo robusto a tutti i nodi della rete attraverso il modulo rbrbrb.
-    
-
-DDS-Lecture13-2026-2027.pdf
-
-### 3. Ricezione del Messaggio (`rb, Deliver`)
-
-Quando il livello di Reliable Broadcast consegna un messaggio mmm inviato da un processo ppp:
-
-- L'algoritmo verifica se il messaggio non è stato già consegnato in precedenza (`m ∉ delivered`).
-    
-- Se è un messaggio nuovo, viene inserito nel buffer dei messaggi in attesa di ordinamento: `unordered := unordered ∪ {(p, m)}`.
-    
-
-DDS-Lecture13-2026-2027.pdf
-
-### 4. Attivazione del Consenso (`Propose`)
+ 4. Attivazione del Consenso (`Propose`)
 
 Non appena il buffer `unordered` non è vuoto e il processo non è già in attesa di una decisione precedente (`wait = FALSE`):
 
