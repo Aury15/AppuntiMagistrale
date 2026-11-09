@@ -2125,3 +2125,6 @@ Combining the agreement property  ($UA$ vs $NUA$) and the order properties ($\te
 - **Composition:** Non-Uniform Agreement + Weak Non-Uniform Total Order.
 - **What this means:** This is the minimal Total Order specification. All guarantees (both message agreement and relative ordering) are constrained **exclusively** for correct processes. If a process fails, there are no formal restrictions on what messages it saw or in what order it printed them before the crash; the important thing is that the "healthy" part of the distributed system sees things consistently.
 
+![[Dependable distributed system 1-1794223719991.webp]]
+
+So we can see how the module interacts 
