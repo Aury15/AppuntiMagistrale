@@ -2157,29 +2157,29 @@ $$
 &\quad wait := FALSE;
 \end{aligned}
 $$
-1. State Initialization (`Init`)
+1. **State Initialization** (`Init`)
 	Upon startup, each process initializes its local variables:
 	- `unordered := ∅`: A set (buffer) that collects messages received from the reliable broadcast layer but not yet ordered and delivered. 
 	- `delivered := ∅`: The set of all messages that have already been ordered and definitively delivered to the application. 
 	- `round := 1`: A counter that identifies the current instance of the consensus protocol. 
 	- `wait := FALSE`: A boolean flag indicating whether the process is currently waiting for a consensus instance to reach a decision. 
 
-2. Broadcast Request (`tob, Broadcast`)
+2. **Broadcast Request** (`tob, Broadcast`)
 	When an application requests to send a message `m` with total ordering:
 	- The process simply triggers an underlying reliable broadcast: `trigger (rb, Broadcast | m)`. In this way, the message is robustly propagated to all nodes in the network via the reliable broadcast module. 
 
-3. Message Reception (`rb, Deliver`)
+3. **Message Reception** (`rb, Deliver`)
 	When the reliable broadcast layer delivers a message `m` sent by a process `p`:
 	- The algorithm checks whether the message has already been delivered (`m ∉ delivered`). 
 	- If it is a new message, it is added to the buffer of messages awaiting ordering: `unordered := unordered ∪ {(p, m)}`. 
 
-4. Consensus Activation (`Propose`)
+4. **Consensus Activation** (`Propose`)
 	As soon as the `unordered` buffer is non-empty and the process is not already waiting for a previous decision (`wait = FALSE`):
 	- The process sets `wait := TRUE` to block new proposals within the same round. 
 	- It initializes a new consensus instance for the current round (`c.round`). - Propose the entire content of the unordered buffer to the consensus system: `trigger (c.round, Propose | unordered)`. 
 	- _Note:_ Through this phase, all nodes propose the messages they have accumulated, and the consensus module ensures that all processes agree on a common list of messages to be ordered for this round.
 
-5. Decision and Delivery (`Decide`)
+5. **Decision and Delivery** (`Decide`)
 	When the consensus instance for round `r` returns a decision (`c.r, Decide | decided`), indicating an agreed-upon set of messages:
 	- The decided messages are ordered **deterministically** using a common function (e.g., `sort(decided)`), ensuring that all processes obtain the exact same sequence. 
 	- The algorithm iterates through the ordered list and delivers each message to the application: `trigger (tob, Deliver | s, m)`. 
