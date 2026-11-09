@@ -2139,6 +2139,11 @@ Combining the agreement property  ($UA$ vs $NUA$) and the order properties ($\te
 - **Why it works (The Proof):**
 	1. _Agreement limited to correct processes (NUA):_ Since the Reliable Broadcast is non-uniform ($\text{NURB}$), only *correct* processes are guaranteed to deliver the same set of messages. Faulty processes may deliver different or incomplete sets of messages. 
 	2. _Weak, non-uniform ordering (WNUTO):_ The consensus mechanism is also non-uniform ($\text{NUC}$). Consequently, only the correct processes in the network agree on the same ordered sequence of messages, whereas nodes that fail may exhibit discrepancies—both in the messages they perceive and in the order of those messages—prior to their crash.
+	![[Dependable distributed system 1-1794225196731.webp]]
+
+
+
+
 
 ![[Dependable distributed system 1-1794223719991.webp]]
 
