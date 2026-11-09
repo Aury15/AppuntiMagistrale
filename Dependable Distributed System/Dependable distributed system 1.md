@@ -2098,7 +2098,7 @@ Combining the agreement property  ($UA$ vs $NUA$) and the order properties ($\te
 - **Composition:** Uniform Agreement + Strong Uniform Total Order.
 - **What it means:** This is the most rigid and secure specification. All processes (even those that will later crash) agree on exactly the same set of delivered messages (UA) and receive them in the exact same sequential order and with the same prefix (SUTO). No process will ever see a divergence, not even before it dies.
 - **Assumption:** Both underlying modules are uniform (Uniform Reliable Broadcast and Uniform Consensus).
-- **Result:** This yields the strongest possible specification: **Uniform Agreement** and **Strong Uniform Total Order**.
+	- **Result:** This yields the strongest possible specification: **Uniform Agreement** and **Strong Uniform Total Order**.
 - **Why it works (The Proof):**
 	1. _Agreement on messages (UA):_ Since Uniform Reliable Broadcast (URB) is used, all processes—including those that eventually crash—deliver the exact same set of messages. Consequently, the local `unordered` buffer will contain the identical set of messages on every node. 
 	2. _Strong ordering (SUTO):_ Thanks to Uniform Consensus (UC), every consensus instance ensures that all processes (even faulty ones) decide on the exact same list of messages for each round. Because the messages are ordered using a deterministic rule (`sort`), all nodes process and deliver the messages in the exact same, rigid sequence.
@@ -2113,6 +2113,11 @@ Combining the agreement property  ($UA$ vs $NUA$) and the order properties ($\te
 ###### 4. $\text{TO(UA, WNUTO)}$
 - **Composition:** Uniform Agreement + Weak Non-Uniform Total Order.
 - **What this means:** The set of delivered messages is guaranteed to be uniform among all healthy processes (UA), but weak ordering (agreeing on the relative order of shared messages) is required only among healthy processes (WNUTO).
+- **Assumption:** Reliable Broadcast is Uniform (URB), but Consensus is Non-Uniform (NUC).
+	- **Result:** Agreement on messages remains uniform ($\text{UA}$), but the ordering property degrades to weak non-uniform ordering ($\text{WNUTO}$).
+- **Why it works (The Proof):**
+	1. _Agreement on messages (UA):_ Since URB guarantees that _all_ processes (including faulty ones) receive the same set of messages, the buffer of unordered messages is identical for everyone. This preserves Uniform Agreement regarding the messages delivered. 
+	2. _Loss of uniformity in ordering (WNUTO):_ Because Consensus is Non-Uniform ($\text{NUC}$), it only guarantees agreement on the decision **among correct processes**. Processes destined to crash (_faulty_ nodes) might decide on a slightly different list or stop midway. Consequently, healthy (correct) nodes agree on the final order, whereas faulty nodes might deliver a different sequence just before failing.
 
 ###### 5. $\text{TO(NUA, SUTO)}$
 - **Composition:** Non-Uniform Agreement + Strong Uniform Total Order.
