@@ -2,6 +2,8 @@
   "cssTheme": "",
   "enabledCssSnippets": [
     "latex-fix",
-    "dds-notes"
+    "dds-notes",
+    "quadretti",
+    "margini"
   ]
 }
