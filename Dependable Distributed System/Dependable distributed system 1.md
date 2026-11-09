@@ -2156,4 +2156,75 @@ $$
 &\quad round := round + 1; \\
 &\quad wait := FALSE;
 \end{aligned}
-$$
+$$$
+ 1. Inizializzazione dello Stato (`Init`)
+
+All'avvio, ogni processo imposta le proprie variabili locali:
+
+- `unordered := ∅`: Un insieme (buffer) che raccoglie i messaggi ricevuti dal livello affidabile ma non ancora ordinati e consegnati.
+    
+- `delivered := ∅`: L'insieme di tutti i messaggi che sono già stati ordinati e consegnati definitivamente all'applicazione.
+    
+- `round := 1`: Un contatore che identifica l'istanza corrente del protocollo di consenso.
+    
+- `wait := FALSE`: Un flag booleano che indica se il processo è attualmente in attesa che un'istanza di consenso giunga a una decisione.
+    
+
+DDS-Lecture13-2026-2027.pdf
+
+### 2. Richiesta di Broadcast (`tob, Broadcast`)
+
+Quando un'applicazione richiede di inviare un messaggio mmm con ordinamento totale:
+
+- Il processo attiva semplicemente un broadcast affidabile sottostante: `trigger (rb, Broadcast | m)`. In questo modo, il messaggio viene propagato in modo robusto a tutti i nodi della rete attraverso il modulo rbrbrb.
+    
+
+DDS-Lecture13-2026-2027.pdf
+
+### 3. Ricezione del Messaggio (`rb, Deliver`)
+
+Quando il livello di Reliable Broadcast consegna un messaggio mmm inviato da un processo ppp:
+
+- L'algoritmo verifica se il messaggio non è stato già consegnato in precedenza (`m ∉ delivered`).
+    
+- Se è un messaggio nuovo, viene inserito nel buffer dei messaggi in attesa di ordinamento: `unordered := unordered ∪ {(p, m)}`.
+    
+
+DDS-Lecture13-2026-2027.pdf
+
+### 4. Attivazione del Consenso (`Propose`)
+
+Non appena il buffer `unordered` non è vuoto e il processo non è già in attesa di una decisione precedente (`wait = FALSE`):
+
+- Il processo imposta `wait := TRUE` per bloccare nuove proposte nello stesso round.
+    
+    DDS-Lecture13-2026-2027.pdf
+    
+- Inizializza una nuova istanza di consenso per il round corrente (`c.round`).
+    
+    DDS-Lecture13-2026-2027.pdf
+    
+- Propone al sistema di consenso l'intero contenuto del proprio buffer non ordinato: `trigger (c.round, Propose | unordered)`.
+    
+    DDS-Lecture13-2026-2027.pdf
+    
+- _Nota:_ Grazie a questa fase, tutti i nodi proporranno i messaggi che hanno accumulato, e il modulo di consenso garantirà che tutti i processi concordino su una lista comune di messaggi da ordinare per questo round.
+    
+    DDS-Lecture13-2026-2027.pdf
+    
+
+### 5. Decisione e Consegna (`Decide`)
+
+Quando l'istanza di consenso del round rrr restituisce una decisione (`c.r, Decide | decided`), indicando un insieme concordato di messaggi:
+
+- I messaggi decisi vengono ordinati in modo **deterministico** tramite una funzione comune (es. `sort(decided)`), in modo che tutti i processi ottengano esattamente la stessa sequenza.
+    
+- L'algoritmo scorre la lista ordinata e consegna ciascun messaggio all'applicazione: `trigger (tob, Deliver | s, m)`.
+    
+- Aggiorna lo stato locale:
+    
+    - Aggiunge i messaggi elaborati all'insieme dei consegnati: `delivered := delivered ∪ decided`.
+        
+    - Rimuove i messaggi appena consegnati dal buffer dei non ordinati: `unordered := unordered \ decided`.
+        
+    - Incrementa il contatore del round (`round := round + 1`) e sblocca il flag (`wait := FALSE`) per permettere l'avvio di un nuovo round di consenso se ci sono altri messaggi in sospeso.
