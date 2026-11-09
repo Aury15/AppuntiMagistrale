@@ -2255,4 +2255,5 @@ A **consistency criterion** defines the formal contract between the programmer a
 	* Causal consistency
 The primary difference between the various criteria lies in how they define the "most recent" state visible to the client.
 
-####
+###### Linearizability 
+The linearizability is the strongest consistency criterion 
