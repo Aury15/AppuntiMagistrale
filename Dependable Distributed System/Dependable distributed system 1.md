@@ -2224,4 +2224,8 @@ In a distributed system, replication is the process by which multiple copies (ca
 
 >[!Definitions] Availability 
 >Let $p$ be the probability of failure of a single item $O$. The availability of the single item is given by: $Availability = 1 - p$. 
->If we replicate the item $O$ on $n$ independent nodes assuming that the failures are independent of each other, the probability that every node fail at the same time is $p^n$. The availability of the replicated system is $Availability = 1 - p^n$
+>If we replicate the item $O$ on $n$ independent nodes assuming that the failures are independent of each other, the probability that every node fail at the same time is $p^n$. The availability of the replicated system is $Availability = 1 - p^n$ 
+
+#### System model
+
+
