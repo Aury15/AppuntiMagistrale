@@ -2362,4 +2362,8 @@ Each operation is delimited by two instantaneous, indivisible events: the **Invo
 		![[Dependable distributed system 1-1794230358374.webp]]
 
 3. **Failures:**
-	- *Assumptions*: 
+	- *Assumptions*: several processes can access the register, serial access, processes can fail by crashing, i.e. after some point in time they stop to run their algorithm forever
+	
+>[!definitions] Failed operation
+A process fails at some time in between the invocation and the response of the operation
+	     
