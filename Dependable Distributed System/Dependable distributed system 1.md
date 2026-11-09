@@ -2087,4 +2087,7 @@ Ordering determines how messages are sequenced. The slides compare four main var
 
 ###### Total Order Specification Hierarchy
 
-Combining the agreement property  ($UA$ vs $NUA$) and the order 
+Combining the agreement property  ($UA$ vs $NUA$) and the order properties ($\text{SUTO}$, $\text{WUTO}$, $\text{SNUTO}$, $\text{WNUTO}$), we can obtain 8 combinations, where:
+- The strongest one: $TO(UA, SUTO)$
+- The weakest one: $TO(NUA, WNUTO)$
+
