@@ -2327,3 +2327,10 @@ To maintain atomicity and ordering without a primary, active replication require
 
 ## Distributed registers
 
+In multiprocessor systems with hardware-shared memory, processes communicate by reading from and writing to physical memory registers connected to a common bus. In **message-passing distributed systems**, there is no shared physical memory: processes communicate exclusively by sending messages to one another over the network.
+
+The abstraction of a **distributed register** serves to hide this complexity, offering programmers the illusion of a global shared variable accessible via read and write operations, even though it is implemented entirely on top of a message-passing system.
+
+>[!definitions] Register
+>A register is a shared variable accessed by processes through *read* and *write* operations.
+
