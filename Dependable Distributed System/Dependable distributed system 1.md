@@ -2324,3 +2324,6 @@ In **Active Replication**, there is no central coordinator or primary node: **al
 
 To maintain atomicity and ordering without a primary, active replication requires the rigorous use of **Total Order Broadcast** (including the initial submission by clients), ensuring that all replicas receive the same requests in the exact same sequence.
 * **Crash Handling:** If a replica fails, the system does not require complex state-recovery procedures or leader elections, as the remaining replicas continue to process requests without interruption.
+
+## Distributed registers
+
