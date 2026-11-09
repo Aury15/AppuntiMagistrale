@@ -2228,4 +2228,4 @@ In a distributed system, replication is the process by which multiple copies (ca
 
 #### System model
 
-
+We have a set of processes: client and server connected of each other with point-to-point *perfect* channel. Use a cra
