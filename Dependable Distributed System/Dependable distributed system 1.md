@@ -2085,4 +2085,6 @@ Ordering determines how messages are sequenced. The slides compare four main var
 ![[Dependable distributed system 1-1794222876355.webp]]
 
 
-###### 
+###### Total Order Specification Hierarchy
+
+Combining the agreement property  ($UA$ vs $NUA$) and the order 
