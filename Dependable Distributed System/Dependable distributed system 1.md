@@ -2347,7 +2347,9 @@ Each operation is delimited by two instantaneous, indivisible events: the **Invo
 * **Completed operation:** The time interval between the invocation and the return.
 * **Failed operation:** An operation invoked by a process $p_i$ that crashes before receiving the return.
 * **Temporal precedence ($<$):** Given two operations $o_1$ and $o_2$, we say that $o_1$ precedes $o_2$ ($o_1 < o_2$) if the return time of $o_1$ occurs before the invocation time of $o_2$.
+*
 * **Concurrency ($\vert\vert$):** If the time intervals of two operations overlap—either partially or entirely—and no precedence relationship can be defined, the operations are said to be concurrent.
+
 
 
 
