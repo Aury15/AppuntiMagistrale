@@ -2243,4 +2243,8 @@ To tolerate process crashes, a logical object must have several physical replica
 
 * Each replica $x^i$ situated at a site $s$ is managed by a process $p_j$ that is also located at $s$.
 * It is assumed that a process $p_j$ crashes precisely when its corresponding replica $x^i$ fails.
-* **Transparency:** The complexity and the very existence of replication must be completely hidden from client processes.
+* **Transparency:** The complexity and the very existence of replication must be completely hidden from client processes. *Replication is transparent to the client processes.*
+
+#### Consistency criteria
+
+A consistency criteria defines the formal c
