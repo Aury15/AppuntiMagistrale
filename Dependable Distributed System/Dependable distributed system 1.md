@@ -2286,3 +2286,15 @@ There are two main architectural approaches for implementing linearizability:
 In the primary-backup method, the replication's roles are asymmetric:
 - **Primary:** This is a single designated replica that receives invocations from clients, processes requests, updates its own state, and coordinates the backups.
 * **Backups:** Passive replicas that receive update messages from the primary and replicate its state to ensure fault tolerance in the event of a primary crash.
+
+<mark style="background:#fff88f">Flow in the absence of crashes</mark>
+$$
+\begin{aligned}
+&\mathbf{1.} \text{ The client sends the invocation to the Primary } (prim(x)). \\
+&\mathbf{2.} \text{ The Primary processes the operation and sends an } update \text{ message to all Backups.} \\
+&\mathbf{3.} \text{ The Backups update their state and send an } ack \text{ message back to the Primary.} \\
+&\mathbf{4.} \text{ The Primary waits for all } ack \text{ messages from the correct backups to arrive and then responds to the client.}
+\end{aligned}
+$$
+
+
