@@ -2157,34 +2157,34 @@ $$
 &\quad wait := FALSE;
 \end{aligned}
 $$
-1. Inizializzazione dello Stato (`Init`)
-	All'avvio, ogni processo imposta le proprie variabili locali:
-	- `unordered := ∅`: Un insieme (buffer) che raccoglie i messaggi ricevuti dal livello affidabile ma non ancora ordinati e consegnati.
-	- `delivered := ∅`: L'insieme di tutti i messaggi che sono già stati ordinati e consegnati definitivamente all'applicazione.
-	- `round := 1`: Un contatore che identifica l'istanza corrente del protocollo di consenso.
-	- `wait := FALSE`: Un flag booleano che indica se il processo è attualmente in attesa che un'istanza di consenso giunga a una decisione.
+1. State Initialization (`Init`)
+	Upon startup, each process initializes its local variables:
+	- `unordered := ∅`: A set (buffer) that collects messages received from the reliable broadcast layer but not yet ordered and delivered. 
+	- `delivered := ∅`: The set of all messages that have already been ordered and definitively delivered to the application. 
+	- `round := 1`: A counter that identifies the current instance of the consensus protocol. 
+	- `wait := FALSE`: A boolean flag indicating whether the process is currently waiting for a consensus instance to reach a decision. 
 
- 2. Richiesta di Broadcast (`tob, Broadcast`)
-	Quando un'applicazione richiede di inviare un messaggio mmm con ordinamento totale:
-	- Il processo attiva semplicemente un broadcast affidabile sottostante: `trigger (rb, Broadcast | m)`. In questo modo, il messaggio viene propagato in modo robusto a tutti i nodi della rete attraverso il modulo rbrbrb.
+2. Broadcast Request (`tob, Broadcast`)
+	When an application requests to send a message `m` with total ordering:
+	- The process simply triggers an underlying reliable broadcast: `trigger (rb, Broadcast | m)`. In this way, the message is robustly propagated to all nodes in the network via the reliable broadcast module. 
 
- 3. Ricezione del Messaggio (`rb, Deliver`)
-	Quando il livello di Reliable Broadcast consegna un messaggio mmm inviato da un processo ppp:
-	- L'algoritmo verifica se il messaggio non è stato già consegnato in precedenza (`m ∉ delivered`).
-	- Se è un messaggio nuovo, viene inserito nel buffer dei messaggi in attesa di ordinamento: `unordered := unordered ∪ {(p, m)}`.
+3. Message Reception (`rb, Deliver`)
+	When the reliable broadcast layer delivers a message `m` sent by a process `p`:
+	- The algorithm checks whether the message has already been delivered (`m ∉ delivered`). 
+	- If it is a new message, it is added to the buffer of messages awaiting ordering: `unordered := unordered ∪ {(p, m)}`. 
 
- 4. Attivazione del Consenso (`Propose`)
-	Non appena il buffer `unordered` non è vuoto e il processo non è già in attesa di una decisione precedente (`wait = FALSE`):
-	- Il processo imposta `wait := TRUE` per bloccare nuove proposte nello stesso round.
-	- Inizializza una nuova istanza di consenso per il round corrente (`c.round`).
-	- Propone al sistema di consenso l'intero contenuto del proprio buffer non ordinato: `trigger (c.round, Propose | unordered)`.
-	- _Nota:_ Grazie a questa fase, tutti i nodi proporranno i messaggi che hanno accumulato, e il modulo di consenso garantirà che tutti i processi concordino su una lista comune di messaggi da ordinare per questo round.
-    
- 5. Decisione e Consegna (`Decide`)
-	Quando l'istanza di consenso del round rrr restituisce una decisione (`c.r, Decide | decided`), indicando un insieme concordato di messaggi:
-	- I messaggi decisi vengono ordinati in modo **deterministico** tramite una funzione comune (es. `sort(decided)`), in modo che tutti i processi ottengano esattamente la stessa sequenza.
-	- L'algoritmo scorre la lista ordinata e consegna ciascun messaggio all'applicazione: `trigger (tob, Deliver | s, m)`.
-	- Aggiorna lo stato locale:
-	    - Aggiunge i messaggi elaborati all'insieme dei consegnati: `delivered := delivered ∪ decided`.
-	    - Rimuove i messaggi appena consegnati dal buffer dei non ordinati: `unordered := unordered \ decided`.
-	    - Incrementa il contatore del round (`round := round + 1`) e sblocca il flag (`wait := FALSE`) per permettere l'avvio di un nuovo round di consenso se ci sono altri messaggi in sospeso.
+4. Consensus Activation (`Propose`)
+	As soon as the `unordered` buffer is non-empty and the process is not already waiting for a previous decision (`wait = FALSE`):
+	- The process sets `wait := TRUE` to block new proposals within the same round. 
+	- It initializes a new consensus instance for the current round (`c.round`). - Propose the entire content of the unordered buffer to the consensus system: `trigger (c.round, Propose | unordered)`. 
+	- _Note:_ Through this phase, all nodes propose the messages they have accumulated, and the consensus module ensures that all processes agree on a common list of messages to be ordered for this round.
+
+5. Decision and Delivery (`Decide`)
+	When the consensus instance for round `r` returns a decision (`c.r, Decide | decided`), indicating an agreed-upon set of messages:
+	- The decided messages are ordered **deterministically** using a common function (e.g., `sort(decided)`), ensuring that all processes obtain the exact same sequence. 
+	- The algorithm iterates through the ordered list and delivers each message to the application: `trigger (tob, Deliver | s, m)`. 
+	- Update the local state:
+	- Add the processed messages to the set of delivered messages: `delivered := delivered ∪ decided`. 
+	- Remove the newly delivered messages from the unordered buffer: `unordered := unordered \ decided`. 
+	- Increment the round counter (`round := round + 1`) and reset the flag (`wait := FALSE`) to allow a new consensus round to begin if there are other pending messages.
+
