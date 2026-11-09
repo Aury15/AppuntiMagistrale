@@ -2379,11 +2379,10 @@ A process fails at some time in between the invocation and the response of the o
 #### Register specifications
 
 There are two main levels of guarantee for registers in a concurrent environment:
-- **Regular register $(1, N)$**:
+- **Regular register $(1, N)$**: Regular registers allow for the retrieval of either the last completed value or one of the values ​​written concurrently.
 	- *Termination*. If a correct process invokes an operation, then the operation eventually receives the corresponding confirmation.
 	- *Validity*.
 		- A read operation that is *not* concurrent with any write returns the last written value. 
 		- A read operation that is *concurrent* with one or more writes may return the last written value *or* one of the values ​​written concurrently.
--
-
-![[Dependable distributed system 1-1794231136107.webp]]
+	![[Dependable distributed system 1-1794231774237.webp]]
+- **Atomic register $(1,N)$:** 
