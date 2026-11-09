@@ -2369,7 +2369,10 @@ Each operation is delimited by two instantaneous, indivisible events: the **Invo
 
 
 >[!Important]
->Register semantics: a read may return both: ◦ The value written by the last write operation which completes ◦ The value given as input to the last write operation, even though this operation will fail
+>A read may return both: 
+>- The value written by the last write operation which completes 
+>- The value given as input to the last write operation, even though this operation will fail
+
 
 >[!definitions] Failed operation
 A process fails at some time in between the invocation and the response of the operation
