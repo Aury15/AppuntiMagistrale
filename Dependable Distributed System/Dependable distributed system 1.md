@@ -2262,4 +2262,10 @@ The linearizability is the strongest consistency criterion most rigorous. Requir
 
 >[!definitiosn] Linearizability
 >An execution $E$ is linearizable if there exist a global sequence $S$ (called sequential specification) that includes every operations of $E$ such that:
->	1. 
+>	1. **Preservation of precedence order:** If $O_1 < O_2$, then $O_1$ must appear before $O_2$ in the global sequence $S$.
+>	2. **Legality of the sequence:** The sequence $S$ must adhere to the object's sequential specification (e.g., the logical behavior of a variable or a FIFO queue).
+
+**Sufficient Conditions for Linearizability**
+To ensure linearizability across replicas, the system must satisfy two fundamental properties:
+* **Atomicity:** If a replica of an object $x$ executes an invocation, *every* correct replica of $x$ must execute the same invocation.
+* **Ordering:** If two replicas both execute two invocations, they must execute them in the **exact same order**.
