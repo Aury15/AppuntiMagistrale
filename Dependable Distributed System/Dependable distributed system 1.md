@@ -2213,8 +2213,10 @@ $$
 ![[Dependable distributed system 1-1794224756006.webp]]![[Dependable distributed system 1-1794224783375.webp]]![[Dependable distributed system 1-1794224799687.webp]]
 ![[Dependable distributed system 1-1794224817041.webp]]
 
-| **Reliable Broadcast** | **Consensus**         | **TO Risultante**           | **Main rational**                                                                                          |
-| ---------------------- | --------------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| **Uniform (URB)**      | **Uniform (UC)**      | **$\text{TO(UA, SUTO)}$**   | Maximum robustness: everyone (even the defective ones) sees the same messages and the same order.          |
-| **Uniform (URB)**      | **Non-Uniform (NUC)** | **$\text{TO(UA, WNUTO)}$**  | L'URB salva l'accordo uniforme sui messaggi ($\text{UA}$), ma il NUC rende l'ordine debole e non-uniforme. |
-| **Non-Uniform (NURB)** | **Non-Uniform (NUC)** | **$\text{TO(NUA, WNUTO)}$** | Tutto è garantito solo per i processi corretti; i faulty possono divergere su tutto.                       |
+| **Reliable Broadcast** | **Consensus**         | **TO result**               | **Main reason**                                                                                               |
+| ---------------------- | --------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| **Uniform (URB)**      | **Uniform (UC)**      | **$\text{TO(UA, SUTO)}$**   | Maximum robustness: everyone (even the defective ones) sees the same messages and the same order.             |
+| **Uniform (URB)**      | **Non-Uniform (NUC)** | **$\text{TO(UA, WNUTO)}$**  | URB preserves uniform agreement on messages ($\text{UA}$), but NUC renders the ordering weak and non-uniform. |
+| **Non-Uniform (NURB)** | **Non-Uniform (NUC)** | **$\text{TO(NUA, WNUTO)}$** | Guarantees apply only to correct processes; faulty processes may diverge on everything                        |
+
+## Software replication
