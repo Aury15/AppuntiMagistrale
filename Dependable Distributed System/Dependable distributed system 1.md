@@ -2350,9 +2350,9 @@ Each operation is delimited by two instantaneous, indivisible events: the **Invo
 ![[Dependable distributed system 1-1794229820988.webp]]
 * **Concurrency ($\vert\vert$):** If the time intervals of two operations overlap—either partially or entirely—and no precedence relationship can be defined, the operations are said to be concurrent.
 
+#### Semantic evolution
 
-
-
+1. **Serial system**
 
 
 
