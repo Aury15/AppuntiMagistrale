@@ -2274,4 +2274,11 @@ To ensure linearizability across replicas, the system must satisfy two fundament
 ![[Dependable distributed system 1-1794227050700.webp]]
 
 <mark style="background:#d3f8b6">Example: FIFO queue</mark>
+![[Dependable distributed system 1-1794227085608.webp]]
+![[Dependable distributed system 1-1794227098604.webp]]
+
+#### Replication techniques
+There are two main architectural approaches for implementing linearizability:
+1. **Primary-Backup (Passive Replication)**
+2. **Active Replication**
 
