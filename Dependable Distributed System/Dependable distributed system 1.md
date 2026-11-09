@@ -2091,3 +2091,59 @@ Combining the agreement property  ($UA$ vs $NUA$) and the order properties ($\te
 - The strongest one: $TO(UA, SUTO)$
 - The weakest one: $TO(NUA, WNUTO)$
 
+### Le 8 Combinazioni Dettagliate
+
+#### 1. $\text{TO(UA, SUTO)}$ — La più forte in assoluto
+
+- **Composizione:** Uniform Agreement + Strong Uniform Total Order.
+    
+- **Cosa significa:** È la specifica più rigida e sicura. Tutti i processi (anche quelli che poi subiranno un crash) concordano esattamente sullo stesso insieme di messaggi consegnati (UA) e li ricevono rigorosamente nello stesso identico ordine sequenziale e con lo stesso prefisso (SUTO). Nessun processo vedrà mai una divergenza, neanche prima di morire.
+    
+
+#### 2. $\text{TO(UA, WUTO)}$
+
+- **Composizione:** Uniform Agreement + Weak Uniform Total Order.
+    
+- **Cosa significa:** L'accordo è uniforme (tutti i processi corretti alla fine hanno lo stesso set di messaggi $M$), e l'ordinamento è debole ma uniforme: se due processi consegnano gli stessi due messaggi $m$ e $m'$, lo fanno nello stesso ordine. Tuttavia, a causa della natura "debole" (Weak), se un processo subisce un crash, i prefissi dei messaggi consegnati prima del salto possono non coincidere perfettamente.
+    
+
+#### 3. $\text{TO(UA, SNUTO)}$
+
+- **Composizione:** Uniform Agreement + Strong Non-Uniform Total Order.
+    
+- **Cosa significa:** L'accordo sui messaggi è forte e uniforme (tutti i processi corretti ricevono la stessa identica collezione di messaggi), ma la regola ferrea dell'ordine forte (SUTO) viene garantita unicamente per i processi che rimangono _corretti_. I processi difettosi prima del crash potrebbero violare il vincolo di prefisso stretto.
+    
+
+#### 4. $\text{TO(UA, WNUTO)}$
+
+- **Composizione:** Uniform Agreement + Weak Non-Uniform Total Order.
+    
+- **Cosa significa:** L'insieme dei messaggi consegnati è uniformemente garantito tra tutti i processi corretti (UA), ma l'ordinamento debole (concordare sull'ordine relativo dei messaggi condivisi) è richiesto solo ed esclusivamente tra i processi corretti (WNUTO).
+    
+
+#### 5. $\text{TO(NUA, SUTO)}$
+
+- **Composizione:** Non-Uniform Agreement + Strong Uniform Total Order.
+    
+- **Cosa significa:** L'accordo è non-uniforme (se un processo corretto consegna un messaggio, tutti i corretti lo fanno, ma i processi falliti possono avere insiemi $M_p$ diversi). Di contro, la regola di ordinamento è forte e uniforme (SUTO): l'ordine con cui i messaggi vengono transitati è rigidamente vincolato per chiunque.
+    
+
+#### 6. $\text{TO(NUA, WUTO)}$
+
+- **Composizione:** Non-Uniform Agreement + Weak Uniform Total Order.
+    
+- **Cosa significa:** L'accordo è limitato ai soli processi corretti (NUA) e l'ordinamento è debole ma uniforme (WUTO): i processi che condividono la consegna di $m$ e $m'$ rispettano lo stesso ordine relativo, ma si accettano tolleranze sui comportamenti anomali dei nodi che falliscono.
+    
+
+#### 7. $\text{TO(NUA, SNUTO)}$
+
+- **Composizione:** Non-Uniform Agreement + Strong Non-Uniform Total Order.
+    
+- **Cosa significa:** Sia l'accordo (Agreement) che l'ordinamento forte (Strong Order) perdono il carattere di uniformità totale: valgono come garanzia ferrea per i processi _corretti_ della rete, mentre i nodi che incorrono in un crash possono mostrare discrepanze sia sui messaggi che sull'ordine prima di spegnersi.
+    
+
+#### 8. $\text{TO(NUA, WNUTO)}$ — La più debole in assoluto
+
+- **Composizione:** Non-Uniform Agreement + Weak Non-Uniform Total Order.
+    
+- **Cosa significa:** È la specifica minimale di Total Order. Tutte le garanzie (sia l'accordo sui messaggi che l'ordinamento relativo) sono vincolate **esclusivamente ai processi corretti**. Se un processo fallisce, non ci sono restrizioni formali su quali messaggi abbia visto o in quale ordine li abbia stampati prima del crash; l'importante è che la fetta "sana" del sistema distribuito veda le cose in modo coerente.
