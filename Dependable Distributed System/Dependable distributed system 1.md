@@ -2358,6 +2358,8 @@ Each operation is delimited by two instantaneous, indivisible events: the **Invo
 	- _Safety:_ Every read operation returns the most recently written value in chronological order.
 		![[Dependable distributed system 1-1794230236002.webp]]
 2. **Concurrency**:
-	- Assumptions: several processes can access the register, concurrent access, no failures.
+	- *Assumptions*: several processes can access the register, concurrent access, no failures.
 		![[Dependable distributed system 1-1794230358374.webp]]
 
+3. **Failures:**
+	- *Assumptions*: 
