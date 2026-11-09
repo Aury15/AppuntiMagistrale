@@ -2127,4 +2127,4 @@ Combining the agreement property  ($UA$ vs $NUA$) and the order properties ($\te
 
 ![[Dependable distributed system 1-1794223719991.webp]]
 
-So we can see how the module interact with each other. The total order broadcast is the principal abstractions that we see and use. So a process send a message $m$ TOBroadcast(m)
+So we can see how the module interact with each other. The total order broadcast is the principal abstractions that we see and use. So a process send a message $m$ ($TOBroadcast(m)$) asking the total order. The reliable broadcast guarantee the the robustness and propagation of messages in the network ($rbBroadcast(m)$). 
