@@ -2372,7 +2372,12 @@ The semantics depends on the assumptions on the executions:
 >- The value written by the last write operation which completes 
 >- The value given as input to the last write operation, even though this operation will fail
 
-
 >[!definitions] Failed operation
 A process fails at some time in between the invocation and the response of the operation
-	     
+
+
+
+
+
+
+![[Dependable distributed system 1-1794231136107.webp]]
