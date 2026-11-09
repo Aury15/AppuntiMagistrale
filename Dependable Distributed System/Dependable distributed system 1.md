@@ -2082,3 +2082,4 @@ Ordering determines how messages are sequenced. The slides compare four main var
 2. **Weak Uniform Total Order (WUTO)** If process $p$ and process $q$ both deliver messages $m$ and $m'$, then $p$ delivers $m$ before $m'$ if and only if $q$ delivers $m$ before $m'$. Characteristics: There is no restriction on whether a process must deliver all the other processes' messages, but if two processes deliver the same subset of messages, they do so in the same order. After an omission, processes may have disjoint sets of delivered messages, as long as the relative order on the common messages is identical.
 3. **Non-Uniform Versions (SNUTO and WNUTO)**: The strong (Strong Non-Uniform Total Order) and weak (Weak Non-Uniform Total Order) versions, respectively: apply the same order consistency rules but only to healthy processes, ignoring the behavior of crashed processes.
 
+![[Dependable distributed system 1-1794222876355.webp]]
