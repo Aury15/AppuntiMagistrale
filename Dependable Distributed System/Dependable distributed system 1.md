@@ -1709,3 +1709,375 @@ When a process has heard from all currently correct processes (`correct ⊆ rece
 - **Termination:** Ensured because all correct processes eventually reach round $N$ and decide in that round.
 - **Uniform Agreement:** Holds because all processes reaching round $N$ possess the identical set of values in their `proposalset`.
 - **Performance:** Requires $N$ communication steps and $O(N^3)$ messages for all correct processes to decide.
+
+## Paxos 
+
+>[!FLP] FLP
+>In an asynchronous system, it is not possible to always guarantee that consensus will be achieved if even a single process can crash. 
+
+In an asynchronous system we cannot assume that processes have a predictable speed or that messages arrive within a maximum time. <u>The silence of a process does not prove that that process has failed.</u>
+
+What does FLP claim?
+Imagine three processes that must decide on a common value:
+- $p_1$ proposes $A$;
+- $p_2$ proposes $B$;
+- $p_3$ proposes $C$.
+We would like all correct processes to reach a decision, choosing one of the proposed values. FLP demonstrates that, in a completely asynchronous system, if even a single crash is possible, we cannot design an algorithm that guarantees termination in every possible execution. **Caution**: This does not mean that consensus is always impossible to achieve. It means that we cannot guarantee that it will be achieved in all executions allowed by the asynchronous model. We can still guarantee <u>safety properties</u>, such as that two processes do not decide on different values. **The problem is ensuring that sooner or later someone decides.**
+
+The paxos family of algorithms was introduced to provide a viable solution to consensus in asynchronous settings. The goal is to allow multiple processes to agree on a value, even in the presence of arbitrary delays and crashes. 
+
+###### Properties of paxos's family
+- **Safety** is always guaranteed.The protocol must not produce contradictory decisions, even when the network behaves badly.
+- **Liveness** is guaranteed only when the system behaves well for sufficiently long periods: in other words, when network conditions allow messages to flow and processes to complete the protocol phases. This property is connected to the partial synchrony.
+- **Only a value that has been proposed may be chosen**;
+- **Only a single value is chosen**;
+- **A process never learns that a value has been chosen unless it actually has been**: A process must have a concrete basis for knowing that a decision has been reached. It cannot simply assume that a value has been chosen because it received an isolated message. 
+
+>[!important] Remember
+Paxos does not contradict the FLP result. FLP says that we cannot guarantee termination in every possible asynchronous execution. Paxos guarantees safety and can progress when favorable conditions are met, such as when a proposer can communicate stably with a majority of acceptors.
+
+##### System model
+<u>The processes</u>:
+- They can have arbitrary execution speeds;
+- They can fail by interrupting their execution (crashing);
+- They can restart after a crash.
+<u>The messages</u>: 
+- They can take an arbitrarily long time to be delivered;
+- They can be duplicated;
+- They can be lost;
+- They are not corrupted.
+
+>[!Observation] 
+>Since all agents may fail after a value is chosen and then restart, a solution is impossible unless some information can be remembered by an agent that has failed and restarted.
+
+#### The three roles of Paxos
+
+1. **Proposers**: are processes that can propose a value;
+	1. For <mark style="background:#affad1">example</mark>, we could have:
+			- proposer $P_1$ proposing the value $v_1$;
+			- proposer $P_2$ proposing the value $v_2$;
+			- proposer $P_3$ proposing the value $v_3$.
+	The proposer cannot directly impose its choice: it must participate in the protocol and obtain the necessary approval from the acceptors.
+2. **Acceptors**: are the processes that participate in value selection. They receive proposals and can accept them. They are the heart of Paxos' security: the protocol must ensure that accepted proposals never lead to the choice of two different values; 
+3. **Learners**: passively assist to the decision and obtain the final decided value. They are not responsible for proposing or accepting the value: they observe the decisions reached by the acceptors. For <mark style="background:#affad1">example</mark>, when a learner receives confirmation that a majority of acceptors have accepted a proposal, it can conclude that the corresponding value has been chosen. 
+
+The easiest way to solve the problem is to have a single acceptor:
+-  A proposer sends a proposal to the acceptor;
+-  The acceptor choses the first proposed value it receives and informs everybody about its choice.
+
+**But there's a fundamental problem: what happens if the only acceptor crashes?**
+If the acceptor fails before communicating its decision, the system can no longer progress. There is no other acceptor that can replace it. Therefore, we need multiple acceptors so that the protocol can continue even if some of them fail.
+
+**The problem of having multiple acceptors**:
+
+Each proposer sends its proposal to a set of acceptors. However, messages do not necessarily arrive in the same order to all of them. 
+For <mark style="background:#affad1">example</mark>, suppose we have three proposers:
+
+$$
+P_1 \rightarrow v_1
+$$
+
+$$
+P_2 \rightarrow v_2
+$$
+
+$$
+P_3 \rightarrow v_3
+$$
+
+and three acceptors:
+$$
+A_1,\ A_2,\ A_3
+$$
+<u></u>
+It could happen that:
+- $A_1$ receives $v_1$, $v_2$, and $v_3$;
+- $A_2$ receives $v_2$ and $v_1$;
+- $A_3$ receives only $v_3$.
+The problem is obvious: each acceptor can receive a different set of proposals and can receive them in a different order. <mark style="background:#b1ffff">How can we ensure that acceptors don't choose different values?</mark> This is the central question that led to the construction of Paxos.
+
+#### Evolution of rules
+To prevent acceptors from choosing different values, strict rules and invariants are introduced.
+>[!Initial Rule]
+>**Initial rule:** An acceptor can accept at most one value, and a value is chosen when a majority of acceptors accept it. The majority is required to ensure that only one value is accepted.
+
+**Trial (P1)**: An acceptor must accept the first proposal it receives.
+**Problem** (<u>Deadlock</u>): If multiple values ​​are proposed concurrently by different proposers, none could reach the required majority. An acceptor must be able to accept multiple proposals. 
+**Solution**: We keep track of the different proposals by assigning each one a unique proposal number (total sorting). A value is chosen when a single proposal with that value has been accepted by a <u>majority</u> of acceptors (**chosen proposal**). <mark style="background:rgba(173, 239, 239, 0.55)">We may allow multiple proposals to be accepted, but all accepted proposals must be of equal value.</mark>
+
+**Trial (P2)**: If a proposal with value $v$ is chosen, every higher-numbered proposal that is chosen has value $v$.
+To ensure P2, we go through two successive refinements:
+- **P2a:** If a proposal with value $v$ is accepted, every higher-numbered proposal accepted by _any_ acceptor has value $v$.
+	- _Problem:_ What happens if an acceptor $c$ doesn't see an accepted proposal with value $v$, and a new proposer wakes up proposing a different value $v'$ that $c$ is forced to accept for P1?
+- **P2b:** If a proposal with value $v$ is chosen, every higher-numbered proposal **issued by any proposer** has value $v$.
+To ensure $P2b$, we keep the following invariant for any value $v$ and number $n$:
+- **P2c**: For any $v$ and $n$, if a proposal with value $v$ and number $n$ is issued, then there exists a set $S$ consisting of a majority of acceptors such that:
+	- No acceptor in $S$ has accepted any proposal numbered less than $n$, or
+	- $v$ is the value of the proposal with the highest number among all proposals numbered less than $n$ accepted by acceptors in $S$.
+
+To maintain $P2c$, a proposer who wants to issue a proposal with number $n$ must first discover (or promise to bind) the value of the highest proposal less than $n$ that is accepted (or will be accepted) by a majority of acceptors. The protocol is divided into two main phases (each consisting of a request and a response):
+1. **PHASE 1: Prepare / Promise**
+	1. **Prepare Request:** A proposer chooses a new proposal version number $n$ (unique) and sends a prepare request $(\text{PREPARE}, n)$ to a majority of acceptors:
+		- _(a)_ Can I make a proposal with number $n$?
+		- _(b)_ If so, can you suggest a value for my proposal?
+	2. **Acceptor Response (Promise):** When an acceptor receives $(\text{PREPARE}, n)$:
+		- If $n$ is greater than any previously received prepare number, it responds with a **promise** to no longer accept any proposals numbered lower than $n$.
+		- In its response, it suggests the value $v'$ of the highest-numbered proposal it has accepted so far (if any), or $\perp$ (bottom/null) if it has accepted nothing.
+		- The response message is of the form:
+			- $(\text{ACK}, n, n', v')$ if the acceptor has already accepted a proposal with number $n'$ and value $v'$.
+			- $(\text{ACK}, n, \perp, \perp)$ if it has not accepted any proposals.
+		- **NACK:** If the acceptor receives a prepare with a number $n$ lower than a $n'$ to which it has already responded, it sends a rejection $(\text{NACK}, n')$ indicating that the proposal is too old.
+	
+2. **PHASE 2: Accept / Accepted**
+	1. **Accept Request:** If the proposer receives responses (ACK) from a **majority** of acceptors, it can proceed to issue an accept request $(\text{ACCEPT}, n, v)$ where:
+		- _(a)_ $n$ is the number that appeared in the prepare request.
+		- _(b)_ $v$ is the value of the proposal with the highest number among all the values ​​returned in the acceptor responses (or the proposer's own value if none of the acceptors had previously accepted any proposals).
+	2. **Acceptor Acceptance:** If an acceptor receives an $(\text{ACCEPT}, n, v)$ request, it accepts the proposal unless it has already responded to a prepare request with a number **greater** than $n$.
+3. **Learning phase**: Whenever an acceptor accepts a proposal, it responds to all learners by sending $(\text{ACCEPT}, n, v)$. A learner receives $(\text{ACCEPT}, n, v)$ from a majority of acceptors, decides on the value $v$, and sends $(\text{DECIDE}, v)$ to all other learners. Learners who receive $(\text{DECIDE}, v)$ learn and officially record the decided value.
+
+**Liveness Issues and Solutions**: 
+- <u>Competing Proposers</u> (Livelock): If two competing proposers continuously issue increasing numbers of prepares ($n_1, n_2, n_3 \dots$), they can invalidate each other, blocking the algorithm from terminating (neither one succeeds in completing phase 2). 
+- <u>Practical Solution</u>: The proposers are "elected" or coordinated using an external Leader Election protocol. This way, the protocol operates as a 2-Phase Commit (or 3-Phase Commit in the event of leader failure).
+
+
+## Ordered communication
+
+In distributed systems, reliable broadcast ensures that all correct processes deliver the same set of messages, but does not impose any properties on the order of delivery.
+⚠️ The Anomaly Problem: Without order guarantees, serious application inconsistencies can arise. For example, if a client first sends "reserve a seat" and then "cancel my reservation," but the messages are delivered reversed or processed by different servers in the wrong random order, the system risks canceling a reservation that never existed.
+Ordered communications add one or more ordering properties to reliable broadcast, and are mainly divided into three categories: 
+1. FIFO Order,
+2. Causal Order, 
+3. Total Order / Atomic Broadcast.
+
+#### FIFO Broadcast
+**FIFO Broadcast** ensures that messages sent from the same sender are delivered to all processes in the same order in which they were issued. 
+The properties of the _FIFO Reliable Broadcast_ (`frb` instance) extend those of standard reliable broadcast:
+- **FRB1 - FRB4:** Satisfy all the basic properties of reliable broadcast (Validity, Agreement, Integrity, Uniformity).
+- **FRB5 (FIFO delivery):** If a process $p$ emits message $m_1$ before $m_2$ ($\text{broadcast}(m_1) \to \text{broadcast}(m_2)$), then no correct process will deliver $m_2$ if it has not previously delivered $m_1$.
+
+
+$$
+\begin{aligned}
+&\textbf{Algorithm 3.12: Broadcast with Sequence Number}\\[4pt]
+&\textbf{Implements: } \text{FIFOReliableBroadcast, instance } frb.\\
+&\textbf{Uses: } \text{ReliableBroadcast, instance } rb.\\[6pt]
+&\textbf{upon event } \langle frb, Init \rangle \textbf{ do}\\
+&\qquad lsn := 0;\\
+&\qquad pending := \emptyset;\\
+&\qquad next := [1]^N;\\[6pt]
+&\textbf{upon event } \langle frb, Broadcast \mid m \rangle \textbf{ do}\\
+&\qquad lsn := lsn + 1;\\
+&\qquad \textbf{trigger } \langle rb, Broadcast \mid [DATA, self, m, lsn] \rangle;\\[6pt]
+&\textbf{upon event } \langle rb, Deliver \mid p, [DATA, s, m, sn] \rangle \textbf{ do}\\
+&\qquad pending := pending \cup \{(s,m,sn)\};\\
+&\qquad \textbf{while there exists } (s,m,sn) \in pending
+\textbf{ such that } sn = next[s] \textbf{ do}\\
+&\qquad\qquad next[s] := next[s] + 1;\\
+&\qquad\qquad pending := pending \setminus \{(s,m,sn)\};\\
+&\qquad\qquad \textbf{trigger } \langle frb, Deliver \mid s,m \rangle.
+\end{aligned}
+$$
+
+The algorithm uses a local sequence counter and a pending data structure: Initialization: $lsn := 0$, $\text{pending} := \emptyset$, $\text{next} := [1]^N$. Broadcast ($m$):$$lsn := lsn + 1$$
+The underlying layer is activated by sending $\text{rb.Broadcast}([DATA, \text{self}, m, lsn])$. Deliver ($p, [DATA, s, m, sn]$):
+The message is inserted into $\text{pending}$. Using a while loop, messages are released and delivered (frb.Deliver) only when the sequence number $sn'$ exactly matches the expected value $\text{next}[s]$.
+
+![[Dependable distributed system 1-1793988432290.webp]]
+In the diagram, process $P_1$ transmits two messages in sequence:$m_1$ with local sequence number $lsn = 1$ ($\langle P_1, m_1, 1 \rangle$)$m_2$ with local sequence number $lsn = 2$ ($\langle P_1, m_2, 2 \rangle$)Each process maintains a next vector indicating the sequence number of the next message it expects to receive from each sender (initially set to $1$) and a dangling data structure to accumulate early-arrived messages.What happens in individual processesProcess $P_3$ (Arrival in order):First receives $m_1$ ($sn = 1$), which exactly matches the expected value in next [P1]. It is delivered immediately (Deliver), and next [P1] is incremented to $2$. Next, it receives $m_2$ ($sn = 2$), which corresponds to the new expected value. It is delivered immediately, bringing $3$ next to it. Process $P_2$ (Out of Order Arrival): Due to network delays, $m_2$ ($sn = 2$) arrives at $P_2$ before $m_1$ ($sn = 1$). Since $P_2$ expects the message with $sn = 1$ (next [P1] = 1), the arrival of $อง$ with $sn = 2$ violates the FIFO rule if delivered immediately. The algorithm intervenes by inserting $m_2$ into the pending message queue: $\text{Pending} = \{\langle p_1, m_2, 2 \rangle\}$. When $m_1$ ($sn = 1$) finally arrives, $P_2$ delivers it immediately and updates next[P1] to $2$. At this point, the control loop (while the algorithm is running) detects that there is a message in the Pending queue with $sn' = \text{next}[s]$ (i.e., $m_2$ with $sn = 2$). $P_2$ removes $m_2$ from Pending, delivers it, and updates next [P1] to $3$.
+
+#### Casual order broadcast
+Causal order extends the concept of ordering by capturing the cause-effect (happened-before) dependency relationships between messages.
+A message $m_1$ has potentially caused a message $m_2$ ($m_1 \rightarrow m_2$) if at least one of the following conditions is true: 
+- The same process $p$ emits $m_1$ before $m_2$.
+- A process $p$ delivers $m_1$ and subsequently emits $m_2$. 
+- There exists an intermediate message $m'$ such that $m_1 \rightarrow m'$ and $m'$ $\rightarrow m_2$ (transitive property).
+![[Dependable distributed system 1-1794059108083.webp]]
+
+###### Properties 
+- CRB1-CRB4: Same as properties RB1-RB4 in (regular) reliable broadcast;
+- CRB5: Causal delivery, for any message $m_1$ that potentially caused a message $m_2$, $m_1 \rightarrow m_2$, no process delivers $m_2$ unless it has already delivered $m_1$. 
+
+>[!Observations] 
+>Casual broadcast = reliable broadcast + casual order;
+>Casual order $\implies$ FIFO order
+>Fifo order $\not\implies$ Casual order
+>Casual order = FIFO order + local order.
+**Local order**: if a process delivers a message $m_a$ before sending a message $m_b$, then no correct process deliver $m_b$ if it has not already delivered $m_a$.
+
+
+![[Dependable distributed system 1-1794059567279.webp]]
+![[Dependable distributed system 1-1794059581268.webp]]
+
+$$
+\begin{aligned}
+&\textbf{Algorithm 3.15:} \text{ Waiting Causal Broadcast} \\[0.5em]
+&\textbf{Implements:} \quad \text{CausalOrderReliableBroadcast, instance } crb. \\
+&\textbf{Uses:} \quad \text{ReliableBroadcast, instance } rb. \\[0.8em]
+&\mathbf{upon \ event} \ \langle crb, Init \rangle \ \mathbf{do} \\
+&\quad V := [0]^N; \\
+&\quad lsn := 0; \\
+&\quad pending := \emptyset; \\[0.8em]
+&\mathbf{upon \ event} \ \langle crb, Broadcast \mid m \rangle \ \mathbf{do} \\
+&\quad W := V; \\
+&\quad W[rank(self)] := lsn; \\
+&\quad lsn := lsn + 1; \\
+&\quad \mathbf{trigger} \ \langle rb, Broadcast \mid [DATA, W, m] \rangle; \\[0.8em]
+&\mathbf{upon \ event} \ \langle rb, Deliver \mid p, [DATA, W, m] \rangle \ \mathbf{do} \\
+&\quad pending := pending \cup \{(p, W, m)\}; \\
+&\quad \mathbf{while} \ \text{exists } (p', W', m') \in pending \ \text{such that } W' \le V \ \mathbf{do} \\
+&\quad\quad pending := pending \setminus \{(p', W', m')\}; \\
+&\quad\quad V[rank(p')] := V[rank(p')] + 1; \\
+&\quad\quad \mathbf{trigger} \ \langle crb, Deliver \mid p', m' \rangle;
+\end{aligned}
+$$
+
+![[Dependable distributed system 1-1794060669854.webp]]
+
+##### Safety property
+If two messages $m$ and $m'$ are related by a causal relationship $broadcast(m) \rightarrow broadcast(m')$, then each process must deliver $m$ before $m'$. Simply: if $m$ "generated" $m'$ (directly or indirectly), no process can ever deliver $m'$ by skipping or anticipating $m$. The causal order must be strictly preserved in the delivery. 
+If $m$ is the $k$-th message sent by process $p_i$, then $m.\text{VC}[i] = k-1$.
+<u>How it works:</u> When a process $p_i$ broadcasts a message, it attaches a clock vector $W$ (called $m.\text{VC}$) to it. <u>The meaning:</u> If that message is the $k$-th message emitted by $p_i$, the cell of the vector corresponding to $p_i$ will have the value $k-1$. This value acts as an "order label": it tells the recipient of the message how many previous messages that particular process had already emitted before this one.
+
+>[!Definitions] Casual distance
+>Let two broadcast events $b$ and $b'$ with $b \rightarrow b'$. These events have a **casual distance k** if $\exists$ a sequence of $k$ broadcast events $b_1, ..., b_k$ such that:
+>	- $\forall I \in {1, ...k} b_i \rightarrow b_{i+1} \land (\not\exists) m* | b_i \rightarrow m* \rightarrow b_{i+1}$ 
+>	- $b \rightarrow b_1$
+>	- $b_k \rightarrow b'$
+
+###### Safety Property Proof of the Causal Order Broadcast Protocol: Base Case ($K = 0$)
+
+The base case considers two messages $m$ and $m'$ such that $broadcast(m) \rightarrow broadcast(m')$, with **zero causal distance** ($k=0$). This means that $m$ directly causes $m'$ and there is no intermediate message** $m''$ between them ($\text{broadcast}(m) \rightarrow \text{broadcast}(m'') \rightarrow \text{broadcast}(m')$).
+
+Depending on who sends the messages, the proof is divided into two distinct cases:
+
+###### Case 1: Messages are emitted by the _same process_ ($p_i$)
+
+Suppose both $m$ and $m'$ were sent by the same process $p_i$, and that $p_j$ is the receiving process.
+
+1. **Vector Clock Update (_Vector Clock_):** From line 3 of the broadcast procedure of Algorithm 3.15, when a process emits a message, it increments its component in the vector:
+$$m'.\text{VC}[i] := m.\text{VC}[i] + 1$$
+If $m$ is the $h$-th message sent by $p_i$, then its clock will be $m.\text{VC}[i] = h - 1$, while for the next message it will be $m'.\text{VC}[i] = h$.
+2. **Delivery Condition:** A receiving process $p_j$ can deliver message $m'$ only if its local vector $V_j$ satisfies the causal dominance condition:
+$$\forall x \in \{1, \dots, n\}, \ m'.\text{VC}[x] \le V_j[x] \quad \text{and in particular} \quad m'.\text{VC}[i] \le V_j[i]$$
+
+3. **The Unlocking Mechanism:** In the vector of $m'$, the $i$-th component is $h$ ($m'.\text{VC}[i] = h$). For the inequality $h \le V_j[i]$ to be true, the recipient's local vector must have $V_j[i] \ge h$. The clock vector property states that $V_j[i] = h$ **if and only if** the recipient has already delivered all the first $h$ messages sent by $p_i$ (including $m$, which was the $h$-th).
+4. **Conclusion of Case 1:** Consequently, process $p_j$ **can never deliver $m'$ unless it has first delivered $m$**.
+###### Case 2: Messages are issued by _distinct processes_ ($p_i$ and $p_j$)
+Suppose that $m$ was issued by $p_i$ and that $m'$ was issued by a different process $p_j$ _after_ $p_j$ delivered $m$. The final recipient is a generic process $p_k[cite: 60]$.
+1. **Causal Relationship and Vector Clocks:** Since $broadcast(m) \rightarrow broadcast(m')$ and $m'$ is emitted after the delivery of $m$ (with $m$ being the $h$-th message of $p_i$, i.e. $m.\text{VC}[i] = h-1$), by the clock vector update rule we have that the new message inherits and updates the component.$$m'.\text{VC}[i] = h$$
+2. **Condition Verification at Receiver ($p_k$):** Process $p_k$ receives $m'$ and must verify the delivery condition:
+$$m'.\text{VC}[i] \le V_k[i] \quad \implies \quad h \le V_k[i]$$
+3. **Interpretation of $V_k[i]$:** Within the system, $V_k[i] = h$ if and only if the The $h$-th message emitted by $p_i$ (i.e., our message $m$) was actually delivered by $p_k$.
+4. **Conclusion of Case 2:** Since the component in the vector of $m'$ requires that $V_k[i] \ge h$, process $p_k$ is forced to block $m'$ waiting for its local view to reach that value. Therefore, **$p_k$ can deliver $m'$ only after delivering $m$**.
+
+##### Liveness property
+Eventually each message will be delivered. Liveness is guaranteed by the following assumptions:
+- The number of broadcast events that precedes a certain event is finite;
+- Channels are reliable.
+$$
+\begin{aligned}
+&\textbf{Algorithm 3.13:} \text{ No-Waiting Causal Broadcast} \\[0.5em]
+&\textbf{Implements:} \quad \text{CausalOrderReliableBroadcast, instance } crb. \\
+&\textbf{Uses:} \quad \text{ReliableBroadcast, instance } rb. \\[0.8em]
+&\mathbf{upon \ event} \ \langle crb, Init \rangle \ \mathbf{do} \\
+&\quad delivered := \emptyset; \\
+&\quad past := []; \\[0.8em]
+&\mathbf{upon \ event} \ \langle crb, Broadcast \mid m \rangle \ \mathbf{do} \\
+&\quad \mathbf{trigger} \ \langle rb, Broadcast \mid [DATA, past, m] \rangle; \\
+&\quad append(past, (self, m)); \\[0.8em]
+&\mathbf{upon \ event} \ \langle rb, Deliver \mid p, [DATA, mpast, m] \rangle \ \mathbf{do} \\
+&\quad \mathbf{if} \ m \notin delivered \ \mathbf{do} \\
+&\quad\quad \mathbf{forall} \ (s, n) \in mpast \ \mathbf{do} \\
+&\quad\quad\quad \mathbf{if} \ n \notin delivered \ \mathbf{do} \\
+&\quad\quad\quad\quad \mathbf{trigger} \ \langle crb, Deliver \mid s, n \rangle; \\
+&\quad\quad\quad\quad delivered := delivered \cup \{n\}; \\
+&\quad\quad\quad\quad \mathbf{if} \ (s, n) \notin past \ \mathbf{do} \\
+&\quad\quad\quad\quad\quad append(past, (s, n)); \\
+&\quad\quad \mathbf{trigger} \ \langle crb, Deliver \mid p, m \rangle; \\
+&\quad\quad delivered := delivered \cup \{m\}; \\
+&\quad\quad \mathbf{if} \ (p, m) \notin past \ \mathbf{do} \\
+&\quad\quad\quad append(past, (p, m));
+\end{aligned}
+$$
+![[Dependable distributed system 1-1794062366984.webp]]
+1. **Broadcast of the first message ($m_1$)** 
+	1. Process $p_1$ emits message $m_1$. According to the No-Waiting algorithm, $m_1$ travels along with the past message list, which currently contains only $\langle p_1, m_1 \rangle$.
+	2. Process $p_3$ receives $m_1$, immediately delivers it ($m_1$), and adds $\langle p_1, m_1 \rangle$ to its local past list. 
+2. **The causal chain and the second message ($m_2$)**
+	1. Subsequently, process $p_3$ emits a new message $m_2$.
+	2. Since $p_3$ has previously seen/delivered $m_1$, message $m_2$ is sent along with the past history containing $\langle p_1, m_1 \rangle$ (i.e., the information that $m_1$ causally precedes $m_2$). 
+3. **What happens when $m_2$ reaches the other processes?** 
+		1. On process $p_1$: 
+			1. $p_1$ receives $m_2$. Since $p_1$ was the original author of $m_1$, it already knows $\langle p_1, m_1 \rangle$ in its local list. 
+			2. Therefore, $p_1$ does not have to retrieve anything from the past and delivers $m_2$ directly. 
+		2. On process $p_2$ (The most interesting case): 
+			1. Due to network delays, $m_1$ had not yet arrived directly at $p_2$. Instead, it receives $m_2$ directly (which also carries $\langle p_1, m_1 \rangle$ in its backpack).
+			2. The algorithm reads the mpast packet, notices that $m_1$ has not yet been delivered ($n \notin delivered$), and applies the recursive rule: it delivers $m_1$ first, and then immediately delivers $m_2$. 
+			3. This way, the causal order is respected without $p_2$ having to block execution waiting for a lost message: $m_2$ also took care of delivering its "ancestor" $m_1$.
+		3. The late arrival of $m_1$ on $p_2$: Subsequently, the "slow" and direct copy of $m_1$ still reaches $p_2$. Since $p_2$ has already delivered $m_1$ thanks to $m_2$, the "if m not in delivered" check causes $p_2$ to discard the duplicate.
+No-Waiting avoids having messages wait in a blocking queue: if a message arrives "early" bringing with it the history (mpast) of causally previous messages that the recipient does not yet have, the algorithm unpacks the history, delivers the missing messages in the correct order and discards any subsequent duplicates.
+
+###### Casual order is not enough strong to avoid anomalies
+![[Dependable distributed system 1-1794063162496.webp]]
+Same initial state, different final state at the two sites. To have the same final state we need to ensure that the order of deliveries is the same at each process. Note that ensuring the same delivery order at each replicas does not consider the sending
+order of messages
+
+## Total order broadcast
+
+A total order reliable broadcast abstraction order <u>all</u> messages, even those from different senders and those that are note causally related. The total-order broadcast abstraction is sometimes also called **atomic broadcast**.
+Total order is orthogonal with respect to FIFO and Causal Order. Total order would accept indeed a computation in which a process $p_i$ sends $n$ messages to a group, and each of the processes of the group delivers such messages in the reverse order of their sending. The computation is totally ordered but it is not FIFO.
+![[Dependable distributed system 1-1794063677428.webp]]
+
+###### Properties 
+- All processes agree on the same set of delivered messages.
+- All processes agree on the same delivery sequence.
+- The delivery action behaves like an atomic event: the message is delivered to everyone or no one, and any other messages are strictly ordered before or after it.
+###### Relationship between broadcast specifications
+![[Dependable distributed system 1-1794063748711.webp]]
+
+In the following image, we can see the Venn diagram representing the **hierarchy and intersection between the different ordering and reliability properties in distributed broadcast systems**. It helps us understand the guarantees offered by the different abstractions and how they overlap with each other through four example executions (taken from Lesson 12 of _Dependable Distributed Systems_).
+- **Reliable Broadcast (Larger Outer Circle):** This is the minimum level. It only guarantees that all messages are delivered correctly to everyone or no one, **without any ordering rules**.
+- **FIFO Reliable Broadcast (Middle Circle):** This adds the FIFO constraint (messages issued by the _same_ sender must be delivered in the order they were sent).
+- **Causal Reliable Broadcast (Smaller Inner Circle):** This is the most restrictive of the sender-based ordered broadcasts. Requires that the causal (cause-effect) order between messages be respected.
+The vertical green oval represents the Total Order property (or Atomic Broadcast, in which all processes deliver all messages in the exact same global order).
+The diagram positions four different runs of a distributed system to show which category they fall into:
+- **Execution 1 (In external Reliable Broadcast, outside Total** Order):
+	- ***Meaning***: This is an execution that respects the basic rules of Reliable Broadcast, but does not satisfy either Total Order or the advanced FIFO/Causal ordering properties.
+
+- **Execution 2 (Completely outside or at the margin):**
+	- ***Meaning***: This is an execution that violates even the basic properties or fails to fall within the desired standard ordering categories (e.g., messages lost or delivered incorrectly compared to specifications).
+
+- **Execution 3 (At the intersection of Total Order and FIFO, but outside Causal):**
+	- **_Meaning**:_ An execution that guarantees **Total Order** (everyone sees messages in the same sequence) and **FIFO Order** (messages from the same sender are in order), but does not respect global causality between different senders.
+
+- **Execution 4 (In the middle, at the narrowest intersection):**
+	- _**Meaning**:_ This is the ideal and strongest case. It lies within the _Causal Reliable Broadcast_ **and is covered by Total Order**. It simultaneously satisfies causality, FIFO, and total order (often called _Causal Atomic Broadcast_).
+![[Dependable distributed system 1-1794063846265.webp]]
+#### System model 
+- **Process set**: $\Pi = \{p_1, p_2, \dots, p_n\}$ (static set).
+- **Communication channels**: Perfect channels, meaning that messages exchanged between correct processes are delivered reliably without loss or corruption.
+- **Time model**: Asynchronous.
+- **Fault model**: Crash fault model (processes can crash without sending corrupted messages).
+- **Execution representation**: The space of feasible behaviors of the system is characterized by the set of possible executions $R$.
+
+###### Properties
+The formal specification of Total Order Broadcast consists of four fundamental pillars, briefly referred to as $\text{TO}(V, I, A, O)$: 
+1. **Validity** ($V$): Ensures that messages sent by the correct processes are ultimately delivered. 
+2. **Integrity** ($I$): Ensures that there are no spurious, duplicate, or invented messages; every delivered message has been previously issued. 
+3. **Agreement** ($A$): Imposes constraints on the set of messages that must be delivered. 
+4. **Order** ($O$): Imposes constraints on the sequence in which messages are delivered.
+
+Each of these properties can be either Uniform or Non-Uniform. 
+- A **uniform** property imposes restrictions on the behavior of all processes, including those that will crash.
+- A **non-uniform** property restricts the behavior of only the correct processes.
+![[Dependable distributed system 1-1794064432960.webp]]
+The agreement defines whether failed and successful processes must share the exact same set of delivered messages:
+- **Uniform Agreement (UA):** $\text{If a process (successful or not) TODelivers a message } m, \text{then all successful processes will eventually deliver } m.$
+- **Non-Uniform Agreement (NUA):** $\text{If a successful process TODelivers a message } m, \text{then all successful processes will eventually deliver } m.$
+Let $M$ be the set of messages delivered by correct processes, and $M_p$ be the set of messages delivered by a generic process $p$ (possibly a failed one): With UA, the relation $M_p \subseteq M$ holds (correct processes agree perfectly on the set $M$, and failed processes can only deliver a subset of $M$ before crashing). With NUA, it is allowed that $M_p - M \neq \emptyset$ (a failed process may have delivered messages that correct processes will never see).
+![[Dependable distributed system 1-1794064694938.webp]]
+###### Order properties
+Ordering determines how messages are sequenced. The slides compare four main variants: 
+1. **Strong Uniform Total Order (SUTO)** If a process delivers message $m$ before $m'$, then no process (correct or not) can deliver $m'$ until it has first delivered $m$. Characteristics: All processes see exactly the same message sequence prefix. If a process crashes, it has still followed the exact same sequence as the living ones until it crashed.
+2. **Weak Uniform Total Order (WUTO)** If process $p$ and process $q$ both deliver messages $m$ and $m'$, then $p$ delivers $m$ before $m'$ if and only if $q$ delivers $m$ before $m'$. Characteristics: There is no restriction on whether a process must deliver all the other processes' messages, but if two processes deliver the same subset of messages, they do so in the same order. After an omission, processes may have disjoint sets of delivered messages, as long as the relative order on the common messages is identical.
+3. The strong non-uniform and weak
