@@ -2283,3 +2283,5 @@ There are two main architectural approaches for implementing linearizability:
 2. **Active Replication**
 
 ###### Primary-backup (passive replication)
+In the primary-backup method, the replication's roles are asymmetric:
+- **Primary**
