@@ -2261,4 +2261,5 @@ The linearizability is the strongest consistency criterion most rigorous. Requir
 * **Concurrency ($||$):** If the operations overlap in time.
 
 >[!definitiosn] Linearizability
->An execution $E$ is linearizable if there exist a global sequence $S$ (called sequential specificatio)
+>An execution $E$ is linearizable if there exist a global sequence $S$ (called sequential specification) that includes every operations of $E$ such that:
+>	1. 
