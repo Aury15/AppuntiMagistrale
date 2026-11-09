@@ -2129,3 +2129,31 @@ Combining the agreement property  ($UA$ vs $NUA$) and the order properties ($\te
 
 So we can see how the module interact with each other. The total order broadcast is the principal abstractions that we see and use. So a process send a message $m$ ($TOBroadcast(m)$) asking the total order. The reliable broadcast guarantee the the robustness and propagation of messages in the network ($rbBroadcast(m)$). The consensus ensures order agreement. Since messages arrive to processes at different times and in random order, a mechanism is needed to agree on which batch or sequence of messages should be considered "next" in chronological order ($propose(s_n, list), decide(s_n, list)$). Then we have the command for the delivery. 
 
+$$
+\begin{aligned}
+&\textbf{Algorithm 6.1:} \text{ Consensus-Based Total-Order Broadcast} \\[0.5em]
+&\textbf{Implements:} \quad \text{TotalOrderBroadcast, instance } tob. \\
+&\textbf{Uses:} \quad \text{ReliableBroadcast, instance } rb; \ \text{Consensus (multiple instances)}. \\[0.8em]
+&\mathbf{upon \ event} \ \langle tob, Init \rangle \ \mathbf{do} \\
+&\quad unordered := \emptyset; \\
+&\quad delivered := \emptyset; \\
+&\quad round := 1; \\
+&\quad wait := FALSE; \\[0.8em]
+&\mathbf{upon \ event} \ \langle tob, Broadcast \mid m \rangle \ \mathbf{do} \\
+&\quad \mathbf{trigger} \ \langle rb, Broadcast \mid m \rangle; \\[0.8em]
+&\mathbf{upon \ event} \ \langle rb, Deliver \mid p, m \rangle \ \mathbf{do} \\
+&\quad \mathbf{if} \ m \notin delivered \ \mathbf{do} \\
+&\quad\quad unordered := unordered \cup \{(p, m)\}; \\[0.8em]
+&\mathbf{upon} \ unordered \neq \emptyset \ \land \ \neg wait \ \mathbf{do} \\
+&\quad wait := TRUE; \\
+&\quad \text{Initialize a new instance } c.round \text{ of consensus}; \\
+&\quad \mathbf{trigger} \ \langle c.round, Propose \mid unordered \rangle; \\[0.8em]
+&\mathbf{upon \ event} \ \langle c.r, Decide \mid decided \rangle \ \mathbf{do} \\
+&\quad \mathbf{forall} \ (s, m) \in sort(decided) \ \mathbf{do} \\
+&\quad\quad \mathbf{trigger} \ \langle tob, Deliver \mid s, m \rangle; \\
+&\quad delivered := delivered \cup decided; \\
+&\quad unordered := unordered \setminus decided; \\
+&\quad round := round + 1; \\
+&\quad wait := FALSE;
+\end{aligned}
+$$
