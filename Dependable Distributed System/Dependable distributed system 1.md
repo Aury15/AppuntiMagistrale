@@ -2316,3 +2316,6 @@ When the **primary node crashes**, a new leader must be elected from among the b
 In **Active Replication**, there is no central coordinator or primary node: **all replicas have exactly the same role** and execute the same code in parallel.
 * **Determinism:** To function correctly, each replica must be *deterministic*. Given the same initial state and the same sequence of inputs, they will always produce the same output.
 * **Interaction with Clients:** The client sends its request to *all* replicas simultaneously and will receive responses from each of them.
+
+To maintain atomicity and ordering without a primary, active replication requires the rigorous use of **Total Order Broadcast** (including the initial submission by clients), ensuring that all replicas receive the same requests in the exact same sequence.
+* **Crash Handling:** If a replica fails, the system does not require complex state-recovery procedures or leader elections, as the remaining replicas continue to process requests without interruption.
