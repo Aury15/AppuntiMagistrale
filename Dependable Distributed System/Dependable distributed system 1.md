@@ -2296,6 +2296,8 @@ $$
 &\mathbf{4.} \text{ The Primary waits for all } ack \text{ messages from the correct backups to arrive and then responds to the client.}
 \end{aligned}
 $$
+![[Dependable distributed system 1-1794228076737.webp]]
+
 
 When the **primary node crashes**, a new leader must be elected from among the backup replicas. Three critical scenarios must be analyzed:
 
@@ -2312,7 +2314,7 @@ When the **primary node crashes**, a new leader must be elected from among the b
 * **Scenario 3: The primary fails *after* sending the updates but *before* receiving all acknowledgments (ACKs).**
 	* *Problem:* A violation of atomicity (the update has reached only some of the backups). 
 	* *Solution:* This requires rigorous consensus mechanisms to ensure that the update is either applied by all replicas or by none at all before the transition to a new primary takes place.
-		
+		![[Dependable distributed system 1-1794228036908.webp]]
 
 #### Active replication
 
