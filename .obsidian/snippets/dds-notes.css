@@ -1,0 +1,363 @@
+/* ==========================================================================
+   DDS · stile "dispensa" — replica l'impaginazione del PDF
+   Attivo solo sulle note con (frontmatter):
+       cssclasses:
+         - dds-notes
+   Non tocca il resto della vault e non dipende dal tema.
+   ========================================================================== */
+
+.dds-notes {
+  --dds-accent: #2663f2;
+  --dds-accent-dark: #1b4dd8;
+  --dds-ink: #1c2331;
+  --dds-muted: #5b667c;
+  --dds-line: #e2e7f0;
+  --dds-panel: #f7f9fd;
+}
+
+/* ------------------------------------------------------------- tipografia -- */
+.dds-notes.markdown-rendered,
+.dds-notes .markdown-rendered {
+  font-family: "Inter", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: var(--dds-ink);
+  line-height: 1.58;
+  letter-spacing: 0;
+}
+
+/* titolo della nota */
+.dds-notes .inline-title {
+  margin-bottom: 0.55em;
+  padding-bottom: 0.28em;
+  border-bottom: 3px solid var(--dds-accent);
+  font-size: 2.2em;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--dds-accent-dark) !important;
+}
+
+/* capitoli */
+.dds-notes h2 {
+  margin-block: 1.9em 0.65em;
+  padding-bottom: 0.12em;
+  border-bottom: 1.5px solid rgba(38, 99, 242, 0.35);
+  font-size: 1.8em;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  color: var(--dds-accent) !important;
+}
+
+/* paragrafi / sezioni */
+.dds-notes h3 {
+  margin-block: 1.6em 0.5em;
+  padding-left: 0.55em;
+  border-left: 4px solid var(--dds-accent);
+  font-size: 1.3em;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--dds-ink) !important;
+}
+
+.dds-notes h4 {
+  margin-block: 1.35em 0.4em;
+  font-size: 1.12em;
+  font-weight: 700;
+  color: #22304d !important;
+}
+
+/* etichette (es. "ALGORITHM: ...") */
+.dds-notes h5 {
+  margin-block: 1.25em 0.35em;
+  font-size: 0.8em;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--dds-muted) !important;
+}
+
+.dds-notes h6 {
+  margin-block: 1.1em 0.3em;
+  font-size: 0.78em;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dds-muted) !important;
+}
+
+/* --------------------------------------------------------------- testi ---- */
+.dds-notes p {
+  margin-block: 0.55em;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.dds-notes li {
+  margin-block: 0.18em;
+  text-align: justify;
+}
+
+.dds-notes ul,
+.dds-notes ol {
+  margin-block: 0.4em 0.7em;
+}
+
+.dds-notes li::marker {
+  color: var(--dds-accent);
+  font-weight: 600;
+}
+
+.dds-notes strong {
+  font-weight: 700;
+}
+
+/* -------------------------------------------------------- separatori ------ */
+.dds-notes hr {
+  height: 1px;
+  margin-block: 1.9em;
+  border: 0;
+  background: var(--dds-line);
+}
+
+/* --------------------------------------------------------------- code ----- */
+.dds-notes code {
+  font-family: "Cascadia Mono", Consolas, "Courier New", monospace;
+  font-size: 0.88em;
+}
+
+.dds-notes :not(pre) > code {
+  padding: 0.1em 0.35em;
+  border: 1px solid var(--dds-line);
+  border-radius: 4px;
+  background: var(--dds-panel);
+  color: #1f2a44;
+}
+
+/* ------------------------------------------------------------ callout ----- */
+.dds-notes .callout {
+  --callout-border-width: 0px;
+  --callout-radius: 10px;
+  --callout-padding: 0;
+  margin-block: 1em;
+  padding: 0.75em 1em 0.55em 1.05em;
+  border: 0 !important;
+  border-left: 4px solid rgb(var(--callout-color)) !important;
+  border-radius: 10px !important;
+  background: #f3f7ff;
+  box-shadow: none;
+  mix-blend-mode: normal !important;
+}
+
+.dds-notes .callout-title {
+  padding: 0 0 0.25em;
+  font-size: 0.88em;
+  font-weight: 700;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+  color: rgb(var(--callout-color)) !important;
+}
+
+.dds-notes .callout-icon {
+  display: none;
+}
+
+.dds-notes .callout-content {
+  padding: 0;
+  background: transparent;
+}
+
+.dds-notes .callout-content > p:first-child {
+  margin-top: 0;
+}
+
+.dds-notes .callout-content > p:last-child {
+  margin-bottom: 0.1em;
+}
+
+.dds-notes .callout p,
+.dds-notes .callout li {
+  text-align: left;
+}
+
+/* colori per tipo, come nel PDF */
+.dds-notes .callout[data-callout="definition"] {
+  --callout-color: 38, 99, 242;
+  background: #f2f6ff;
+}
+
+.dds-notes .callout[data-callout="definition"] .callout-title {
+  color: #1b4dd8 !important;
+}
+
+.dds-notes .callout[data-callout="note"],
+.dds-notes .callout[data-callout="info"] {
+  --callout-color: 71, 85, 105;
+  background: #f6f7f9;
+}
+
+.dds-notes .callout[data-callout="note"] .callout-title,
+.dds-notes .callout[data-callout="info"] .callout-title {
+  color: #475569 !important;
+}
+
+.dds-notes .callout[data-callout="warning"],
+.dds-notes .callout[data-callout="important"] {
+  --callout-color: 180, 83, 9;
+  background: #fff8ee;
+}
+
+.dds-notes .callout[data-callout="warning"] .callout-title,
+.dds-notes .callout[data-callout="important"] .callout-title {
+  color: #b45309 !important;
+}
+
+.dds-notes .callout[data-callout="question"] {
+  --callout-color: 109, 40, 217;
+  background: #f8f4ff;
+}
+
+.dds-notes .callout[data-callout="question"] .callout-title {
+  color: #6d28d9 !important;
+}
+
+.dds-notes .callout[data-callout="example"] {
+  --callout-color: 15, 118, 110;
+  background: #eefbf8;
+}
+
+.dds-notes .callout[data-callout="example"] .callout-title {
+  color: #0f766e !important;
+}
+
+/* ------------------------------------------------------------ tabelle ----- */
+.dds-notes table {
+  width: 100% !important;
+  margin-block: 1em;
+  border: 1px solid var(--dds-line);
+  border-radius: 8px;
+  border-collapse: separate !important;
+  border-spacing: 0;
+  overflow: hidden;
+  font-size: 0.94em;
+}
+
+.dds-notes .table-wrapper {
+  width: 100%;
+}
+
+.dds-notes thead th {
+  padding: 0.55em 0.8em;
+  border: 0 !important;
+  background: var(--dds-accent) !important;
+  font-weight: 600;
+  font-size: 0.94em;
+  letter-spacing: 0.015em;
+  text-align: left;
+  color: #ffffff !important;
+}
+
+.dds-notes tbody td {
+  padding: 0.5em 0.8em;
+  border-top: 1px solid var(--dds-line);
+  vertical-align: top;
+}
+
+.dds-notes tbody tr:nth-child(even) td {
+  background: var(--dds-panel);
+}
+
+/* --------------------------------------------------------- matematica ----- */
+.dds-notes mjx-container[display="true"] {
+  margin-block: 0.9em !important;
+  padding: 0.55em 0.6em !important;
+  border-radius: 8px;
+  background: var(--dds-panel);
+  overflow-x: auto;
+}
+
+.dds-notes .math-block > mjx-container {
+  padding: 0.55em 0.6em !important;
+}
+
+.dds-notes mjx-container {
+  color: var(--dds-ink);
+}
+
+/* ----------------------------------------------------------- immagini ----- */
+.dds-notes img {
+  display: block;
+  max-width: 100%;
+  margin: 1em auto;
+  border: 1px solid #dbe1ec;
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+/* embed di note / PDF */
+.dds-notes .markdown-embed,
+.dds-notes .file-embed {
+  margin-block: 0.9em;
+  padding: 0.4em 0.9em;
+  border: 0;
+  border-left: 3px solid var(--dds-line);
+  border-radius: 0 8px 8px 0;
+  background: #fbfcff;
+}
+
+.dds-notes .markdown-embed-title {
+  display: none;
+}
+
+/* ------------------------------------------------------------- stampa ----- */
+@media print {
+  .dds-notes img,
+  .dds-notes table,
+  .dds-notes .callout {
+    break-inside: avoid;
+  }
+
+  .dds-notes h2,
+  .dds-notes h3,
+  .dds-notes h4,
+  .dds-notes h5 {
+    break-after: avoid;
+  }
+}
+
+/* --------------------------------------------------- modalità scura ------ */
+body.theme-dark .dds-notes {
+  --dds-ink: #e7eefb;
+  --dds-muted: #9fb0c9;
+  --dds-line: #2b3549;
+  --dds-panel: #1a2334;
+}
+
+body.theme-dark .dds-notes .callout {
+  background: rgba(38, 99, 242, 0.12);
+}
+
+body.theme-dark .dds-notes .callout[data-callout="note"],
+body.theme-dark .dds-notes .callout[data-callout="info"] {
+  background: rgba(148, 163, 184, 0.12);
+}
+
+body.theme-dark .dds-notes .callout[data-callout="warning"],
+body.theme-dark .dds-notes .callout[data-callout="important"] {
+  background: rgba(217, 119, 6, 0.14);
+}
+
+body.theme-dark .dds-notes .callout[data-callout="question"] {
+  background: rgba(124, 58, 237, 0.14);
+}
+
+body.theme-dark .dds-notes .callout[data-callout="example"] {
+  background: rgba(14, 148, 136, 0.14);
+}
+
+body.theme-dark .dds-notes img {
+  border-color: #33405a;
+}
+
+body.theme-dark .dds-notes :not(pre) > code {
+  color: #d7e3f8;
+}
