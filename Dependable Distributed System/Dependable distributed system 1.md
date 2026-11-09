@@ -2359,8 +2359,5 @@ Each operation is delimited by two instantaneous, indivisible events: the **Invo
 		![[Dependable distributed system 1-1794230236002.webp]]
 2. **Concurrency**:
 	- Assumptions: several processes can access the register, concurrent access, no failures.
-
-
- 
-
+		![[Dependable distributed system 1-1794230358374.webp]]
 
