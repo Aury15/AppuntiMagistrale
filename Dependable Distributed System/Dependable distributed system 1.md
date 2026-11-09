@@ -2284,4 +2284,5 @@ There are two main architectural approaches for implementing linearizability:
 
 ###### Primary-backup (passive replication)
 In the primary-backup method, the replication's roles are asymmetric:
-- **Primary**
+- **Primary:** This is a single designated replica that receives invocations from clients, processes requests, updates its own state, and coordinates the backups.
+* **Backups:** Passive replicas that receive update messages from the primary and replicate its state to ensure fault tolerance in the event of a primary crash.
