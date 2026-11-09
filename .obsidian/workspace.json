@@ -4,37 +4,22 @@
     "type": "split",
     "children": [
       {
-        "id": "0b6449ba102507c0",
+        "id": "484969ec3ef57ed6",
         "type": "tabs",
         "children": [
           {
-            "id": "77adfa146b5254a9",
+            "id": "a73c43ecf9d870a5",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "pdf",
               "state": {
-                "file": "Machine Learning.md",
-                "mode": "source",
-                "source": false
+                "file": "Dependable Distributed System/Dependable distributed system 1.pdf"
               },
-              "icon": "lucide-file",
-              "title": "Machine Learning"
-            }
-          },
-          {
-            "id": "5a7946c170d64209",
-            "type": "leaf",
-            "state": {
-              "type": "release-notes",
-              "state": {
-                "currentVersion": "1.15.0"
-              },
-              "icon": "lucide-book-up",
-              "title": "Note di rilascio 1.15.0"
+              "icon": "lucide-file-text",
+              "title": "Dependable distributed system 1"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -96,7 +81,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "f6cc322df633c375",
@@ -202,14 +188,27 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "5a7946c170d64209",
+  "active": "a73c43ecf9d870a5",
   "lastOpenFiles": [
+    "Machine Learning.md",
+    "immagini DS/Dependable distributed system-1793878442061.webp",
+    "immagini DS/Dependable distributed system-1793788692222.webp",
+    "immagini DS/Lezione 1-1793616554037.webp",
+    "immagini DS/Lezione 1-1793618151965.webp",
+    "immagini DS/Lezione 1-1793618142277.webp",
+    "immagini DS/Lezione 1-1793618082417.webp",
+    "immagini DS/Lezione 1-1793616647445.webp",
+    "immagini DS/Dependable distributed system-1793878592836.webp",
+    "immagini DS/Lezione 1-1793616539878.webp",
+    "immagini DS/Dependable distributed system-1793890533236.webp",
+    "immagini DS/blockchain_process.pdf",
+    "immagini DS/beb_vs_rb.pdf",
+    "immagini DS",
     "Dependable Distributed System/Dependable distributed system 1.md",
     "Dependable Distributed System/Dependable distributed system 1 (bella copia).md",
     "Dependable Distributed System/Dependable distributed system 1 (bella copia).pdf",
     "Dependable Distributed System/Dependable distributed system.md",
     "Dependable Distributed System/Dependable distributed system 1.pdf",
-    "Machine Learning.md",
     "Dependable Distributed System/Lezione 1.md",
     "Dependable Distributed System",
     "Senza nome.md",
