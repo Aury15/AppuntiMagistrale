@@ -2239,4 +2239,8 @@ In a distributed system, replication is the process by which multiple copies (ca
 
 #### Replication requirements
 
-To tolerate
+To tolerate process crashes, a logical object must have several physical replicas located at different sites in the network ($x^1, x^2, \dots, x^l$).
+
+* Each replica $x^i$ situated at a site $s$ is managed by a process $p_j$ that is also located at $s$.
+* It is assumed that a process $p_j$ crashes precisely when its corresponding replica $x^i$ fails.
+* **Transparency:** The complexity and the very existence of replication must be completely hidden from client processes.
