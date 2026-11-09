@@ -2187,4 +2187,6 @@ $$
 	- Add the processed messages to the set of delivered messages: `delivered := delivered ∪ decided`. 
 	- Remove the newly delivered messages from the unordered buffer: `unordered := unordered \ decided`. 
 	- Increment the round counter (`round := round + 1`) and reset the flag (`wait := FALSE`) to allow a new consensus round to begin if there are other pending messages.
-
+<mark style="background:#d3f8b6">Example</mark>:
+![[Dependable distributed system 1-1794224727348.webp]]
+![[Dependable distributed system 1-1794224756006.webp]]![[Dependable distributed system 1-1794224783375.webp]]
