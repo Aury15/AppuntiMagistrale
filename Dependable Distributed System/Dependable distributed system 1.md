@@ -2256,4 +2256,6 @@ A **consistency criterion** defines the formal contract between the programmer a
 The primary difference between the various criteria lies in how they define the "most recent" state visible to the client.
 
 ###### Linearizability 
-The linearizability is the strongest consistency criterion 
+The linearizability is the strongest consistency criterion most rigorous. Requires the introduction of two important relations between operations:
+- *Precedence ($<$):** If the response to operation $O_1$ temporally precedes the invocation of $O_2$, then $O_1 < O_2$.
+* **Concurrency ($||$):** If the operations overlap in time.
