@@ -2333,4 +2333,5 @@ The abstraction of a **distributed register** serves to hide this complexity, of
 
 >[!definitions] Register
 >A register is a shared variable accessed by processes through *read* and *write* operations.
+>	-`read()`: return the current value $v$ of the register without modify the con
 
