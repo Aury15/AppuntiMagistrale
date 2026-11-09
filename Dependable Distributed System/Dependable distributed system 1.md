@@ -2378,6 +2378,9 @@ A process fails at some time in between the invocation and the response of the o
 
 #### Register specifications
 
+There are two main levels of guarantee for registers in a concurrent environment:
+
+
 
 
 ![[Dependable distributed system 1-1794231136107.webp]]
