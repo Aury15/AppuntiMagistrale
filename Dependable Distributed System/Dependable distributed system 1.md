@@ -2102,6 +2102,7 @@ Combining the agreement property  ($UA$ vs $NUA$) and the order properties ($\te
 - **Why it works (The Proof):**
 	1. _Agreement on messages (UA):_ Since Uniform Reliable Broadcast (URB) is used, all processes—including those that eventually crash—deliver the exact same set of messages. Consequently, the local `unordered` buffer will contain the identical set of messages on every node. 
 	2. _Strong ordering (SUTO):_ Thanks to Uniform Consensus (UC), every consensus instance ensures that all processes (even faulty ones) decide on the exact same list of messages for each round. Because the messages are ordered using a deterministic rule (`sort`), all nodes process and deliver the messages in the exact same, rigid sequence.
+		![[Dependable distributed system 1-1794225248148.webp]]
 ###### 2. $\text{TO(UA, WUTO)}$
 - **Composition:** Uniform Agreement + Weak Uniform Total Order.
 - **What this means:** The agreement is uniform (all correct processes ultimately receive the same set of messages $M$), and the ordering is weak but uniform: if two processes deliver the same two messages $m$ and $m'$, they do so in the same order. However, due to the "weak" (weak) nature, if a process crashes, the prefixes of the messages delivered before the branch may not match perfectly.
@@ -2118,7 +2119,7 @@ Combining the agreement property  ($UA$ vs $NUA$) and the order properties ($\te
 - **Why it works (The Proof):**
 	1. _Agreement on messages (UA):_ Since URB guarantees that _all_ processes (including faulty ones) receive the same set of messages, the buffer of unordered messages is identical for everyone. This preserves Uniform Agreement regarding the messages delivered. 
 	2. _Loss of uniformity in ordering (WNUTO):_ Because Consensus is Non-Uniform ($\text{NUC}$), it only guarantees agreement on the decision **among correct processes**. Processes destined to crash (_faulty_ nodes) might decide on a slightly different list or stop midway. Consequently, healthy (correct) nodes agree on the final order, whereas faulty nodes might deliver a different sequence just before failing.
-
+   ![[Dependable distributed system 1-1794225224317.webp]]
 ###### 5. $\text{TO(NUA, SUTO)}$
 - **Composition:** Non-Uniform Agreement + Strong Uniform Total Order.
 - **What this means:** The agreement is non-uniform (if a correct process delivers a message, all correct processes do so, but failed processes can have different $M_p$ sets). Conversely, the ordering rule is strong and uniform (SUTO): the order in which messages are passed is strictly constrained for everyone.
