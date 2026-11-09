@@ -2134,6 +2134,11 @@ Combining the agreement property  ($UA$ vs $NUA$) and the order properties ($\te
 ###### 8. $\text{TO(NUA, WNUTO)}$ — The weakest of all
 - **Composition:** Non-Uniform Agreement + Weak Non-Uniform Total Order.
 - **What this means:** This is the minimal Total Order specification. All guarantees (both message agreement and relative ordering) are constrained **exclusively** for correct processes. If a process fails, there are no formal restrictions on what messages it saw or in what order it printed them before the crash; the important thing is that the "healthy" part of the distributed system sees things consistently.
+- **Assumption:** Both underlying modules are Non-Uniform (NURB and NUC).
+	- **Result:** The system defaults to the weaker specification, characterized by **Non-Uniform Agreement** ($\text{NUA}$) and **Weak Non-Uniform Total Order** ($\text{WNUTO}$).
+- **Why it works (The Proof):**
+	1. _Agreement limited to correct processes (NUA):_ Since the Reliable Broadcast is non-uniform ($\text{NURB}$), only *correct* processes are guaranteed to deliver the same set of messages. Faulty processes may deliver different or incomplete sets of messages. 
+	2. _Weak, non-uniform ordering (WNUTO):_ The consensus mechanism is also non-uniform ($\text{NUC}$). Consequently, only the correct processes in the network agree on the same ordered sequence of messages, whereas nodes that fail may exhibit discrepancies—both in the messages they perceive and in the order of those messages—prior to their crash.
 
 ![[Dependable distributed system 1-1794223719991.webp]]
 
