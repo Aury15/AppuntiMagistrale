@@ -2097,6 +2097,11 @@ Combining the agreement property  ($UA$ vs $NUA$) and the order properties ($\te
 ###### 1. $\text{TO(UA, SUTO)}$ :
 - **Composition:** Uniform Agreement + Strong Uniform Total Order.
 - **What it means:** This is the most rigid and secure specification. All processes (even those that will later crash) agree on exactly the same set of delivered messages (UA) and receive them in the exact same sequential order and with the same prefix (SUTO). No process will ever see a divergence, not even before it dies.
+- **Assumption:** Both underlying modules are uniform (Uniform Reliable Broadcast and Uniform Consensus).
+- **Result:** This yields the strongest possible specification: **Uniform Agreement** and **Strong Uniform Total Order**.
+- **Why it works (The Proof):**
+	1. _Agreement on messages (UA):_ Since Uniform Reliable Broadcast (URB) is used, all processes—including those that eventually crash—deliver the exact same set of messages. Consequently, the local `unordered` buffer will contain the identical set of messages on every node. 
+	2. _Strong ordering (SUTO):_ Thanks to Uniform Consensus (UC), every consensus instance ensures that all processes (even faulty ones) decide on the exact same list of messages for each round. Because the messages are ordered using a deterministic rule (`sort`), all nodes process and deliver the messages in the exact same, rigid sequence.
 ###### 2. $\text{TO(UA, WUTO)}$
 - **Composition:** Uniform Agreement + Weak Uniform Total Order.
 - **What this means:** The agreement is uniform (all correct processes ultimately receive the same set of messages $M$), and the ordering is weak but uniform: if two processes deliver the same two messages $m$ and $m'$, they do so in the same order. However, due to the "weak" (weak) nature, if a process crashes, the prefixes of the messages delivered before the branch may not match perfectly.
