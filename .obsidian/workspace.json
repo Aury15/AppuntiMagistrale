@@ -4,11 +4,31 @@
     "type": "split",
     "children": [
       {
-        "id": "ba53a16cb7c31c12",
+        "id": "9af41ffbff27d806",
         "type": "tabs",
         "children": [
           {
-            "id": "2b3e495e43fb7f12",
+            "id": "f1f93865e678db21",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Dependable Distributed System/lectures_16_17_distributed_registers.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "lectures_16_17_distributed_registers"
+            }
+          }
+        ]
+      },
+      {
+        "id": "f613abda85c70b8c",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "20fbfe19f3c78368",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -83,7 +103,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "f6cc322df633c375",
@@ -189,21 +210,20 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "e085b63d3534c645",
+  "active": "20fbfe19f3c78368",
   "lastOpenFiles": [
-    "Dependable distributed system 1-1794231136107.webp",
-    "Dependable distributed system 1-1794230723357.webp",
-    "Dependable distributed system 1-1794230692806.webp",
-    "Dependable distributed system 1-1794230570175.webp",
-    "Dependable distributed system 1-1794230374773.webp",
-    "Dependable distributed system 1-1794230365319.webp",
-    "immagini DS/Dependable distributed system 1-1794230358374.webp",
-    "immagini DS/Dependable distributed system 1-1794230236002.webp",
     "Dependable Distributed System/lectures_16_17_distributed_registers.md",
     "Dependable Distributed System/Dependable distributed system 1.md",
+    "immagini DS/Dependable distributed system 1-1794231136107.webp",
+    "immagini DS/Dependable distributed system 1-1794230723357.webp",
+    "immagini DS/Dependable distributed system 1-1794230692806.webp",
+    "immagini DS/Dependable distributed system 1-1794230570175.webp",
+    "immagini DS/Dependable distributed system 1-1794230374773.webp",
+    "immagini DS/Dependable distributed system 1-1794230365319.webp",
+    "immagini DS/Dependable distributed system 1-1794230358374.webp",
+    "immagini DS/Dependable distributed system 1-1794230236002.webp",
     "immagini DS/Dependable distributed system 1-1794229820988.webp",
     "immagini DS/Dependable distributed system 1-1794229815774.webp",
-    "Dependable distributed system 1-1794229790730.webp",
     "Dependable Distributed System/lecture_14_software_replication (1).md",
     "Dependable Distributed System/lecture_14_software_replication.md",
     "Dependable Distributed System/Dependable distributed system 1 (bella copia).pdf",

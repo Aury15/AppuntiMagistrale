@@ -2376,7 +2376,7 @@ The semantics depends on the assumptions on the executions:
 A process fails at some time in between the invocation and the response of the operation
 
 
-
+#### Register specifications
 
 
 
