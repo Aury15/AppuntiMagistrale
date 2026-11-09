@@ -2352,8 +2352,11 @@ Each operation is delimited by two instantaneous, indivisible events: the **Invo
 
 #### Semantic evolution
 
-1. **Serial system**
-
+1. **Serial system**: 
+	- _Assumption:_ Pure serial access (a process does not invoke an operation if another process has initiated one that has not yet completed). No crashes. 
+	- _Liveness:_ Every operation always terminates. 
+	- _Safety:_ Every read operation returns the most recently written value in chronological order.
+2. 
 
 
 
