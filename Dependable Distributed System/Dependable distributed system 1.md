@@ -2356,7 +2356,8 @@ Each operation is delimited by two instantaneous, indivisible events: the **Invo
 	- _Assumption:_ Pure serial access (a process does not invoke an operation if another process has initiated one that has not yet completed). No crashes. 
 	- _Liveness:_ Every operation always terminates. 
 	- _Safety:_ Every read operation returns the most recently written value in chronological order.
-2. 
+		![[Dependable distributed system 1-1794230236002.webp]]
+2. **Concurrency**
 
 
 
