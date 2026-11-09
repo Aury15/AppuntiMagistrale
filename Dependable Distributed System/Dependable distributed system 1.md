@@ -2382,7 +2382,8 @@ There are two main levels of guarantee for registers in a concurrent environment
 - **Regular register $(1, N)$**:
 	- *Termination*. If a correct process invokes an operation, then the operation eventually receives the corresponding confirmation.
 	- *Validity*.
-		- A *non-concurrent* read operation with returns the last value written or the value concurrently written.
-
+		- A read operation that is *not* concurrent with any write returns the last written value. 
+		- A read operation that is *concurrent* with one or more writes may return the last written value *or* one of the values ​​written concurrently.
+-
 
 ![[Dependable distributed system 1-1794231136107.webp]]
