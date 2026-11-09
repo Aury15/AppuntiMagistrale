@@ -2223,4 +2223,5 @@ $$
 In a distributed system, replication is the process by which multiple copies (called replicas) of the same logical item, piece of data, or service are created and maintained across different computing nodes (sites).  The principal **goal** of the replication is to ensure the high availability of a service (called object) despite nodes failures. 
 
 >[!Definitions] Availability 
->Let $p$ be the probability of failure of a single item $O$. The availability of the single item is given by: $Availability = 1 - p$
+>Let $p$ be the probability of failure of a single item $O$. The availability of the single item is given by: $Availability = 1 - p$. 
+>If we replicate the item $O$ on $n$ independent nodes assuming that the failures are independent 
