@@ -2228,4 +2228,15 @@ In a distributed system, replication is the process by which multiple copies (ca
 
 #### System model
 
-We have a set of processes: client and server connected of each other with point-to-point *perfect* channel. Use a cra
+**Set of processes:** Clients and servers connected via **perfect point-to-point channels** (no message loss or corruption).
+* **Failure model:** *Crash fault model* (processes may fail by crashing, without sending corrupted or malicious messages).
+* **Objects and operations:** Servers manage a set of objects $X$. Each object has its own state and is accessible through a set of operations. 
+* An operation performed by a process $p_i$ on an object $x$ consists of an **Invocation/Response** pair. 
+* **Invocation:** Denoted as $[x \circ p(\text{arg}) p_i]$, where $\text{arg}$ represents the operation arguments. 
+* **Response:** Denoted as $[x \text{ ok}(\text{res}) p_i]$, where $\text{res}$ is the returned result. 
+* **Complete pair:** $[x \circ p(\text{arg}) / \text{ok}(\text{res}) p_i]$. 
+* **Client blocking:** After issuing an invocation, the client process remains blocked until it receives the corresponding response.
+
+#### Replication requirements
+
+To tolerate
