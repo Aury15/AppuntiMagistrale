@@ -2269,3 +2269,9 @@ The linearizability is the strongest consistency criterion most rigorous. Requir
 To ensure linearizability across replicas, the system must satisfy two fundamental properties:
 * **Atomicity:** If a replica of an object $x$ executes an invocation, *every* correct replica of $x$ must execute the same invocation.
 * **Ordering:** If two replicas both execute two invocations, they must execute them in the **exact same order**.
+
+<mark style="background:#d3f8b6">Example: simple variables </mark>
+![[Dependable distributed system 1-1794227050700.webp]]
+
+<mark style="background:#d3f8b6">Example: FIFO queue</mark>
+
