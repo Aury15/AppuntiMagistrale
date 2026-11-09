@@ -1,0 +1,115 @@
+/*
+  Nome Tema: Professional Blue & Celeste Finissimo (Con Ordinamento e Immagini)
+  Descrizione: Tema scuro professionale con testo giustificato e gestione pulita delle immagini.
+*/
+
+body {
+  /* Definizione della Palette cromatica */
+  --background-primary: #0b132b;       /* Sfondo principale (Blu notte finissimo) */
+  --background-primary-alt: #121c38;   /* Sfondo alternativo leggermente più chiaro */
+  --background-secondary: #1c2541;     /* Sfondo sidebar e pannelli */
+  --background-secondary-alt: #232d4d; /* Sfondo hover nei pannelli */
+  
+  --text-normal: #e0fbfc;              /* Testo principale (Bianco azzurrato) */
+  --text-muted: #8d99ae;               /* Testo secondario / descrizioni */
+  --text-faint: #4a5568;               /* Testo molto sfumato */
+  
+  --interactive-accent: #48cae4;       /* Celeste brillante per accenti */
+  --interactive-accent-hover: #00b4d8; /* Hover celeste */
+  
+  --text-accent: #48cae4;              /* Colore dei link */
+  --text-accent-hover: #90e0ef;        /* Hover dei link */
+
+  --accent-h: 191;
+  --accent-s: 76%;
+  --accent-l: 59%;
+
+  --font-ui-size: 14px;
+  --divider-color: #1f305e;            /* Colore dei separatori sottili */
+}
+
+/* 1. ORDINAMENTO E TESTO GIUSTIFICATO */
+.markdown-rendered p {
+  text-align: justify;                 /* Allineamento pulito a blocchi */
+  line-height: 1.6;                    /* Spaziatura ideale tra le righe per la lettura */
+  margin-bottom: 1em;
+}
+
+/* 2. GESTIONE PULITA DELLE IMMAGINI (Dritte, centrate e non giganti) */
+.markdown-rendered img {
+  display: block;
+  margin: 1.5em auto;                  /* Centra automaticamente l'immagine nella pagina */
+  max-width: 650px;                    /* Impedisce che l'immagine diventi troppo grande */
+  width: 100%;                         /* Adattabile su schermi più piccoli */
+  height: auto;                        /* Mantiene le proporzioni originali (evita distorsioni) */
+  border-radius: 8px;                  /* Angoli delicatamente arrotondati */
+  border: 1px solid #1f305e;           /* Cornice sottile in tinta con il tema */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Leggera ombra per staccarla dallo sfondo */
+}
+
+/* Stile raffinato per le intestazioni (H1-H6) */
+.markdown-rendered h1 {
+  color: #48cae4;
+  border-bottom: 2px solid #1d3557;
+  padding-bottom: 0.3em;
+}
+
+.markdown-rendered h2 {
+  color: #00b4d8;
+}
+
+.markdown-rendered h3 {
+  color: #0077b6;
+}
+
+/* Evidenziazioni (Mark) con tonalità celeste/bluet soft */
+mark {
+  background-color: rgba(72, 202, 228, 0.2);
+  color: #90e0ef;
+  padding: 0.1em 0.3em;
+  border-radius: 4px;
+}
+
+/* Blocchi di citazione (Callout / Blockquote) eleganti */
+blockquote {
+  border-left: 4px solid #48cae4;
+  background-color: rgba(28, 37, 65, 0.5);
+  color: #caf0f8;
+  padding: 0.5em 1em;
+  border-radius: 0 6px 6px 0;
+}
+
+/* Codice in linea raffinato */
+code {
+  background-color: #121c38;
+  color: #90e0ef;
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* Tabelle professionali e pulite */
+table th {
+  background-color: #1c2541;
+  color: #48cae4;
+  border-bottom: 2px solid #0077b6;
+}
+
+table td {
+  border-bottom: 1px solid #1f305e;
+}
+
+/* Tag (etichette #) con stile pillola bluet/celeste */
+.tag {
+  background-color: rgba(0, 119, 182, 0.25);
+  color: #48cae4;
+  border: 1px solid rgba(72, 202, 228, 0.3);
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 0.85em;
+}
+
+.tag:hover {
+  background-color: rgba(72, 202, 228, 0.35);
+  color: #ffffff;
+}
