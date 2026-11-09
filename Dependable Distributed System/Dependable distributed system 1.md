@@ -2220,3 +2220,4 @@ $$
 | **Non-Uniform (NURB)** | **Non-Uniform (NUC)** | **$\text{TO(NUA, WNUTO)}$** | Guarantees apply only to correct processes; faulty processes may diverge on everything                        |
 
 ## Software replication
+In a distributed system, replication is the process by which multiple copies (called replicas) of the same logical object, piece of data, or service are created and maintained across different computing nodes (sites). 
