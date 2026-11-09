@@ -2189,4 +2189,5 @@ $$
 	- Increment the round counter (`round := round + 1`) and reset the flag (`wait := FALSE`) to allow a new consensus round to begin if there are other pending messages.
 <mark style="background:#d3f8b6">Example</mark>:
 ![[Dependable distributed system 1-1794224727348.webp]]
-![[Dependable distributed system 1-1794224756006.webp]]![[Dependable distributed system 1-1794224783375.webp]]
+![[Dependable distributed system 1-1794224756006.webp]]![[Dependable distributed system 1-1794224783375.webp]]![[Dependable distributed system 1-1794224799687.webp]]
+![[Dependable distributed system 1-1794224817041.webp]]
