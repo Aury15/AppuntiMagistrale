@@ -2351,16 +2351,15 @@ Each operation is delimited by two instantaneous, indivisible events: the **Invo
 * **Concurrency ($\vert\vert$):** If the time intervals of two operations overlap—either partially or entirely—and no precedence relationship can be defined, the operations are said to be concurrent.
 
 #### Semantic evolution
-
+The semantics depends on the assumptions on the executions:
 1. **Serial system**: 
 	- _Assumption:_ Pure serial access (a process does not invoke an operation if another process has initiated one that has not yet completed). No crashes. 
 	- _Liveness:_ Every operation always terminates. 
 	- _Safety:_ Every read operation returns the most recently written value in chronological order.
-		![[Dependable distributed system 1-1794230236002.webp]]
+		![[Dependable distributed system 1-1794230236002.webp|574]]
 2. **Concurrency**:
 	- *Assumptions*: several processes can access the register, concurrent access, no failures.
-		![[Dependable distributed system 1-1794230358374.webp]]
-
+		![[Dependable distributed system 1-1794230358374.webp|608]]
 3. **Failures:**
 	- *Assumptions*: several processes can access the register, serial access, processes can fail by crashing, i.e. after some point in time they stop to run their algorithm forever
 		![[Dependable distributed system 1-1794230570175.webp|503]]
