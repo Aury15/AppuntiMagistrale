@@ -2364,7 +2364,13 @@ Each operation is delimited by two instantaneous, indivisible events: the **Invo
 3. **Failures:**
 	- *Assumptions*: several processes can access the register, serial access, processes can fail by crashing, i.e. after some point in time they stop to run their algorithm forever
 		![[Dependable distributed system 1-1794230570175.webp|503]]
-4. **Failure and concurrency:** ![[Dependable distributed system 1-1794230692806.webp]]
+4. **Failure and concurrency:** A process can invokes a write operation and then crash before the corresponding response event is generated. The write operation could have taken place or not.
+		![[Dependable distributed system 1-1794230723357.webp]]
+
+
+>[!Important]
+>Register semantics: a read may return both: ◦ The value written by the last write operation which completes ◦ The value given as input to the last write operation, even though this operation will fail
+
 >[!definitions] Failed operation
 A process fails at some time in between the invocation and the response of the operation
 	     
