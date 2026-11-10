@@ -2519,4 +2519,6 @@ Performance is evaluated based on the number of network messages exchanged:
 - **Read:** Requests **0 messages** over the network. Since each node holds an up-to-date local copy of the ledger, the operation is resolved entirely locally.
 
 > [!Warning] Problem of the algorithm
-> The algorithm does not ensure validity if the failure detector is not perfect. 
+> The algorithm does not ensure validity if the failure detector is not perfect. The following scenario could happen: ![[Dependable distributed system 1-1794322193528.webp]]
+> $P_1$ invokes write(6) and
+>  
