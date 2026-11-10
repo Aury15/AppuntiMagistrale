@@ -2682,10 +2682,8 @@ The goal of this algorithm is to upgrade consistency: starting from an underlyin
 	- **`Uses (1, N)-RegularRegister, instance onrr`**: Uses a regular register $(1,N)$ as the underlying building block.
 
 2. **Initialization** (`Init`)
-
 	Code Snippet
-	
-	```
+	$$
 	(ts, val) := (0, \bot); wts := 0;
 	```
 	- `ts`: The timestamp associated with the current value (initialized to 0).
