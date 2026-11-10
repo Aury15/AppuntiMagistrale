@@ -2471,40 +2471,32 @@ upon event < onrr, Read > do \\
 $$
 	- **Read-One**: When a read request (`Read`) arrives, the process **does not send any messages over the network**. It simply reads the value stored in its local variable `val` and immediately returns the result (`ReadReturn | val`). Reads are therefore local and have no communication cost.
 
-5. **Operazione di Scrittura (`Write`)**
+5. **Write Operation (`Write`)**
 $$
 upon event < onrr, Write \mid v > do \\
-    \quad \quad trigger < beb, Broadcast \mid [WRITE, v] >;
+\quad \quad trigger < beb, Broadcast \mid [WRITE, v] >;
 $$
+	- When the writer wants to write a value $v$, it uses Best-Effort Broadcast (`beb`) to send a `[WRITE, v]` message to all nodes on the network.
 
-- Quando lo scrittore vuole scrivere un valore $v$, usa il Best-Effort Broadcast (`beb`) per inviare un messaggio `[WRITE, v]` a tutti i nodi della rete.
-    
+6. **Receiving Writes on Nodes (`beb, Deliver`)**
 
-#### F. Ricezione della Scrittura sui Nodi (`beb, Deliver`)
+$$
+upon event < beb, Deliver \mid q, [WRITE, v] > do \\
+val := v;\\ 
+trigger < pl, Send \mid q, ACK >; \\
+$$
+	- When any process receives the write message from node $q$, it immediately updates its local copy (`val := v`) and sends an acknowledgement (`ACK`) directly to the writer using point-to-point links (`pl`).
 
-Snippet di codice
+7. **Raccolta degli ACK e Chiusura della Scrittura (`writeset`)**
 
-```
-upon event < beb, Deliver \mid q, [WRITE, v] > do
-    val := v;
-    trigger < pl, Send \mid q, ACK >;
-```
-
-- Quando un qualsiasi processo riceve il messaggio di scrittura dal nodo $q$, aggiorna immediatamente la sua copia locale (`val := v`) e spedisce indietro un messaggio di riscontro (`ACK`) direttamente allo scrittore usando i link point-to-point (`pl`).
-    
-
-#### G. Raccolta degli ACK e Chiusura della Scrittura (`writeset`)
-
-Snippet di codice
-
-```
-upon event < pl, Deliver \mid p, ACK > do
-    writeset := writeset \cup \{p\};
-
-upon event correct \subseteq writeset do
-    writeset := \emptyset;
+$$
+upon event < pl, Deliver \mid p, ACK > do \\
+    writeset := writeset \cup \{p\};\\ 
+\\
+upon event correct \subseteq writeset do\\
+    writeset := \emptyset;\\
     trigger < onrr, WriteReturn >;
-```
+$$
 
 - **Write-All**: Man mano che arrivano gli `ACK` dai vari processi $p$, questi vengono aggiunti al `writeset`.
     
