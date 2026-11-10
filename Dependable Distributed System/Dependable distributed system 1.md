@@ -3008,3 +3008,7 @@ A differenza dei modelli basati su **Crash-Stop** o **Crash-Failure**, nel **Mod
     - Ritardare deliberatamente le consegne.
     - Alterare il contenuto dei messaggi in transito.
 2. **Agire attivamente per sabotare** il sistema, impedendo il raggiungimento degli obiettivi dell'algoritmo (es. impedire il consenso o la coerenza).
+
+As in the crash failure model, we distinguish between faulty and correct processes.
+
+>
