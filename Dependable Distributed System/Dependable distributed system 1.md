@@ -2910,3 +2910,10 @@ $$
 Unlike the regular version (where reading was costless), in the atomic RIWA implementation, the cost is also shifted to reading, due to the need to enforce the value:
 - **Write:** Requires a maximum of $2N$ messages.** The writer broadcasts the value to all nodes ($N$ messages) and receives ACKs from all valid processes ($N$ messages).
 - **Read:** Also requires a maximum of $2N$ messages. Because of the _Read-Impose_ mechanism, the read also needs to broadcast to all nodes to force the timestamp update ($N$ messages) and collect all confirmation ACKs ($N$ messages).
+
+##### Read-Impose Write-Majority Atomic register fail-silent
+Nel modello _Fail-Stop_ (visto prima con il RIWA), potevamo permetterci di imporre la scrittura su _tutti_ i nodi vivi (`correct`), perché avevamo un detector perfetto che ci diceva esattamente chi fosse vivo. Nel mondo reale **Fail-Silent**, non possiamo sapere con certezza se un nodo è morto o solo lento. Di conseguenza:
+
+- Non possiamo pretendere risposte da tutti i nodi.
+    
+- Ci affidiamo alla **maggioranza** ($> N/2$).
