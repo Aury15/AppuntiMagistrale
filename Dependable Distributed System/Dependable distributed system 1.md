@@ -2394,7 +2394,7 @@ There are two main levels of guarantee for registers in a concurrent environment
 
 ![[Dependable distributed system 1-1794232190035.webp]]
 
-###### Regular register: Read-One Write-ALL (ROWA) algorithm
+###### Regular register: Read-One Write-ALL (ROWA) algorithm FAIL-STOP
 What does "Perfect" mean? It has two absolute formal guarantees:
 1. *Strong completeness*: if a process die, every healthy process knows that;
 2. *Strong accuracy*: if the detector say that a process is died, that process is died. 
@@ -2522,4 +2522,5 @@ Performance is evaluated based on the number of network messages exchanged:
 > The algorithm does not ensure validity if the failure detector is not perfect. The following scenario could happen: ![[Dependable distributed system 1-1794322193528.webp]]
 > $P_1$ invokes write(6) and then falsely suspects $p_2$ . Thus, $p_1$ completes the write operation without waiting for the ack of $p_2$, i.e. without being sure that the value 6 has been written in the local copy of the register at $p_2$. 
 
-###### 
+###### Fail-silent algorithm: majority voting regular register
+While in the Fail-Stop model we had a “superpower” (the perfect fault detector $\mathcal{P}$ that told us who was dead), here we enter the real world of asynchronous systems.
