@@ -2731,3 +2731,5 @@ To demonstrate that the algorithm correctly implements an atomic register $(1,1)
 - **Write:** Requests a single write operation to the underlying regular register $(1,N)$.
 - **Read:** Requests a single read operation to the underlying regular register $(1,N)$.
 - **IMPORTANT NOTE:** From a network message perspective, **there are no additional messages** beyond those already provided by a regular register implementation $(1,1)$. Timestamp-based filtering occurs entirely locally on the client/reader, with no network overhead.
+
+![[Dependable distributed system 1-1794325035328.webp]]![[Dependable distributed system 1-1794325048225.webp]]
