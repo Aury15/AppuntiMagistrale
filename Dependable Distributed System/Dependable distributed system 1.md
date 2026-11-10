@@ -2635,9 +2635,9 @@ Unlike ROWA (where reading was costless and writing was costly), here the costs 
 ##### Implementation of atomic register (1, $N$)
 To build an Atomic Register $(1,N)$ (the maximum level of consistency, or linearizability).
 The construction occurs in two distinct phases:
-1. Phase 1: Starting from a regular register $(1,N)$, we build an atomic register $(1,1)$ (a single writer, a single reader).
-2. Phase 2: Using a set of atomic registers $(1,1)$, we finally build the complete atomic register $(1,N)$ (a single writer, $N$ readers).
-Let's analyze Phase 1 in detail (from Regular $(1,N)$ to Atomic $(1,1)$):
+1. **Phase 1**: Starting from a regular register $(1,N)$, we build an atomic register $(1,1)$ (a single writer, a single reader).
+2. **Phase 2**: Using a set of atomic registers $(1,1)$, we finally build the complete atomic register $(1,N)$ (a single writer, $N$ readers).
+Let's analyze *Phase 1* in detail (from Regular $(1,N)$ to Atomic $(1,1)$):
 
 **The Key Idea**:
 - **The Context**: We have a process $p_1$ (the writer) and a process $p_2$ (the reader), and we want to implement an atomic register $(1,1)$ between them.
