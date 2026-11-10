@@ -2966,25 +2966,50 @@ $$
 This algorithm combines two key concepts:
 1. **Write-Majority**: Since we can't trust all nodes and don't know which ones are dead or slow, we only need to collect responses from a strict majority of nodes ($> N/2$) to consider an operation valid.
 2. **Read-Impose**: When a reader reads, it doesn't just passively observe, but forces a majority of nodes to update with the freshest value found. This prevents future readers from encountering stale data, ensuring atomicity (linearizability).
+ 
+**1. When a process wants to read from the register:**
+- **Phase 1 (Polling):** The reader increments the read identifier (`rid := rid + 1`) to avoid confusion with old or concurrent reads, clears the list, and broadcasts the request (`[READ, rid]`) to all nodes.
+- **Phase 2 (Node Response):** Each node receives the request and responds privately with its current state via a `[VALUE, r, ts, val]` message.
+- **Phase 3 (Collection, Selection, and Enforcement):** The reader collects the responses in the `readlist`. As soon as the number of responses exceeds the majority ($\#(\text{readlist}) > N/2$):
+	- Selects the value with the highest timestamp using `highest(readlist)` (`maxts, readval`).
+	- **The "Read-Impose":** Immediately executes a new `[WRITE, rid, maxts, readval]` broadcast to force nodes to update with this value.
 
- **1. Quando un processo vuole leggere dal registro:**
-- **Fase 1 (Polling):** Il lettore incrementa l'identificativo di lettura (`rid := rid + 1`) per evitare confusione con letture vecchie o concorrenti, azzera la lista e fa un broadcast di richiesta (`[READ, rid]`) a tutti i nodi.
-- **Fase 2 (Risposta dei nodi):** Ciascun nodo riceve la richiesta e risponde privatamente con il proprio stato attuale tramite un messaggio `[VALUE, r, ts, val]`.
-- **Fase 3 (Raccolta, Selezione e Imposizione):** Il lettore raccoglie le risposte nella `readlist`. Appena il numero di risposte supera la maggioranza ($\#(\text{readlist}) > N/2$):
-    - Seleziona il valore con il timestamp più alto usando `highest(readlist)` (`maxts, readval`).
-    - **Il "Read-Impose":** Esegue subito un nuovo broadcast `[WRITE, rid, maxts, readval]` per forzare i nodi ad aggiornarsi con questo valore.
+**2. The Write Operation (`onar, Write \mid v`) and ACK Management**
+When the writer (or the reader in the write-back phase) sends a value:
+- Increments `rid` and the write timestamp `wts := wts + 1`, sending a broadcast `[WRITE, rid, wts, v]`.
+- **Checking Nodes:** When a node receives the write message, it checks whether the incoming timestamp is more recent than its own (`ts' > ts`). If so, it updates its local memory `(ts, val) := (ts', v')` and returns an acknowledgment `[ACK, rid]`.
+- **Termination of the Operation (`acks > N/2`):** The process waits to receive ACKs from a **majority** of nodes. As soon as the threshold is exceeded:
+	- If the current operation was a read (`reading = TRUE`), return the value to the client with `ReadReturn | readval`.
+	- If it was a write, unblock the application with `WriteReturn`.
+
+###### Correttezza (_Correctness_)
+
+- **Termination (Terminazione): Deriva direttamente dalle stesse proprietà del registro regolare _Majority Voting_. Poiché l'algoritmo si basa sull'ipotesi che esista una **maggioranza di processi corretti** e utilizza primitive di comunicazione affidabili, le operazioni di lettura e scrittura non si bloccano indefinitamente, in quanto basta l'attesa di riscontri da parte della maggioranza ($> N/2$) per completarle.
         
-
-#### 2. L'Operazione di Scrittura (`onar, Write \mid v`) e Gestione ACK
-
-Quando lo scrittore (o il lettore nella fase di write-back) invia un valore:
-
-- Incrementa `rid` e il timestamp di scrittura `wts := wts + 1`, inviando un broadcast `[WRITE, rid, wts, v]`.
+- **Validity (Validità):**
     
-- **Controllo sui nodi:** Quando un nodo riceve il messaggio di scrittura, controlla se il timestamp in arrivo è più recente del proprio (`ts' > ts`). In caso affermativo, aggiorna la sua memoria locale `(ts, val) := (ts', v')` e restituisce un riscontro `[ACK, rid]`.
-    
-- **Chiusura dell'operazione (`acks > N/2`):** Il processo attende di ricevere gli `ACK` da una **maggioranza** di nodi. Appena la soglia è superata:
-    
-    - Se l'operazione in corso era una lettura (`reading = TRUE`), restituisce il valore al client con `ReadReturn | readval`.
+    - Ereditata anch'essa dal registro regolare _Majority Voting_: ogni valore restituito o scritto è semanticamente valido e appartiene all'insieme dei valori immessi nel sistema dallo scrittore.
         
-    - Se era una scrittura, sblocca l'applicazione con `WriteReturn`.
+- **Ordering (Ordinamento / Atomicità):**
+    
+    - Questa è la proprietà chiave che eleva l'algoritmo ad _atomico_. Deriva dalla combinazione di due fattori:
+        
+        1. Il meccanismo di **Read-Impose**, che obbliga il lettore a propagare e imporre il valore appena letto a una maggioranza di processi prima di ritornarlo al client.
+            
+        2. La **proprietà di intersezione dei quorum (maggioranze)**, per cui qualsiasi operazione futura interrogherà una maggioranza che condivide almeno un nodo con quella precedente, impedendo categoricamente a un lettore di visualizzare una versione obsoleta (il tempo non torna mai indietro).
+            
+
+### 2. Prestazioni (_Performance_)
+
+Nel modello _Fail-Silent_ a maggioranza, la garanzia dell'atomicità richiede un costo di messaggi più elevato, soprattutto per l'operazione di lettura:
+
+- **Write (Scrittura):** Richiede al **massimo $2N$ messaggi**. Lo scrittore esegue un Best-Effort Broadcast a tutti i nodi ($N$ messaggi) e raccoglie i riscontri ACK dalla maggioranza (al più $N$ messaggi di risposta), per un totale di $2N$.
+    
+- **Read (Lettura):** Richiede al **massimo $4N$ messaggi**. Il costo è maggiore perché la lettura si compone di _due fasi distinte_, ciascuna basata su uno scambio a maggioranza:
+    
+    1. **Fase di polling (lettura):** Broadcast della richiesta di lettura ($N$ messaggi) + ricezione dei valori dai nodi ($N$ messaggi).
+        
+    2. **Fase di impose (scrittura/riparazione):** Broadcast del valore più fresco trovato per aggiornare la rete ($N$ messaggi) + ricezione degli ACK di conferma ($N$ messaggi).
+        
+    
+    - Totale complessivo: $N + N + N + N = 4N$ messaggi.
