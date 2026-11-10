@@ -2536,8 +2536,9 @@ Communication primitives:
 - Best-effort broadcast.
 
 **Idea of the algorithm:**
--  Each process locally stores a copy of the current value of the register
--  Each written value is univocally associated to a timestamp
-- The writer and the reader processes use a set of witness processes, to track the last value written
--  Quorum: the intersection of any two sets of witness processes is not empty
--  “*Majority Voting*”: each set is constituted by a majority of processes
+-  Each process locally stores a copy of the current value of the register;
+-  Each written value is univocally associated to a timestamp;
+- The writer and the reader processes use a set of witness processes, to track the last value written;
+-  Quorum: the intersection of any two sets of witness processes is not empty;
+-  “*Majority Voting*”: each set is constituted by a majority of processes.
+
