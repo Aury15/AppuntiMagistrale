@@ -2808,5 +2808,122 @@ As we've seen, in a regular ledger, if there's a concurrent read and write, the 
 3. **The result**: This "forced write" phase (impose) ensures that the most recent value propagates instantaneously across the network. No subsequent reader will ever again encounter an obsolete version.
 
 $$
-
+\begin{aligned}
+&\textbf{Algorithm 4.5:} \text{ Read-Impose Write-All Atomic Register} \\
+&\textbf{Implements:} \\
+&\quad (1, N)\text{-AtomicRegister, \textbf{instance } } onar. \\
+&\textbf{Uses:} \\
+&\quad \text{BestEffortBroadcast, \textbf{instance } } beb; \\
+&\quad \text{PerfectPointToPointLinks, \textbf{instance } } pl; \\
+&\quad \text{PerfectFailureDetector, \textbf{instance } } \mathcal{P}. \\
+& \\
+&\textbf{upon event } \langle onar, Init \rangle \textbf{ do} \\
+&\quad (ts, val) := (0, \bot); \\
+&\quad correct := \Pi; \\
+&\quad writeset := \emptyset; \\
+&\quad readval := \bot; \\
+&\quad reading := \text{FALSE}; \\
+& \\
+&\textbf{upon event } \langle \mathcal{P}, Crash \mid p \rangle \textbf{ do} \\
+&\quad correct := correct \setminus \{p\}; \\
+& \\
+&\textbf{upon event } \langle onar, Read \rangle \textbf{ do} \\
+&\quad reading := \text{TRUE}; \\
+&\quad readval := val; \\
+&\quad \textbf{trigger } \langle beb, Broadcast \mid [\textsc{Write}, ts, val] \rangle; \\
+& \\
+&\textbf{upon event } \langle onar, Write \mid v \rangle \textbf{ do} \\
+&\quad \textbf{trigger } \langle beb, Broadcast \mid [\textsc{Write}, ts + 1, v] \rangle; \\
+& \\
+&\textbf{upon event } \langle beb, Deliver \mid p, [\textsc{Write}, ts', v'] \rangle \textbf{ do} \\
+&\quad \textbf{if } ts' > ts \textbf{ then} \\
+&\quad\quad (ts, val) := (ts', v'); \\
+&\quad \textbf{trigger } \langle pl, Send \mid p, [\textsc{Ack}] \rangle; \\
+& \\
+&\textbf{upon event } \langle pl, Deliver \mid p, [\textsc{Ack}] \rangle \textbf{ do} \\
+&\quad writeset := writeset \cup \{p\}; \\
+& \\
+&\textbf{upon event } correct \subseteq writeset \textbf{ do} \\
+&\quad writeset := \emptyset; \\
+&\quad \textbf{if } reading = \text{TRUE} \textbf{ then} \\
+&\quad\quad reading := \text{FALSE}; \\
+&\quad\quad \textbf{trigger } \langle onar, ReadReturn \mid readval \rangle; \\
+&\quad \textbf{else} \\
+&\quad\quad \textbf{trigger } \langle onar, WriteReturn \rangle;
+\end{aligned}
 $$
+
+1. Inizializzazione e Variabili
+	- `(ts, val) := (0, \bot)`: Memorizzano il timestamp e il valore corrente.
+	    
+	- `reading := \text{FALSE}`: Un flag booleano che serve a capire se il processo sta eseguendo un'operazione di lettura (`TRUE`) o di scrittura (`FALSE`).
+	    
+	- `readval`: Salva temporaneamente il valore che il lettore ha intenzione di restituire.
+    
+
+#### 2. L'Operazione di Lettura (`onar, Read`)
+
+Quando arriva una richiesta di lettura:
+
+Snippet di codice
+
+```
+reading := \text{TRUE};
+readval := val;
+trigger \langle beb, Broadcast \mid [\textsc{Write}, ts, val] \rangle;
+```
+
+- Il lettore attiva il flag `reading` e si salva localmente il valore attuale (`readval := val`).
+    
+- Subito dopo, **fa un Broadcast a tutti i nodi** inviando il timestamp e il valore che possiede (`[\textsc{Write}, ts, val]`). Questa è la fase di _imposizione_: forza la rete ad allinearsi sul suo valore.
+    
+
+#### 3. L'Operazione di Scrittura (`onar, Write \mid v`)
+
+Quando arriva una richiesta di scrittura di un nuovo valore $v$:
+
+Snippet di codice
+
+```
+trigger \langle beb, Broadcast \mid [\textsc{Write}, ts + 1, v] \rangle;
+```
+
+- Lo scrittore incrementa il timestamp di 1 (`ts + 1`) per renderlo più recente di qualsiasi altro, e fa un broadcast a tutti i nodi con il nuovo valore.
+    
+
+#### 4. La Ricezione sui Nodi (`beb, Deliver`)
+
+Quando un qualsiasi processo riceve un messaggio di scrittura/imposizione `[\textsc{Write}, ts', v']`:
+
+Snippet di codice
+
+```
+if ts' > ts then
+    (ts, val) := (ts', v');
+trigger \langle pl, Send \mid p, [\textsc{Ack}] \rangle;
+```
+
+- **Controllo di freschezza:** Se il timestamp in arrivo ($ts'$) è più alto di quello che il nodo ha in memoria ($ts$), il nodo **aggiorna la sua copia locale**.
+    
+- **Riscontro:** In ogni caso, il nodo risponde inviando un `ACK` allo scrittore/lettore tramite i link point-to-point (`pl`).
+    
+
+#### 5. Chiusura dell'operazione (`correct \subseteq writeset`)
+
+Snippet di codice
+
+```
+if reading = \text{TRUE} then
+    reading := \text{FALSE};
+    trigger \langle onar, ReadReturn \mid readval \rangle;
+else
+    trigger \langle onar, WriteReturn \rangle;
+```
+
+- Quando lo scrittore (o il lettore che ha fatto il broadcast) riceve gli `ACK` da **tutti i processi corretti** (grazie al detector perfetto $\mathcal{P}$):
+    
+    - Se l'operazione in corso era una **lettura** (`reading = TRUE`), resetta il flag e restituisce il valore al client (`ReadReturn | readval`).
+        
+    - Se era una **scrittura**, sblocca l'applicazione con `WriteReturn`.
+
+![[Dependable distributed system 1-1794326088156.webp]]
