@@ -2630,3 +2630,4 @@ A distributed algorithm in a Fail-Silent model must guarantee termination and va
 Unlike ROWA (where reading was costless and writing was costly), here the costs are distributed across both operations:
 - **Write:** Requests a maximum of $2N$ messages. The writer broadcasts to all nodes ($N$ messages) and receives ACKs from the majority nodes (and at most $N$ responses), totaling a maximum of $2N$ messages.
 - **Read:** This also requires a maximum of $2N$ messages. The reader broadcasts the request to all nodes ($N$ messages) and collects the valuable responses from the queried nodes ($N$ messages).
+
