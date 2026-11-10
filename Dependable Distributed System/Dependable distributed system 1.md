@@ -2997,3 +2997,6 @@ In the majority _Fail-Silent_ model, ensuring atomicity requires a higher messag
 	1. **Polling Phase (Read):** Broadcast the read request ($N$ messages) + receive values ​​from nodes ($N$ messages).
 	2. **Impose Phase (Write/Repair):** Broadcast the freshest value found to update the network ($N$ messages) + receive confirmation ACKs ($N$ messages).
 	- Grand total: $N + N + N + N = 4N$ messages.
+
+## Byzantine processes 
+A differenza dei modelli basati su **Crash-Stop** o **Crash-Failure**, nel **Modello Bizantino** i processi difettosi (chiamati _Byzantine processes_ o processi arbitrari) possono comportarsi in modo completamente ostile, imprevedibile o malevolo.
