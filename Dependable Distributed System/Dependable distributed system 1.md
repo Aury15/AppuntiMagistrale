@@ -2406,4 +2406,4 @@ The philosophy behind this approach is to "share the burden" asymmetrically betw
 - **Write-All (Writing is expensive):** When the writer process wants to update the registry with a new value:
 	1. Sends the new value to **all** processes that the detector considers alive (not crashed).
 	2. The write is not considered complete until the writer receives a write acknowledgement (**ACK**) from _each_ of the non-crashed processes.
-	3. 
+
