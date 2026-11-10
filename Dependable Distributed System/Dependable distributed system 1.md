@@ -2390,6 +2390,6 @@ There are two main levels of guarantee for registers in a concurrent environment
 	- *Validity*. A read operation returns the last value written or the value concurrently being written.
 	- *Ordering*. If a read operation returns a value $v_1$ and a subsequent read operation (in terms of time) returns $v_2$, then the write operation that introduced $v_2$ cannot have occurred before the write operation that introduced $v_1$. It is not permitted to "go back in time" by observing write operations in an order that is the reverse of the sequence actually experienced by the clients.
 	![[Dependable distributed system 1-1794319677956.webp]]
-	The process $p_1$ 
+	The process $p_1$ executes a first write, write(5), and a second write, write(6). The first write end before the start of the second write. The $p$ 
 
 ![[Dependable distributed system 1-1794232190035.webp]]
