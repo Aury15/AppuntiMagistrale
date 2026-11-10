@@ -2962,4 +2962,40 @@ $$
 &\quad\quad (\text{maxts}, readval) := \text{highest}(\text{readlist}); \\
 &\quad\quad \text{readlist} := [\bot]^N; \\
 &\quad\quad \textbf{trigger } \langle beb, Broadcast \mid [\text{WRITE}, rid, \text{maxts}, readval] \rangle;
-&\textbf{upon event } \langle onar, Write \mid v \rangle \text{ do} \\ &\quad rid := rid + 1; \\ &\quad wts := wts + 1; \\ &\quad acks := 0; \\ &\quad \textbf{trigger } \langle beb, Broadcast \mid [\text{WRITE}, rid, wts, v] \rangle; \\ & \\ &\textbf{upon event } \langle beb, Deliver \mid p, [\text{WRITE}, r, ts', v'] \rangle \text{ do} \\ &\quad \textbf{if } ts' > ts \text{ then} \\ &\quad\quad (ts, val) := (ts', v'); \\ &\quad \textbf{trigger } \langle pl, Send \mid p, [\text{ACK}, r] \rangle; \\ & \\ &\textbf{upon event } \langle pl, Deliver \mid q, [\text{ACK}, r] \rangle \text{ such that } r = rid \text{ do} \\ &\quad acks := acks + 1; \\ &\quad \textbf{if } acks > N/2 \text{ then} \\ &\quad\quad acks := 0; \\ &\quad\quad \textbf{if } reading = \text{TRUE} \text{ then} \\ &\quad\quad\quad reading := \text{FALSE}; \\ &\quad\quad\quad \textbf{trigger } \langle onar, ReadReturn \mid readval \rangle; \\ &\quad\quad \textbf{else} \\ &\quad\quad\quad \textbf{trigger } \langle onar, WriteReturn \rangle; \end{aligned}
+&\textbf{upon event } \langle onar, Write \mid v \rangle \text{ do} \\ &\quad rid := rid + 1; \\ &\quad wts := wts + 1; \\ &\quad acks := 0; \\ &\quad \textbf{trigger } \langle beb, Broadcast \mid [\text{WRITE}, rid, wts, v] \rangle; \\ & \\ &\textbf{upon event } \langle beb, Deliver \mid p, [\text{WRITE}, r, ts', v'] \rangle \text{ do} \\ &\quad \textbf{if } ts' > ts \text{ then} \\ &\quad\quad (ts, val) := (ts', v'); \\ &\quad \textbf{trigger } \langle pl, Send \mid p, [\text{ACK}, r] \rangle; \\ & \\ &\textbf{upon event } \langle pl, Deliver \mid q, [\text{ACK}, r] \rangle \text{ such that } r = rid \text{ do} \\ &\quad acks := acks + 1; \\ &\quad \textbf{if } acks > N/2 \text{ then} \\ &\quad\quad acks := 0; \\ &\quad\quad \textbf{if } reading = \text{TRUE} \text{ then} \\ &\quad\quad\quad reading := \text{FALSE}; \\ &\quad\quad\quad \textbf{trigger } \langle onar, ReadReturn \mid readval \rangle; \\ &\quad\quad \textbf{else} \\ &\quad\quad\quad \textbf{trigger } \langle onar, WriteReturn \rangle; \end{aligned}$$
+Questo algoritmo fonde due concetti chiave:
+
+1. **Write-Majority (Scrittura a maggioranza):** Poiché non possiamo fidarci di tutti i nodi e non sappiamo chi sia morto o lento, ci basta raccogliere risposte da una maggioranza stretta di nodi ($> N/2$) per considerare valida un'operazione.
+    
+2. **Read-Impose (La lettura impone):** Quando un lettore legge, non si limita a osservare passivamente, ma **costringe (impone)** una maggioranza di nodi ad aggiornarsi con il valore più fresco trovato. Questo impedisce ai lettori futuri di imbattersi in dati obsoleti, garantendo l'atomicità (linearizzabilità).
+    
+
+
+#### 1. L'Operazione di Lettura (`onar, Read`)
+
+Quando un processo vuole leggere dal registro:
+
+- **Fase 1 (Polling):** Il lettore incrementa l'identificativo di lettura (`rid := rid + 1`) per evitare confusione con letture vecchie o concorrenti, azzera la lista e fa un broadcast di richiesta (`[READ, rid]`) a tutti i nodi.
+    
+- **Fase 2 (Risposta dei nodi):** Ciascun nodo riceve la richiesta e risponde privatamente con il proprio stato attuale tramite un messaggio `[VALUE, r, ts, val]`.
+    
+- **Fase 3 (Raccolta, Selezione e Imposizione):** Il lettore raccoglie le risposte nella `readlist`. Appena il numero di risposte supera la maggioranza ($\#(\text{readlist}) > N/2$):
+    
+    - Seleziona il valore con il timestamp più alto usando `highest(readlist)` (`maxts, readval`).
+        
+    - **Il "Read-Impose":** Esegue subito un nuovo broadcast `[WRITE, rid, maxts, readval]` per forzare i nodi ad aggiornarsi con questo valore.
+        
+
+#### 2. L'Operazione di Scrittura (`onar, Write \mid v`) e Gestione ACK
+
+Quando lo scrittore (o il lettore nella fase di write-back) invia un valore:
+
+- Incrementa `rid` e il timestamp di scrittura `wts := wts + 1`, inviando un broadcast `[WRITE, rid, wts, v]`.
+    
+- **Controllo sui nodi:** Quando un nodo riceve il messaggio di scrittura, controlla se il timestamp in arrivo è più recente del proprio (`ts' > ts`). In caso affermativo, aggiorna la sua memoria locale `(ts, val) := (ts', v')` e restituisce un riscontro `[ACK, rid]`.
+    
+- **Chiusura dell'operazione (`acks > N/2`):** Il processo attende di ricevere gli `ACK` da una **maggioranza** di nodi. Appena la soglia è superata:
+    
+    - Se l'operazione in corso era una lettura (`reading = TRUE`), restituisce il valore al client con `ReadReturn | readval`.
+        
+    - Se era una scrittura, sblocca l'applicazione con `WriteReturn`.
