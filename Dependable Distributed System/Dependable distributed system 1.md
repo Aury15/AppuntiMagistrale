@@ -3014,3 +3014,13 @@ As in the crash failure model, we distinguish between faulty and correct process
 >[!Warning]
 >A Byzantine process may act arbitrarily, and no mechanism can guarantee anything related to its actions.
 
+l primo strumento fondamentale per difendersi dai comportamenti bizantini è l'uso della **crittografia** per implementare le **Authenticated Perfect Links** (link punto-punto perfetti e autenticati). <u>Ma la crittografia da sola non basta.</u> Se un mittente è arbitrariamente difettoso (Byzantine), chiedergli di firmare digitalmente ogni messaggio broadcast **non risolve il problema**. Un mittente corrotto può semplicemente firmare e inviare due messaggi differenti a due destinatari differenti, generando incoerenza nella rete.
+
+**Actions:**
+- **Eventi Richiesti:** `(al, Send | q, m)` -> Richiede l'invio del messaggio $m$ al processo $q$.
+- **Eventi di Indicazione:** `(al, Deliver | p, m)` -> Consegna il messaggio $m$ inviato dal processo $p$.
+    
+###### Proprietà:
+- **AL1 (Reliable delivery):** Se un processo corretto invia un messaggio $m$ a un processo corretto $q$, allora $q$ alla fine consegna $m$.
+- **AL2 (No duplication):** Nessun messaggio viene consegnato da un processo corretto più di una volta.
+- **AL3 (Authenticity):** Se un processo corretto $q$ consegna un messaggio $m$ con mittente $p$ (e $p$ è corretto), allora $m$ è stato precedentemente inviato a $q$ da $p$.
