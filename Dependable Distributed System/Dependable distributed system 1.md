@@ -2590,35 +2590,30 @@ $$
 &\quad\quad readlist := [\bot]^N; \\
 &\quad\quad \textbf{trigger } \langle onrr, ReadReturn \mid v \rangle;
 \end{aligned}
-$$
-1. **Le Variabili di Stato (`Init`)**
-	Ogni processo inizializza le proprie variabili locali in questo modo:
-	- `(ts, val) := (0, \bot)`: Memorizzano rispettivamente il **timestamp** associato al valore corrente e il **valore** stesso del registro. All'inizio il timestamp è 0 e il valore è nullo ($\bot$).
-	- `wts := 0`: Utilizzato solo dal processo scrittore per tracciare l'ultimo timestamp generato per le sue scritture.
-	- `acks := 0`: Contatore usato dal writer per contare quanti riscontri riceve dai nodi.
-	- `rid := 0`: Identificativo della lettura (_Read Identifier_), usato dal reader per evitare di confondere risposte arrivate da vecchie letture.
-	- `readlist := `[\alt]$^N$: Un array grande $N$ in cui il lettore accumula le coppie `(timestamp, valore)` ricevute dai vari nodi.
+$$1. **State Variables (`Init`)**
+	Each process initializes its local variables as follows:
+	- `(ts, val) := (0, \bot)`: They store the **timestamp** associated with the current value and the **value** of the register itself, respectively. Initially, the timestamp is 0 and the value is null ($\bot$).
+	- `wts := 0`: Used only by the writer process to track the last timestamp generated for its writes.
+	- `acks := 0`: Counter used by the writer to count how many acknowledgements it receives from nodes.
+	- `rid := 0`: Read Identifier, used by the reader to avoid confusing responses from previous reads.
+	- `readlist := `[\alt]$^N$: An $N$ large array in which the reader accumulates the `(timestamp, value)` pairs received from the various nodes.
     
-
- 2. **L'Operazione di Scrittura (`Write`) sotto il cofano**
-
-	Quando viene invocata una `Write(v)`:
-	1. **Aggiornamento del Timestamp:** Il writer incrementa il suo contatore di timestamp (`wts := wts + 1`). Questo garantisce che ogni nuova scrittura abbia un'etichetta temporale strettamente maggiore della precedente.
-	2. **Broadcast:** Invia a tutti i nodi un messaggio Best-Effort Broadcast: `[WRITE, wts, v]`.
-	3. **Ricezione sui nodi (`beb, Deliver`):** Quando un nodo riceve il messaggio, fa un controllo cruciale:
-	    $$\text{if } ts' > ts \text{ then } (ts, val) := (ts', v')$$
+ 2. **The Write Operation (`Write`) Under the Hood**
+	When a `Write(v)` is invoked:
+	1. **Timestamp Update:** The writer increments its timestamp counter (`wts := wts + 1`). This ensures that each new write has a timestamp strictly greater than the previous one.
+	2. **Broadcast:** Sends a Best-Effort Broadcast message to all nodes: `[WRITE, wts, v]`.
+	3. **Receive at Nodes (`beb, Deliver`):** When a node receives the message, it performs a crucial check:
+	$$\text{if } ts' > ts \text{ then } (ts, val) := (ts', v')$$
 	
-	 Se il timestamp in arrivo ($ts'$) è più alto di quello che il nodo ha attualmente in memoria ($ts$), allora il nodo si aggiorna. _Nota bene:_ Indipendentemente dal fatto che si sia aggiornato o meno, il nodo risponde **sempre** al writer inviandogli un `[ACK, ts']` tramite link point-to-point (`pl`).
+	If the incoming timestamp ($ts'$) is higher than the node's current memory timestamp ($ts$), then the node updates itself. _Note:_ Regardless of whether it has updated or not, the node always responds to the writer by sending an [ACK, ts] via a point-to-point link (pl).
+	4. **Write Closure:** The writer collects the ACKs. When the condition `acks > N/2` is met (i.e., it has received acknowledgements from a strict majority of nodes), the writer knows that the write has been sufficiently logged in the system, resets the counters, and unlocks the application with `WriteReturn`.
     
-	4. **Chiusura della Scrittura:** Il writer raccoglie gli ACK. Quando la condizione `acks > N/2` viene soddisfatta (cioè ha ricevuto riscontri da una **maggioranza stretta** di nodi), il writer sa che la scrittura è stata registrata a sufficienza nel sistema, azzera i contatori e sblocca l'applicazione con `WriteReturn`.
-    
+3. The Read Operation (`Read`) Under the Hood**
+When a `Read()` is invoked:
+4. **New Read ID:** The reader increments `rid` and clears the `readlist`.
+5. **General Polling:** Broadcasts `[READ, rid]` to all nodes.
+6. **Node Response:** Each node, upon receiving the read request, responds privately to the reader by sending its current state via a `[VALUE, r, ts, val]` message.
+7. **Collect and Deliver Value (`pl, Deliver Value`):** The reader saves the responses in the `readlist`. As soon as the number of collected responses exceeds the majority (`#(readlist) > N/2`), the reader activates the selection logic:
+$$v := \text{highestval}(readlist)$$
 
-3. **L'Operazione di Lettura (`Read`) sotto il cofano**
-	Quando viene invocata una `Read()`:
-	1. **Nuovo ID di Lettura:** Il lettore incrementa `rid` e pulisce la `readlist`.
-	2. **Polling generale:** Esegue un broadcast `[READ, rid]` a tutti i nodi.
-	3. **Risposta dei nodi:** Ciascun nodo, quando riceve la richiesta di lettura, risponde privatamente al lettore inviando il proprio stato attuale tramite un messaggio `[VALUE, r, ts, val]`.
-	4. **Raccolta e Decisione (`pl, Deliver Value`):** Il lettore salva le risposte nella `readlist`. Appena il numero di risposte raccolte supera la maggioranza (`#(readlist) > N/2`), il lettore attiva la logica di scelta:
-	$$v := \text{highestval}(readlist)$$
-	    
-	    Esamina cioè tutti i timestamp raccolti tra i nodi della maggioranza, seleziona la coppia con il **timestamp più alto** in assoluto, estrae il valore $v$ associato e lo restituisce al client (`ReadReturn | v`).
+That is, it examines all the timestamps collected among the nodes in the majority, selects the pair with the absolute **highest timestamp**, extracts the associated $v$ value, and returns it to the client (`ReadReturn | v`).
