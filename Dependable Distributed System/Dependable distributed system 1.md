@@ -2591,19 +2591,13 @@ $$
 &\quad\quad \textbf{trigger } \langle onrr, ReadReturn \mid v \rangle;
 \end{aligned}
 $$
-### 1. Le Variabili di Stato (`Init`)
-
-Ogni processo inizializza le proprie variabili locali in questo modo:
-
-- `(ts, val) := (0, \bot)`: Memorizzano rispettivamente il **timestamp** associato al valore corrente e il **valore** stesso del registro. All'inizio il timestamp è 0 e il valore è nullo ($\bot$).
-    
-- `wts := 0`: Utilizzato solo dal processo scrittore per tracciare l'ultimo timestamp generato per le sue scritture.
-    
-- `acks := 0`: Contatore usato dal writer per contare quanti riscontri riceve dai nodi.
-    
-- `rid := 0`: Identificativo della lettura (_Read Identifier_), usato dal reader per evitare di confondere risposte arrivate da vecchie letture.
-    
-- `readlist := [\alt]^N`: Un array grande $N$ in cui il lettore accumula le coppie `(timestamp, valore)` ricevute dai vari nodi.
+1. Le Variabili di Stato (`Init`)
+	Ogni processo inizializza le proprie variabili locali in questo modo:
+	- `(ts, val) := (0, \bot)`: Memorizzano rispettivamente il **timestamp** associato al valore corrente e il **valore** stesso del registro. All'inizio il timestamp è 0 e il valore è nullo ($\bot$).
+	- `wts := 0`: Utilizzato solo dal processo scrittore per tracciare l'ultimo timestamp generato per le sue scritture.
+	- `acks := 0`: Contatore usato dal writer per contare quanti riscontri riceve dai nodi.
+	- `rid := 0`: Identificativo della lettura (_Read Identifier_), usato dal reader per evitare di confondere risposte arrivate da vecchie letture.
+	- `readlist := `$[\alt]^N$: Un array grande $N$ in cui il lettore accumula le coppie `(timestamp, valore)` ricevute dai vari nodi.
     
 
  2. **L'Operazione di Scrittura (`Write`) sotto il cofano**
@@ -2613,8 +2607,8 @@ Ogni processo inizializza le proprie variabili locali in questo modo:
 	2. **Broadcast:** Invia a tutti i nodi un messaggio Best-Effort Broadcast: `[WRITE, wts, v]`.
 	3. **Ricezione sui nodi (`beb, Deliver`):** Quando un nodo riceve il messaggio, fa un controllo cruciale:
 	    $$\text{if } ts' > ts \text{ then } (ts, val) := (ts', v')$$
-	    
-	    Se il timestamp in arrivo ($ts'$) è più alto di quello che il nodo ha attualmente in memoria ($ts$), allora il nodo si aggiorna. _Nota bene:_ Indipendentemente dal fatto che si sia aggiornato o meno, il nodo risponde **sempre** al writer inviandogli un `[ACK, ts']` tramite link point-to-point (`pl`).
+	
+	 Se il timestamp in arrivo ($ts'$) è più alto di quello che il nodo ha attualmente in memoria ($ts$), allora il nodo si aggiorna. _Nota bene:_ Indipendentemente dal fatto che si sia aggiornato o meno, il nodo risponde **sempre** al writer inviandogli un `[ACK, ts']` tramite link point-to-point (`pl`).
     
 	4. **Chiusura della Scrittura:** Il writer raccoglie gli ACK. Quando la condizione `acks > N/2` viene soddisfatta (cioè ha ricevuto riscontri da una **maggioranza stretta** di nodi), il writer sa che la scrittura è stata registrata a sufficienza nel sistema, azzera i contatori e sblocca l'applicazione con `WriteReturn`.
     
