@@ -2617,3 +2617,23 @@ $$1. **State Variables (`Init`)**
 	$$v := \text{highestval}(readlist)$$
 	
 	That is, it examines all the timestamps collected among the nodes in the majority, selects the pair with the absolute **highest timestamp**, extracts the associated $v$ value, and returns it to the client (`ReadReturn | v`).
+![[Dependable distributed system 1-1794323778839.webp]]
+###### Correttezza (_Correctness_)
+Un algoritmo distribuito in un modello _Fail-Silent_ deve garantire terminazione e validità senza poter contare su detector di guasti perfetti:
+- **Termination (Terminazione):**
+    - Si basa sulle proprietà dei canali di comunicazione (Best-Effort Broadcast e link point-to-point affidabili) e sull'**ipotesi fondamentale di avere una maggioranza di processi corretti** ($> N/2$).
+    - Poiché la scrittura e la lettura richiedono riscontri esclusivamente da una maggioranza (e non da _tutti_ i nodi come nel ROWA), l'operazione non può bloccarsi indefinitamente a causa di nodi lenti o crashati, purché esista almeno una maggioranza di nodi vivi che rispondono.
+- **Validity (Validità):**
+    
+    - Deriva direttamente dalla **proprietà di intersezione dei quorum**.
+        
+    - Poiché ogni maggioranza si interseca sempre con qualsiasi altra maggioranza in almeno un nodo, una operazione di lettura che interroga una maggioranza troverà sempre traccia dell'ultima scrittura avvenuta. Scegliendo il timestamp più alto (`highestval`), il valore restituito è garantito essere logicamente corretto secondo la semantica del registro regolare.
+        
+
+### 2. Prestazioni (_Performance_)
+
+A differenza del ROWA (dove la lettura era a costo zero e la scrittura pesante), qui i costi sono distribuiti su entrambe le operazioni:
+
+- **Write (Scrittura):** Richiede al **massimo $2N$ messaggi**. Lo scrittore esegue un broadcast a tutti i nodi ($N$ messaggi) e riceve i riscontri ACK dai nodi della maggioranza (e comunque al più $N$ risposte), totalizzando al massimo $2N$ messaggi.
+    
+- **Read (Lettura):** Richiede anch'essa al **massimo $2N$ messaggi**. Il lettore fa un broadcast di richiesta a tutti i nodi ($N$ messaggi) e raccoglie le risposte di valore dai nodi interpellati ($N$ messaggi).
