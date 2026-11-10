@@ -2608,12 +2608,12 @@ $$1. **State Variables (`Init`)**
 	If the incoming timestamp ($ts'$) is higher than the node's current memory timestamp ($ts$), then the node updates itself. _Note:_ Regardless of whether it has updated or not, the node always responds to the writer by sending an [ACK, ts] via a point-to-point link (pl).
 	4. **Write Closure:** The writer collects the ACKs. When the condition `acks > N/2` is met (i.e., it has received acknowledgements from a strict majority of nodes), the writer knows that the write has been sufficiently logged in the system, resets the counters, and unlocks the application with `WriteReturn`.
     
-3. The Read Operation (`Read`) Under the Hood**
-When a `Read()` is invoked:
-4. **New Read ID:** The reader increments `rid` and clears the `readlist`.
-5. **General Polling:** Broadcasts `[READ, rid]` to all nodes.
-6. **Node Response:** Each node, upon receiving the read request, responds privately to the reader by sending its current state via a `[VALUE, r, ts, val]` message.
-7. **Collect and Deliver Value (`pl, Deliver Value`):** The reader saves the responses in the `readlist`. As soon as the number of collected responses exceeds the majority (`#(readlist) > N/2`), the reader activates the selection logic:
-$$v := \text{highestval}(readlist)$$
-
-That is, it examines all the timestamps collected among the nodes in the majority, selects the pair with the absolute **highest timestamp**, extracts the associated $v$ value, and returns it to the client (`ReadReturn | v`).
+2. **The Read Operation (`Read`) Under the Hood**
+	When a `Read()` is invoked:
+	1. **New Read ID:** The reader increments `rid` and clears the `readlist`.
+	2. **General Polling:** Broadcasts `[READ, rid]` to all nodes.
+	3. **Node Response:** Each node, upon receiving the read request, responds privately to the reader by sending its current state via a `[VALUE, r, ts, val]` message.
+	4. **Collect and Deliver Value (`pl, Deliver Value`):** The reader saves the responses in the `readlist`. As soon as the number of collected responses exceeds the majority (`#(readlist) > N/2`), the reader activates the selection logic:
+	$$v := \text{highestval}(readlist)$$
+	
+	That is, it examines all the timestamps collected among the nodes in the majority, selects the pair with the absolute **highest timestamp**, extracts the associated $v$ value, and returns it to the client (`ReadReturn | v`).
