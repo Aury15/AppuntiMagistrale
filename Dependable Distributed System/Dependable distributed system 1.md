@@ -2500,3 +2500,6 @@ $$
 	- **Write-All**: As ACKs arrive from the various $p$ processes, they are added to the `writeset`.
 	- The write is completed by unlocking the client (`WriteReturn`) **only when the set of correct nodes (`correct`) is entirely included in the `writeset`** (i.e., the writer has received ACKs from _all_ live nodes). The `writeset` is then cleared for the next write.
 
+![[Dependable distributed system 1-1794321842531.webp]]
+![[Dependable distributed system 1-1794321876912.webp]]
+![[Dependable distributed system 1-1794321861055.webp]]
