@@ -2927,3 +2927,39 @@ The combination of these two rules always leverages the mathematical magic of qu
 - Any read forces its value onto a majority $M_1$.
 - Any subsequent read or write will query or update another majority $M_2$.
 - Since $M_1$ and $M_2$ always intersect at at least one node, the freshest value is never lost, and no future reader will ever see an outdated version.
+
+$$
+\begin{aligned}
+&\textbf{Algorithm 4.6:} \text{ Read-Impose Write-Majority Atomic Register (Read)} \\
+&\textbf{Implements:} \\
+&\quad (1, N)\text{-AtomicRegister, \textbf{instance } } onar. \\
+&\textbf{Uses:} \\
+&\quad \text{BestEffortBroadcast, \textbf{instance } } beb; \\
+&\quad \text{PerfectPointToPointLinks, \textbf{instance } } pl. \\
+& \\
+&\textbf{upon event } \langle onar, Init \rangle \text{ do} \\
+&\quad (ts, val) := (0, \bot); \\
+&\quad wts := 0; \\
+&\quad acks := 0; \\
+&\quad rid := 0; \\
+&\quad readlist := [\bot]^N; \\
+&\quad readval := \bot; \\
+&\quad reading := \text{FALSE}; \\
+& \\
+&\textbf{upon event } \langle onar, Read \rangle \text{ do} \\
+&\quad rid := rid + 1; \\
+&\quad acks := 0; \\
+&\quad readlist := [\bot]^N; \\
+&\quad reading := \text{TRUE}; \\
+&\quad \textbf{trigger } \langle beb, Broadcast \mid [\text{READ}, rid] \rangle; \\
+& \\
+&\textbf{upon event } \langle beb, Deliver \mid p, [\text{READ}, r] \rangle \text{ do} \\
+&\quad \textbf{trigger } \langle pl, Send \mid p, [\text{VALUE}, r, ts, val] \rangle; \\
+& \\
+&\textbf{upon event } \langle pl, Deliver \mid q, [\text{VALUE}, r, ts', v'] \rangle \text{ such that } r = rid \text{ do} \\
+&\quad \text{readlist}[q] := (ts', v'); \\
+&\quad \textbf{if } \#(\text{readlist}) > N/2 \text{ then} \\
+&\quad\quad (\text{maxts}, readval) := \text{highest}(\text{readlist}); \\
+&\quad\quad \text{readlist} := [\bot]^N; \\
+&\quad\quad \textbf{trigger } \langle beb, Broadcast \mid [\text{WRITE}, rid, \text{maxts}, readval] \rangle;
+&\textbf{upon event } \langle onar, Write \mid v \rangle \text{ do} \\ &\quad rid := rid + 1; \\ &\quad wts := wts + 1; \\ &\quad acks := 0; \\ &\quad \textbf{trigger } \langle beb, Broadcast \mid [\text{WRITE}, rid, wts, v] \rangle; \\ & \\ &\textbf{upon event } \langle beb, Deliver \mid p, [\text{WRITE}, r, ts', v'] \rangle \text{ do} \\ &\quad \textbf{if } ts' > ts \text{ then} \\ &\quad\quad (ts, val) := (ts', v'); \\ &\quad \textbf{trigger } \langle pl, Send \mid p, [\text{ACK}, r] \rangle; \\ & \\ &\textbf{upon event } \langle pl, Deliver \mid q, [\text{ACK}, r] \rangle \text{ such that } r = rid \text{ do} \\ &\quad acks := acks + 1; \\ &\quad \textbf{if } acks > N/2 \text{ then} \\ &\quad\quad acks := 0; \\ &\quad\quad \textbf{if } reading = \text{TRUE} \text{ then} \\ &\quad\quad\quad reading := \text{FALSE}; \\ &\quad\quad\quad \textbf{trigger } \langle onar, ReadReturn \mid readval \rangle; \\ &\quad\quad \textbf{else} \\ &\quad\quad\quad \textbf{trigger } \langle onar, WriteReturn \rangle; \end{aligned}
