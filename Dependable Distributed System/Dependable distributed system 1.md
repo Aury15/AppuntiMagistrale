@@ -2591,13 +2591,13 @@ $$
 &\quad\quad \textbf{trigger } \langle onrr, ReadReturn \mid v \rangle;
 \end{aligned}
 $$
-1. Le Variabili di Stato (`Init`)
+1. **Le Variabili di Stato (`Init`)**
 	Ogni processo inizializza le proprie variabili locali in questo modo:
 	- `(ts, val) := (0, \bot)`: Memorizzano rispettivamente il **timestamp** associato al valore corrente e il **valore** stesso del registro. All'inizio il timestamp è 0 e il valore è nullo ($\bot$).
 	- `wts := 0`: Utilizzato solo dal processo scrittore per tracciare l'ultimo timestamp generato per le sue scritture.
 	- `acks := 0`: Contatore usato dal writer per contare quanti riscontri riceve dai nodi.
 	- `rid := 0`: Identificativo della lettura (_Read Identifier_), usato dal reader per evitare di confondere risposte arrivate da vecchie letture.
-	- `readlist := `$[\alt]^N$: Un array grande $N$ in cui il lettore accumula le coppie `(timestamp, valore)` ricevute dai vari nodi.
+	- `readlist := `[\alt]$^N$: Un array grande $N$ in cui il lettore accumula le coppie `(timestamp, valore)` ricevute dai vari nodi.
     
 
  2. **L'Operazione di Scrittura (`Write`) sotto il cofano**
