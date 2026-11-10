@@ -3011,4 +3011,6 @@ A differenza dei modelli basati su **Crash-Stop** o **Crash-Failure**, nel **Mod
 
 As in the crash failure model, we distinguish between faulty and correct processes.
 
->
+>[!Warning]
+>A Byzantine process may act arbitrarily, and no mechanism can guarantee anything that relates to its actions.
+
