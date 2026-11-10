@@ -2784,26 +2784,19 @@ $$
 ![[Dependable distributed system 1-1794325150135.webp]]
 ![[Dependable distributed system 1-1794325167962.webp]]
 
-###### Correttezza (_Correctness_)
-- **Termination (Terminazione):**  Deriva direttamente dalla proprietà di terminazione dei registri atomici $(1,1)$ sottostanti. Poiché ogni operazione di scrittura o lettura sui singoli registri $(1,1)$ termina sempre, anche l'algoritmo globale $(1,N)$ completerà le proprie operazioni senza bloccarsi.
-- **Validity (Validità):** Garantita dalla validità dei registri atomici $(1,1)$ sottostanti. I valori scritti e letti mantengono una coerenza semantica corretta.
-- **Ordering (Ordinamento / Atomicità):**
-    - Questa è la proprietà cruciale per garantire la linearizzabilità.
-    - **Come funziona il ragionamento:** Supponiamo di avere una scrittura $w_1$​ (che scrive un valore $v_1$​ con timestamp $s_1$​) e una scrittura precedente $w_2$​ (con valore $v_2$​ e timestamp $s_2$​, dove $s_1 < s_2$).
-    - Se una lettura restituisce $v_2$​, significa che per ogni processo l'ultimo valore scritto nei registri $(1,1)$ era basato su $s_2$​.   
-    - Grazie alla proprietà di ordinamento dei registri atomici $(1,1)$ sottostanti, ogni lettura successiva restituirà un valore con un timestamp **maggiore o uguale a $s_2$​**. Di conseguenza, il timestamp precedente e più basso $s_1​$ non potrà più essere restituito, garantendo un rigoroso ordinamento temporale globale.
+###### Correctness (_Correctness_)
+- **Termination (Termination):** Derives directly from the termination property of the underlying $(1,1)$ atomic registers. Since every write or read operation on the individual $(1,1)$ registers always terminates, the global $(1,N)$ algorithm will also complete its operations without blocking.
+- **Validity (Validity):** Guaranteed by the validity of the underlying $(1,1)$ atomic registers. The values ​​written and read maintain correct semantic consistency.
+- **Ordering (Ordering / Atomicity):**
+	- This is the crucial property for ensuring linearizability.
+	- **How ​​it works:** Suppose we have a write $w_1$​ (writing a value $v_1$​ with timestamp $s_1$​) and a previous write $w_2$​ (with value $v_2$​ and timestamp $s_2$​, where $s_1 < s_2$).
+	- If a read returns $v_2$​, it means that for each process, the last value written to the $(1,1)$ registers was based on $s_2$​.
+	- Due to the ordering property of the underlying $(1,1)$ atomic registers, each subsequent read will return a value with a timestamp **greater than or equal to $s_2$​**. Consequently, the previous and lowest timestamp $s_1​$ can no longer be returned, ensuring strict global time ordering.
         
 
-### 2. Prestazioni (_Performance_)
-
-- **Write (Scrittura):**
-    
-    - Ogni operazione di scrittura su un registro atomico (1,N)(1,N)(1,N) richiede di effettuare ben **NNN operazioni di scrittura** in parallelo sui registri atomici (1,1)(1,1)(1,1) sottostanti (uno per ciascun lettore/processo).
-        
+###### Prestazioni (_Performance_)
+- **Write (Scrittura):** Ogni operazione di scrittura su un registro atomico (1,N)(1,N)(1,N) richiede di effettuare ben **NNN operazioni di scrittura** in parallelo sui registri atomici (1,1)(1,1)(1,1) sottostanti (uno per ciascun lettore/processo).
 - **Read (Lettura):**
-    
-    - Ogni operazione di lettura su un registro atomico (1,N)(1,N)(1,N) è più onerosa e richiede due passaggi:
-        
-        1. Leggere da **NNN registri atomici (1,1)(1,1)(1,1)** differenti per raccogliere tutte le versioni.
-            
-        2. Eseguire la fase di "riparazione/propagazione" scrivendo il valore più fresco su **NNN registri atomici (1,1)(1,1)(1,1)** (fase di write-back vista nell'algoritmo).
+    - Ogni operazione di lettura su un registro atomico (1,N) è più onerosa e richiede due passaggi:
+        1. Leggere da **NNN registri atomici $(1,1)$** differenti per raccogliere tutte le versioni.
+        2. Eseguire la fase di "riparazione/propagazione" scrivendo il valore più fresco su **NNN registri atomici $(1,1)$** (fase di write-back vista nell'algoritmo).
