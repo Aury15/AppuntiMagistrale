@@ -2720,3 +2720,4 @@ $$
 		- _If it is newer_, it updates its local state `(ts, val) := (ts', v')`.
 		- _If it is not (perhaps because the regular register temporarily returned an old value due to a concurrent read), it discards it and keeps the freshest value it already knew.
 		- Finally, it always returns the updated `val` value. This filter prevents time from "going backwards," transforming regularity into **pure atomicity**.
+
