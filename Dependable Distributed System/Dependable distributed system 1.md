@@ -2721,16 +2721,13 @@ $$
 		- _If it is not (perhaps because the regular register temporarily returned an old value due to a concurrent read), it discards it and keeps the freshest value it already knew.
 		- Finally, it always returns the updated `val` value. This filter prevents time from "going backwards," transforming regularity into **pure atomicity**.
 
-###### Correttezza (_Correctness_)
-Per dimostrare che l'algoritmo implementa correttamente un registro atomico $(1,1)$, vengono verificate tre proprietà fondamentali:
-- **Termination (Terminazione):** Deriva direttamente dalla proprietà di terminazione del registro regolare sottostante (`onrr`). Poiché sia la scrittura che la lettura sul registro regolare terminano sempre, anche le corrispondenti operazioni sul registro atomico superiore termineranno senza bloccarsi.
-- **Validity (Validità):** Garantita dalla validità del registro regolare sottostante. Ogni valore scritto o letto è semanticamente coerente con le operazioni effettuate.
-- **Ordering (Ordinamento / Atomicità):** Questa è la proprietà chiave che trasforma la _regolarità_ in _atomicità_. Grazie al meccanismo in cui lo scrittore associa un timestamp progressivo (`wts, v`) e il lettore **traccia l'ultimo timestamp letto** (scartando eventuali valori con timestamp inferiore), si elimina l'anomalia temporale tipica dei registri regolari. Una lettura restituirà sempre un valore con un timestamp **maggiore o uguale** a quello della lettura precedente, garantendo un ordinamento globale coerente (linearizzabile) nel tempo.
-        
+###### Correctness (_Correctness_)
+To demonstrate that the algorithm correctly implements an atomic register $(1,1)$, three fundamental properties are verified:
+- **Termination (Termination):** Derives directly from the termination property of the underlying regular register (`onrr`). Since both writing and reading to the regular register always terminate, the corresponding operations on the upper atomic register will also terminate without blocking.
+- **Validity (Validity):** Guaranteed by the validity of the underlying regular register. Every value written or read is semantically consistent with the operations performed.
+- **Ordering (Sorting / Atomicity):** This is the key property that transforms _regularity_ into _atomicity_. Thanks to the mechanism in which the writer associates a progressive timestamp (`wts, v`) and the reader **tracks the last timestamp read** (discarding any values ​​with a lower timestamp), the temporal anomaly typical of regular registers is eliminated. A read will always return a value with a timestamp **greater than or equal to** the previous read, ensuring a globally consistent (linearizable) sorting over time.
 
-###### Prestazioni (_Performance_)
-- **Write (Scrittura):** Richiede l'esecuzione di una singola operazione di scrittura sul registro regolare sottostante $(1,N)$.
-    
-- **Read (Lettura):** Richiede l'esecuzione di una singola operazione di lettura sul registro regolare sottostante $(1,N)$.
-    
-- **NOTA IMPORTANTE:** Dal punto di vista dei messaggi di rete scambiati, **non ci sono messaggi aggiuntivi** rispetto a quelli già previsti dall'implementazione di un registro regolare $(1,1)$. Il filtro basato sui timestamp avviene interamente a livello locale sul client/lettore, senza gravare sulla rete.
+###### Performance (_Performance_)
+- **Write:** Requests a single write operation to the underlying regular register $(1,N)$.
+- **Read:** Requests a single read operation to the underlying regular register $(1,N)$.
+- **IMPORTANT NOTE:** From a network message perspective, **there are no additional messages** beyond those already provided by a regular register implementation $(1,1)$. Timestamp-based filtering occurs entirely locally on the client/reader, with no network overhead.
