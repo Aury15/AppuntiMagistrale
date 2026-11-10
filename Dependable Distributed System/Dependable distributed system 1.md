@@ -2464,15 +2464,14 @@ The algorithm implements a Regular Register $(1,N)$** (where there is only 1 wri
 	- Quando il detector perfetto segnala che il processo $p$ è caduto (`Crash`), il processo lo rimuove immediatamente dall'insieme dei nodi considerati corretti (`correct`).
     
 
-4. Operazione di Lettura (`Read`)
-upon event < onrr, Read > do
-    trigger < onrr, ReadReturn \mid val >;
-```
+4. **Read Operation (`Read`)**
+$$
+upon event < onrr, Read > do \\
+\quad \quad \quad trigger < onrr, ReadReturn \mid val >;
+$$
+	- **Read-One**: When a read request (`Read`) arrives, the process **does not send any messages over the network**. It simply reads the value stored in its local variable `val` and immediately returns the result (`ReadReturn | val`). Reads are therefore local and have no communication cost.
 
-- **Read-One**: Quando arriva una richiesta di lettura (`Read`), il processo **non invia alcun messaggio in rete**. Legge semplicemente il valore salvato nella sua variabile locale `val` e restituisce subito il risultato (`ReadReturn | val`). Le letture sono quindi locali e a costo zero di comunicazione.
-    
-
-#### E. Operazione di Scrittura (`Write`)
+5. Operazione di Scrittura (`Write`)
 
 Snippet di codice
 
