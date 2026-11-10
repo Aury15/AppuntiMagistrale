@@ -2868,50 +2868,35 @@ $$
 	- The reader sets the `reading` flag and saves the current value locally (`readval := val`).
 	- Immediately afterward, it broadcasts the timestamp and its current value to all nodes (`[\textsc{Write}, ts, val]`). This is the _enforcement_ phase: it forces the network to align on its value.
 
-The Write Operation (`onar, Write \mid v`)
+3. **The Write Operation (`onar, Write \mid v`)**
+	When a request arrives to write a new value $v$:
+	```
+	trigger \langle beb, Broadcast \mid [\textsc{Write}, ts + 1, v] \rangle;
+	```
+	- The writer increments the timestamp by 1 (`ts + 1`) to make it more recent than any other, and broadcasts the new value to all nodes.
 
-When a request arrives to write a new value $v$:
+4. **Receiving at Nodes (`beb, Deliver`)**
+	When any process receives a write/enforce message `[\textsc{Write}, ts', v']`:
+	```
+	if ts' > ts then
+	(ts, val) := (ts', v');
+	trigger \langle pl, Send \mid p, [\textsc{Ack}] \rangle;
+	```
+	
+	- **Freshness check:** If the incoming timestamp ($ts'$) is higher than the node's memory timestamp ($ts$), the node **updates its local copy**.
+	
+	- **Acknowledgement:** In any case, the node responds by sending an ACK to the writer/reader via point-to-point links (`pl`).
 
-Code Snippet
-
-```
-trigger \langle beb, Broadcast \mid [\textsc{Write}, ts + 1, v] \rangle;
-```
-
-- The writer increments the timestamp by 1 (`ts + 1`) to make it more recent than any other, and broadcasts the new value to all nodes.
-
-4. Receiving at Nodes (`beb, Deliver`)
-
-When any process receives a write/enforce message `[\textsc{Write}, ts', v']`:
-
-Code Snippet
-
-```
-if ts' > ts then
-(ts, val) := (ts', v');
-trigger \langle pl, Send \mid p, [\textsc{Ack}] \rangle;
-```
-
-- **Freshness check:** If the incoming timestamp ($ts'$) is higher than the node's memory timestamp ($ts$), the node **updates its local copy**.
-
-- **Acknowledgement:** In any case, the node responds by sending an ACK to the writer/reader via point-to-point links (`pl`).
-
-5. Terminate the operation (`correct \subseteq writeset`)
-
-Code snippet
-
-```
-if reading = \text{TRUE} then
-reading := \text{FALSE};
-trigger \langle onar, ReadReturn \mid readval \rangle;
-else
-trigger \langle onar, WriteReturn \rangle;
-```
-
-- When the writer (or the broadcasting reader) receives ACKs from **all valid processes** (thanks to the perfect detector $\mathcal{P}$):
-
-- If the current operation was a **read** (`reading = TRUE`), it resets the flag and returns the value to the client (`ReadReturn | readval`).
-
-- If it was a **write**, it unblocks the application with `WriteReturn`.
+5. **Terminate the operation (`correct \subseteq writeset`)**	
+	```
+	if reading = \text{TRUE} then
+	reading := \text{FALSE};
+	trigger \langle onar, ReadReturn \mid readval \rangle;
+	else
+	trigger \langle onar, WriteReturn \rangle;
+	```
+	- When the writer (or the broadcasting reader) receives ACKs from **all valid processes** (thanks to the perfect detector $\mathcal{P}$):
+	- If the current operation was a **read** (`reading = TRUE`), it resets the flag and returns the value to the client (`ReadReturn | readval`).
+	- If it was a **write**, it unblocks the application with `WriteReturn`.
 
 ![[Dependable distributed system 1-1794326088156.webp]]
