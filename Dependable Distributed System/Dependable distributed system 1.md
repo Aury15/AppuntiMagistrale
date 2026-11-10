@@ -2394,5 +2394,4 @@ There are two main levels of guarantee for registers in a concurrent environment
 
 ![[Dependable distributed system 1-1794232190035.webp]]
 
-###### Regular register properties
-- **ONRR1** : Termination,
+###### Regular register: Read-One Write-ALL (ROWA) algorithm
