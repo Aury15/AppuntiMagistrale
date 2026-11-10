@@ -3025,3 +3025,40 @@ The first fundamental tool for defending against Byzantine behavior is the use o
 - **AL2 (No duplication):** No message is delivered by a correct process more than once.
 - **AL3 (Authenticity):** If a correct process $q$ delivers message $m$ with sender $p$ (and $p$ is correct), then $m$ was previously sent to $q$ by $p$.
 
+$$
+\begin{aligned}
+&\textbf{Algorithm 3.16:} \text{ Authenticated Echo Broadcast} \\
+&\textbf{Implements:} \\
+&\quad \text{ByzantineConsistentBroadcast, \textbf{instance } } bcb, \text{ with sender } s. \\
+&\textbf{Uses:} \\
+&\quad \text{AuthPerfectPointToPointLinks, \textbf{instance } } al. \\
+& \\
+&\textbf{upon event } \langle bcb, \text{Init} \rangle \text{ do} \\
+&\quad sentecho := \text{FALSE}; \\
+&\quad delivered := \text{FALSE}; \\
+&\quad echos := [\bot]^N; \\
+& \\
+&\textbf{upon event } \langle bcb, \text{Broadcast} \mid m \rangle \text{ do} && \text{// only process } s \\
+&\quad \textbf{forall } q \in \Pi \text{ do} \\
+&\quad\quad \text{trigger } \langle al, \text{Send} \mid q, [\textsc{Send}, m] \rangle; \\
+& \\
+&\textbf{upon event } \langle al, \text{Deliver} \mid p, [\textsc{Send}, m] \rangle \text{ such that } p = s \text{ and } sentecho = \text{FALSE} \text{ do} \\
+&\quad sentecho := \text{TRUE}; \\
+&\quad \textbf{forall } q \in \Pi \text{ do} \\
+&\quad\quad \text{trigger } \langle al, \text{Send} \mid q, [\textsc{Echo}, m] \rangle; \\
+& \\
+&\textbf{upon event } \langle al, \text{Deliver} \mid p, [\textsc{Echo}, m] \rangle \text{ do} \\
+&\quad \textbf{if } echos[p] = \bot \text{ then} \\
+&\quad\quad echos[p] := m; \\
+& \\
+&\textbf{upon exists } m \neq \bot \text{ such that } \#(\{p \in \Pi \mid echos[p] = m\}) > \frac{N + f}{2} \\
+&\quad \text{and } delivered = \text{FALSE} \text{ do} \\
+&\quad delivered := \text{TRUE}; \\
+&\quad \text{trigger } \langle bcb, \text{Deliver} \mid s, m \rangle;
+\end{aligned}
+$$
+- **Initialization (`Init`)**: Each process sets the Boolean flags `sentecho` and `delivered` to false and initializes an $N$-sized `echos` array filled with empty elements ($\bot$).
+- **Broadcast (`Broadcast | m`)**: Executed only by the sender $s$, it sends a `[SEND, m]` message to all processes on the network via authenticated links (`al`).
+- **Receiving SEND (`al, Deliver | p, [SEND, m]`)**: When a process receives the message from the correct sender $s$ (and has not yet responded with an echo), it sets `sentecho = TRUE` and sends an acknowledgement message `[Echo, m]` to all nodes.
+
+- **Echo Phase and Delivery Condition**: As processes receive `[ECHO, m]` messages, they record them in the `echos` vector. A process performs delivery (`bcb, Deliver`) as soon as it detects that there is a message $m$ (other than $\bot$) whose number of received echoes exceeds the safety threshold $\frac{N+f}{2}$, assuming that the system tolerates up to $f$ Byzantine faults with the fundamental condition $N > 3f$.
