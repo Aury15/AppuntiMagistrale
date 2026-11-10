@@ -2963,26 +2963,15 @@ $$
 &\quad\quad \text{readlist} := [\bot]^N; \\
 &\quad\quad \textbf{trigger } \langle beb, Broadcast \mid [\text{WRITE}, rid, \text{maxts}, readval] \rangle;
 &\textbf{upon event } \langle onar, Write \mid v \rangle \text{ do} \\ &\quad rid := rid + 1; \\ &\quad wts := wts + 1; \\ &\quad acks := 0; \\ &\quad \textbf{trigger } \langle beb, Broadcast \mid [\text{WRITE}, rid, wts, v] \rangle; \\ & \\ &\textbf{upon event } \langle beb, Deliver \mid p, [\text{WRITE}, r, ts', v'] \rangle \text{ do} \\ &\quad \textbf{if } ts' > ts \text{ then} \\ &\quad\quad (ts, val) := (ts', v'); \\ &\quad \textbf{trigger } \langle pl, Send \mid p, [\text{ACK}, r] \rangle; \\ & \\ &\textbf{upon event } \langle pl, Deliver \mid q, [\text{ACK}, r] \rangle \text{ such that } r = rid \text{ do} \\ &\quad acks := acks + 1; \\ &\quad \textbf{if } acks > N/2 \text{ then} \\ &\quad\quad acks := 0; \\ &\quad\quad \textbf{if } reading = \text{TRUE} \text{ then} \\ &\quad\quad\quad reading := \text{FALSE}; \\ &\quad\quad\quad \textbf{trigger } \langle onar, ReadReturn \mid readval \rangle; \\ &\quad\quad \textbf{else} \\ &\quad\quad\quad \textbf{trigger } \langle onar, WriteReturn \rangle; \end{aligned}$$
-Questo algoritmo fonde due concetti chiave:
-
-1. **Write-Majority (Scrittura a maggioranza):** Poiché non possiamo fidarci di tutti i nodi e non sappiamo chi sia morto o lento, ci basta raccogliere risposte da una maggioranza stretta di nodi ($> N/2$) per considerare valida un'operazione.
-    
-2. **Read-Impose (La lettura impone):** Quando un lettore legge, non si limita a osservare passivamente, ma **costringe (impone)** una maggioranza di nodi ad aggiornarsi con il valore più fresco trovato. Questo impedisce ai lettori futuri di imbattersi in dati obsoleti, garantendo l'atomicità (linearizzabilità).
-    
-
-
-#### 1. L'Operazione di Lettura (`onar, Read`)
+This algorithm combines two key concepts:
+1. **Write-Majority**: Since we can't trust all nodes and don't know which ones are dead or slow, we only need to collect responses from a strict majority of nodes ($> N/2$) to consider an operation valid.
+2. **Read-Impose**: When a reader reads, it doesn't just passively observe, but forces a majority of nodes to update with the freshest value found. This prevents future readers from encountering stale data, ensuring atomicity (linearizability).
 
 Quando un processo vuole leggere dal registro:
-
 - **Fase 1 (Polling):** Il lettore incrementa l'identificativo di lettura (`rid := rid + 1`) per evitare confusione con letture vecchie o concorrenti, azzera la lista e fa un broadcast di richiesta (`[READ, rid]`) a tutti i nodi.
-    
 - **Fase 2 (Risposta dei nodi):** Ciascun nodo riceve la richiesta e risponde privatamente con il proprio stato attuale tramite un messaggio `[VALUE, r, ts, val]`.
-    
 - **Fase 3 (Raccolta, Selezione e Imposizione):** Il lettore raccoglie le risposte nella `readlist`. Appena il numero di risposte supera la maggioranza ($\#(\text{readlist}) > N/2$):
-    
     - Seleziona il valore con il timestamp più alto usando `highest(readlist)` (`maxts, readval`).
-        
     - **Il "Read-Impose":** Esegue subito un nuovo broadcast `[WRITE, rid, maxts, readval]` per forzare i nodi ad aggiornarsi con questo valore.
         
 
