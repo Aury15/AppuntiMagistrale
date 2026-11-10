@@ -2606,30 +2606,25 @@ Ogni processo inizializza le proprie variabili locali in questo modo:
 - `readlist := [\alt]^N`: Un array grande $N$ in cui il lettore accumula le coppie `(timestamp, valore)` ricevute dai vari nodi.
     
 
-### 2. L'Operazione di Scrittura (`Write`) sotto il cofano
+ 2. **L'Operazione di Scrittura (`Write`) sotto il cofano**
 
-Quando viene invocata una `Write(v)`:
-
-1. **Aggiornamento del Timestamp:** Il writer incrementa il suo contatore di timestamp (`wts := wts + 1`). Questo garantisce che ogni nuova scrittura abbia un'etichetta temporale strettamente maggiore della precedente.
+	Quando viene invocata una `Write(v)`:
+	1. **Aggiornamento del Timestamp:** Il writer incrementa il suo contatore di timestamp (`wts := wts + 1`). Questo garantisce che ogni nuova scrittura abbia un'etichetta temporale strettamente maggiore della precedente.
+	2. **Broadcast:** Invia a tutti i nodi un messaggio Best-Effort Broadcast: `[WRITE, wts, v]`.
+	3. **Ricezione sui nodi (`beb, Deliver`):** Quando un nodo riceve il messaggio, fa un controllo cruciale:
+	    $$\text{if } ts' > ts \text{ then } (ts, val) := (ts', v')$$
+	    
+	    Se il timestamp in arrivo ($ts'$) è più alto di quello che il nodo ha attualmente in memoria ($ts$), allora il nodo si aggiorna. _Nota bene:_ Indipendentemente dal fatto che si sia aggiornato o meno, il nodo risponde **sempre** al writer inviandogli un `[ACK, ts']` tramite link point-to-point (`pl`).
     
-2. **Broadcast:** Invia a tutti i nodi un messaggio Best-Effort Broadcast: `[WRITE, wts, v]`.
-    
-3. **Ricezione sui nodi (`beb, Deliver`):** Quando un nodo riceve il messaggio, fa un controllo cruciale:
-    
-    $$\text{if } ts' > ts \text{ then } (ts, val) := (ts', v')$$
-    
-    Se il timestamp in arrivo ($ts'$) è più alto di quello che il nodo ha attualmente in memoria ($ts$), allora il nodo si aggiorna. _Nota bene:_ Indipendentemente dal fatto che si sia aggiornato o meno, il nodo risponde **sempre** al writer inviandogli un `[ACK, ts']` tramite link point-to-point (`pl`).
-    
-4. **Chiusura della Scrittura:** Il writer raccoglie gli ACK. Quando la condizione `acks > N/2` viene soddisfatta (cioè ha ricevuto riscontri da una **maggioranza stretta** di nodi), il writer sa che la scrittura è stata registrata a sufficienza nel sistema, azzera i contatori e sblocca l'applicazione con `WriteReturn`.
+	4. **Chiusura della Scrittura:** Il writer raccoglie gli ACK. Quando la condizione `acks > N/2` viene soddisfatta (cioè ha ricevuto riscontri da una **maggioranza stretta** di nodi), il writer sa che la scrittura è stata registrata a sufficienza nel sistema, azzera i contatori e sblocca l'applicazione con `WriteReturn`.
     
 
-### 3. L'Operazione di Lettura (`Read`) sotto il cofano
-
-Quando viene invocata una `Read()`
-1. **Nuovo ID di Lettura:** Il lettore incrementa `rid` e pulisce la `readlist`.
-2. **Polling generale:** Esegue un broadcast `[READ, rid]` a tutti i nodi.
-3. **Risposta dei nodi:** Ciascun nodo, quando riceve la richiesta di lettura, risponde privatamente al lettore inviando il proprio stato attuale tramite un messaggio `[VALUE, r, ts, val]`.
-4. **Raccolta e Decisione (`pl, Deliver Value`):** Il lettore salva le risposte nella `readlist`. Appena il numero di risposte raccolte supera la maggioranza (`#(readlist) > N/2`), il lettore attiva la logica di scelta:
-$$v := \text{highestval}(readlist)$$
-    
-    Esamina cioè tutti i timestamp raccolti tra i nodi della maggioranza, seleziona la coppia con il **timestamp più alto** in assoluto, estrae il valore $v$ associato e lo restituisce al client (`ReadReturn | v`).
+3. **L'Operazione di Lettura (`Read`) sotto il cofano**
+	Quando viene invocata una `Read()`:
+	1. **Nuovo ID di Lettura:** Il lettore incrementa `rid` e pulisce la `readlist`.
+	2. **Polling generale:** Esegue un broadcast `[READ, rid]` a tutti i nodi.
+	3. **Risposta dei nodi:** Ciascun nodo, quando riceve la richiesta di lettura, risponde privatamente al lettore inviando il proprio stato attuale tramite un messaggio `[VALUE, r, ts, val]`.
+	4. **Raccolta e Decisione (`pl, Deliver Value`):** Il lettore salva le risposte nella `readlist`. Appena il numero di risposte raccolte supera la maggioranza (`#(readlist) > N/2`), il lettore attiva la logica di scelta:
+	$$v := \text{highestval}(readlist)$$
+	    
+	    Esamina cioè tutti i timestamp raccolti tra i nodi della maggioranza, seleziona la coppia con il **timestamp più alto** in assoluto, estrae il valore $v$ associato e lo restituisce al client (`ReadReturn | v`).
