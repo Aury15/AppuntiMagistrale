@@ -2406,4 +2406,41 @@ The philosophy behind this approach is to "share the burden" asymmetrically betw
 - **Write-All (Writing is expensive):** When the writer process wants to update the registry with a new value:
 	1. Sends the new value to **all** processes that the detector considers alive (not crashed).
 	2. The write is not considered complete until the writer receives a write acknowledgement (**ACK**) from _each_ of the non-crashed processes.
+$$
+\begin{aligned}
+&\textbf{Algorithm 4.1:} \text{ Read-One Write-All} \\
+&\textbf{Implements:} \\
+&\quad (1, N)\text{-RegularRegister, \textbf{instance } } onrr. \\
+&\textbf{Uses:} \\
+&\quad \text{BestEffortBroadcast, \textbf{instance } } beb; \\
+&\quad \text{PerfectPointToPointLinks, \textbf{instance } } pl; \\
+&\quad \text{PerfectFailureDetector, \textbf{instance } } \mathcal{P}. \\
+& \\
+&\textbf{upon event } \langle onrr, Init \rangle \textbf{ do} \\
+&\quad val := \bot; \\
+&\quad correct := \Pi; \\
+&\quad writeset := \emptyset; \\
+& \\
+&\textbf{upon event } \langle \mathcal{P}, Crash \mid p \rangle \textbf{ do} \\
+&\quad correct := correct \setminus \{p\}; \\
+& \\
+&\textbf{upon event } \langle onrr, Read \rangle \textbf{ do} \\
+&\quad \textbf{trigger } \langle onrr, ReadReturn \mid val \rangle; \\
+& \\
+&\textbf{upon event } \langle onrr, Write \mid v \rangle \textbf{ do} \\
+&\quad \textbf{trigger } \langle beb, Broadcast \mid [\textsc{Write}, v] \rangle; \\
+& \\
+&\textbf{upon event } \langle beb, Deliver \mid q, [\textsc{Write}, v] \rangle \textbf{ do} \\
+&\quad val := v; \\
+&\quad \textbf{trigger } \langle pl, Send \mid q, \text{ACK} \rangle; \\
+& \\
+&\textbf{upon event } \langle pl, Deliver \mid p, \text{ACK} \rangle \textbf{ do} \\
+&\quad writeset := writeset \cup \{p\}; \\
+& \\
+&\textbf{upon event } \text{correct} \subseteq \text{writeset} \textbf{ do} \\
+&\quad writeset := \emptyset; \\
+& \\
+&\quad \textbf{trigger } \langle onrr, WriteReturn \rangle;
+\end{aligned}
+$$
 
