@@ -2444,3 +2444,92 @@ $$
 \end{aligned}
 $$
 
+The algorithm implements a Regular Register $(1,N)$** (where there is only 1 writer and $N$ readers) based on the Read-One Write-All (ROWA) paradigm, under the assumption of a Perfect Fault Detector ($\mathcal{P}$).
+
+1. **Header and Interfaces (`Implements` and `Uses`)**
+	- **`Implements (1, N)-RegularRegister, instance onrr`**: The algorithm provides the abstraction of a regular register identified by the `onrr` (on-regular-register) instance.
+	- **`Uses`**: The algorithm relies on three underlying modules:
+		1. `beb` (Best-Effort Broadcast): to send messages to all nodes.
+		2. `pl` (Perfect Point-to-Point Links): to exchange reliable messages in pairs.
+		3. $\mathcal{P}$ (Perfect Failure Detector): A perfect crash detector (with no false positives or false negatives).
+        
+
+#### B. Inizializzazione (`Init`)
+
+Snippet di codice
+
+```
+val := \bot; correct := \Pi; writeset := \emptyset;
+```
+
+- **`val`**: Memorizza il valore corrente del registro locale (inizializzato a vuoto/null $\bot$).
+    
+- **`correct`**: L'insieme di tutti i processi considerati sani (inizialmente impostato a $\Pi$, l'insieme di tutti i processi del sistema).
+    
+- **`writeset`**: L'insieme dei processi che hanno confermato di aver scritto il valore durante un'operazione di scrittura.
+    
+
+#### C. Gestione dei Crash (`upon event < \mathcal{P}, Crash \mid p >`)
+
+Snippet di codice
+
+```
+correct := correct \setminus \{p\};
+```
+
+- Quando il detector perfetto segnala che il processo $p$ è caduto (`Crash`), il processo lo rimuove immediatamente dall'insieme dei nodi considerati corretti (`correct`).
+    
+
+#### D. Operazione di Lettura (`Read`)
+
+Snippet di codice
+
+```
+upon event < onrr, Read > do
+    trigger < onrr, ReadReturn \mid val >;
+```
+
+- **Read-One**: Quando arriva una richiesta di lettura (`Read`), il processo **non invia alcun messaggio in rete**. Legge semplicemente il valore salvato nella sua variabile locale `val` e restituisce subito il risultato (`ReadReturn | val`). Le letture sono quindi locali e a costo zero di comunicazione.
+    
+
+#### E. Operazione di Scrittura (`Write`)
+
+Snippet di codice
+
+```
+upon event < onrr, Write \mid v > do
+    trigger < beb, Broadcast \mid [WRITE, v] >;
+```
+
+- Quando lo scrittore vuole scrivere un valore $v$, usa il Best-Effort Broadcast (`beb`) per inviare un messaggio `[WRITE, v]` a tutti i nodi della rete.
+    
+
+#### F. Ricezione della Scrittura sui Nodi (`beb, Deliver`)
+
+Snippet di codice
+
+```
+upon event < beb, Deliver \mid q, [WRITE, v] > do
+    val := v;
+    trigger < pl, Send \mid q, ACK >;
+```
+
+- Quando un qualsiasi processo riceve il messaggio di scrittura dal nodo $q$, aggiorna immediatamente la sua copia locale (`val := v`) e spedisce indietro un messaggio di riscontro (`ACK`) direttamente allo scrittore usando i link point-to-point (`pl`).
+    
+
+#### G. Raccolta degli ACK e Chiusura della Scrittura (`writeset`)
+
+Snippet di codice
+
+```
+upon event < pl, Deliver \mid p, ACK > do
+    writeset := writeset \cup \{p\};
+
+upon event correct \subseteq writeset do
+    writeset := \emptyset;
+    trigger < onrr, WriteReturn >;
+```
+
+- **Write-All**: Man mano che arrivano gli `ACK` dai vari processi $p$, questi vengono aggiunti al `writeset`.
+    
+- La scrittura si conclude sbloccando il client (`WriteReturn`) **solo quando l'insieme dei nodi corretti (`correct`) è interamente incluso nel `writeset`** (cioè lo scrittore ha ricevuto l'ACK da _tutti_ i nodi vivi). Dopodiché il `writeset` viene ripulito per la scrittura successiva.
