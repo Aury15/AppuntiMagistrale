@@ -2542,3 +2542,51 @@ Communication primitives:
 -  Quorum: the intersection of any two sets of witness processes is not empty;
 -  “*Majority Voting*”: each set is constituted by a majority of processes.
 
+\begin{aligned}
+&\textbf{Algorithm 4.2:} \text{ Majority Voting Regular Register} \\
+&\textbf{Implements:} \\
+&\quad (1, N)\text{-RegularRegister, \textbf{instance } } onrr. \\
+&\textbf{Uses:} \\
+&\quad \text{BestEffortBroadcast, \textbf{instance } } beb; \\
+&\quad \text{PerfectPointToPointLinks, \textbf{instance } } pl. \\
+& \\
+&\textbf{upon event } \langle onrr, Init \rangle \textbf{ do} \\
+&\quad (ts, val) := (0, \bot); \\
+&\quad wts := 0; \\
+&\quad acks := 0; \\
+&\quad rid := 0; \\
+&\quad readlist := [\bot]^N; \\
+& \\
+&\mathbf{\text{--- Write() Operation ---}} \\
+&\textbf{upon event } \langle onrr, Write \mid v \rangle \textbf{ do} \\
+&\quad wts := wts + 1; \\
+&\quad acks := 0; \\
+&\quad \textbf{trigger } \langle beb, Broadcast \mid [\textsc{Write}, wts, v] \rangle; \\
+& \\
+&\textbf{upon event } \langle beb, Deliver \mid p, [\textsc{Write}, ts', v'] \rangle \textbf{ do} \\
+&\quad \textbf{if } ts' > ts \textbf{ then} \\
+&\quad\quad (ts, val) := (ts', v'); \\
+&\quad \textbf{trigger } \langle pl, Send \mid p, [\textsc{Ack}, ts'] \rangle; \\
+& \\
+&\textbf{upon event } \langle pl, Deliver \mid q, [\textsc{Ack}, ts'] \rangle \textbf{ such that } ts' = wts \textbf{ do} \\
+&\quad acks := acks + 1; \\
+&\quad \textbf{if } acks > N/2 \textbf{ then} \\
+&\quad\quad acks := 0; \\
+&\quad\quad \textbf{trigger } \langle onrr, WriteReturn \rangle; \\
+& \\
+&\mathbf{\text{--- Read() Operation ---}} \\
+&\textbf{upon event } \langle onrr, Read \rangle \textbf{ do} \\
+&\quad rid := rid + 1; \\
+&\quad readlist := [\bot]^N; \\
+&\quad \textbf{trigger } \langle beb, Broadcast \mid [\textsc{Read}, rid] \rangle; \\
+& \\
+&\textbf{upon event } \langle beb, Deliver \mid p, [\textsc{Read}, r] \rangle \textbf{ do} \\
+&\quad \textbf{trigger } \langle pl, Send \mid p, [\textsc{Value}, r, ts, val] \rangle; \\
+& \\
+&\textbf{upon event } \langle pl, Deliver \mid q, [\textsc{Value}, r, ts', v'] \rangle \textbf{ such that } r = rid \textbf{ do} \\
+&\quad readlist[q] := (ts', v'); \\
+&\quad \textbf{if } \#(readlist) > N/2 \textbf{ then} \\
+&\quad\quad v := \text{highestval}(readlist); \\
+&\quad\quad readlist := [\bot]^N; \\
+&\quad\quad \textbf{trigger } \langle onrr, ReadReturn \mid v \rangle;
+\end{aligned}
