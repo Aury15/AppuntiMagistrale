@@ -2471,14 +2471,11 @@ upon event < onrr, Read > do \\
 $$
 	- **Read-One**: When a read request (`Read`) arrives, the process **does not send any messages over the network**. It simply reads the value stored in its local variable `val` and immediately returns the result (`ReadReturn | val`). Reads are therefore local and have no communication cost.
 
-5. Operazione di Scrittura (`Write`)
-
-Snippet di codice
-
-```
-upon event < onrr, Write \mid v > do
-    trigger < beb, Broadcast \mid [WRITE, v] >;
-```
+5. **Operazione di Scrittura (`Write`)**
+$$
+upon event < onrr, Write \mid v > do \\
+    \quad \quad trigger < beb, Broadcast \mid [WRITE, v] >;
+$$
 
 - Quando lo scrittore vuole scrivere un valore $v$, usa il Best-Effort Broadcast (`beb`) per inviare un messaggio `[WRITE, v]` a tutti i nodi della rete.
     
