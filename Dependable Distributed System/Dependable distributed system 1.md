@@ -2803,6 +2803,10 @@ $$
 ###### RIWA: Read-Impose Write-All algorithm for atomic register 
 As we've seen, in a regular ledger, if there's a concurrent read and write, the reader can receive a "new" value. However, if a subsequent reader reads from a process that hasn't yet been updated, it risks reading an older value, creating a temporal anomaly (time "rolls back"), which violates atomicity (linearizability). To address this issue, the golden rule applies: "The read operation writes."
 **How the key idea works:**
-1. The Read phase: When a reader queries nodes, it finds the value with the most recent timestamp.
+1. **The Read phase**: When a reader queries nodes, it finds the value with the most recent timestamp.
 2. **The Write-All phase:** Before actually returning the value to the client (ReadReturn), the reader forces all valid processes to update their local copy with that value (unless they already have a version with an even more recent timestamp).
 3. **The result**: This "forced write" phase (impose) ensures that the most recent value propagates instantaneously across the network. No subsequent reader will ever again encounter an obsolete version.
+
+$$
+
+$$
