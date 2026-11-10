@@ -2395,3 +2395,4 @@ There are two main levels of guarantee for registers in a concurrent environment
 ![[Dependable distributed system 1-1794232190035.webp]]
 
 ###### Regular register: Read-One Write-ALL (ROWA) algorithm
+What does "Perfect" mean? It has two absolute formal guarantees:
