@@ -2900,3 +2900,17 @@ $$
 	- If it was a **write**, it unblocks the application with `WriteReturn`.
 
 ![[Dependable distributed system 1-1794326088156.webp]]
+###### Correctness (_Correctness_)
+- **Termination (Termination):** This derives from exactly the same properties as the regular ROWA register. Thanks to the perfect fault detector ($\mathcal{P}$) and communication primitives, both writing and reading always terminate, as they don't block indefinitely (every correct process responds with an ACK).
+
+- **Validity (Validity):** Here too, the same principle applies as for the regular ROWA register: the values ​​read or written are semantically consistent and valid within the system.
+
+- **Ordering (Atomicity):**
+- This is the property that distinguishes atomicity from regularity. To complete a read operation, the reader process **must ensure** (by receiving ACKs from all correct processes) that every other node has updated its local copy with the value (and timestamp) just read.
+- _Why is it crucial?_ This way, any subsequent read will query nodes that already have an updated (or even more recent) version, categorically preventing a future reader from encountering an old value. Time cannot "go back," thus ensuring linearizability (atomicity).
+###### Performance (_Performance_)
+Unlike the regular version (where reading was costless), in the atomic RIWA implementation, the cost is also shifted to reading, due to the need to enforce the value:
+
+- **Write:** Requires a maximum of $2N$ messages.** The writer broadcasts the value to all nodes ($N$ messages) and receives ACKs from all valid processes ($N$ messages).
+
+- **Read:** Also requires a maximum of $2N$ messages. Because of the _Read-Impose_ mechanism, the read also needs to broadcast to all nodes to force the timestamp update ($N$ messages) and collect all confirmation ACKs ($N$ messages).
