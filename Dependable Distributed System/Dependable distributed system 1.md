@@ -2523,4 +2523,8 @@ Performance is evaluated based on the number of network messages exchanged:
 > $P_1$ invokes write(6) and then falsely suspects $p_2$ . Thus, $p_1$ completes the write operation without waiting for the ack of $p_2$, i.e. without being sure that the value 6 has been written in the local copy of the register at $p_2$. 
 
 ###### Fail-silent algorithm: majority voting regular register
-While in the Fail-Stop model we had a “superpower” (the perfect fault detector $\mathcal{P}$ that told us who was dead), here we enter the real world of asynchronous systems.
+While in the Fail-Stop model we had a “superpower” (the perfect fault detector $\mathcal{P}$ that told us who was dead), here we enter the real world of asynchronous systems. <u>Process crashes can never be reliably detected</u>. 
+
+>[!important] The problem
+ In a real network, if a node stops responding, you can't know if it's dead forever (crashed) or just very slow or stuck in a network delay. There's no perfect detector. Therefore, we must design algorithms that work without knowing who's alive and who's dead.
+
