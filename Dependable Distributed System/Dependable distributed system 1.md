@@ -2982,34 +2982,18 @@ When the writer (or the reader in the write-back phase) sends a value:
 	- If the current operation was a read (`reading = TRUE`), return the value to the client with `ReadReturn | readval`.
 	- If it was a write, unblock the application with `WriteReturn`.
 
-###### Correttezza (_Correctness_)
+###### Correctness (_Correctness_)
+- **Termination (Termination):** Derives directly from the same properties as the regular _Majority Voting_ register. Since the algorithm relies on the assumption that there is a **majority of correct processes** and uses reliable communication primitives, read and write operations do not block indefinitely, as they simply wait for acknowledgements from the majority ($> N/2$) to complete them.
+- **Validity (Validity):** Also inherited from the regular _Majority Voting_ register: every value returned or written is semantically valid and belongs to the set of values ​​entered into the system by the writer.
+- **Ordering (Ordering / Atomicity):**
+- This is the key property that elevates the algorithm to _atomic_. It results from the combination of two factors:
+	1. The **Read-Impose** mechanism, which forces the reader to propagate and impose the newly read value on a majority of processes before returning it to the client.
+	2. The **quorum intersection property (majority)**, whereby any future operation will query a majority that shares at least one node with the previous one, categorically preventing a reader from viewing an outdated version (time never goes back).
 
-- **Termination (Terminazione): Deriva direttamente dalle stesse proprietà del registro regolare _Majority Voting_. Poiché l'algoritmo si basa sull'ipotesi che esista una **maggioranza di processi corretti** e utilizza primitive di comunicazione affidabili, le operazioni di lettura e scrittura non si bloccano indefinitamente, in quanto basta l'attesa di riscontri da parte della maggioranza ($> N/2$) per completarle.
-        
-- **Validity (Validità):**
-    
-    - Ereditata anch'essa dal registro regolare _Majority Voting_: ogni valore restituito o scritto è semanticamente valido e appartiene all'insieme dei valori immessi nel sistema dallo scrittore.
-        
-- **Ordering (Ordinamento / Atomicità):**
-    
-    - Questa è la proprietà chiave che eleva l'algoritmo ad _atomico_. Deriva dalla combinazione di due fattori:
-        
-        1. Il meccanismo di **Read-Impose**, che obbliga il lettore a propagare e imporre il valore appena letto a una maggioranza di processi prima di ritornarlo al client.
-            
-        2. La **proprietà di intersezione dei quorum (maggioranze)**, per cui qualsiasi operazione futura interrogherà una maggioranza che condivide almeno un nodo con quella precedente, impedendo categoricamente a un lettore di visualizzare una versione obsoleta (il tempo non torna mai indietro).
-            
-
-### 2. Prestazioni (_Performance_)
-
-Nel modello _Fail-Silent_ a maggioranza, la garanzia dell'atomicità richiede un costo di messaggi più elevato, soprattutto per l'operazione di lettura:
-
-- **Write (Scrittura):** Richiede al **massimo $2N$ messaggi**. Lo scrittore esegue un Best-Effort Broadcast a tutti i nodi ($N$ messaggi) e raccoglie i riscontri ACK dalla maggioranza (al più $N$ messaggi di risposta), per un totale di $2N$.
-    
-- **Read (Lettura):** Richiede al **massimo $4N$ messaggi**. Il costo è maggiore perché la lettura si compone di _due fasi distinte_, ciascuna basata su uno scambio a maggioranza:
-    
-    1. **Fase di polling (lettura):** Broadcast della richiesta di lettura ($N$ messaggi) + ricezione dei valori dai nodi ($N$ messaggi).
-        
-    2. **Fase di impose (scrittura/riparazione):** Broadcast del valore più fresco trovato per aggiornare la rete ($N$ messaggi) + ricezione degli ACK di conferma ($N$ messaggi).
-        
-    
-    - Totale complessivo: $N + N + N + N = 4N$ messaggi.
+###### Performance (_Performance_)
+In the majority _Fail-Silent_ model, ensuring atomicity requires a higher message cost, especially for the read operation:
+- **Write:** Requires **maximum $2N$ messages**. The writer performs a Best-Effort Broadcast to all nodes ($N$ messages) and collects ACKs from the majority (at most $N$ response messages), for a total of $2N$.
+- **Read:** Requires **up to $4N$ messages**. The cost is higher because reading consists of _two distinct phases_, each based on a majority vote:
+	1. **Polling Phase (Read):** Broadcast the read request ($N$ messages) + receive values ​​from nodes ($N$ messages).
+	2. **Impose Phase (Write/Repair):** Broadcast the freshest value found to update the network ($N$ messages) + receive confirmation ACKs ($N$ messages).
+	- Grand total: $N + N + N + N = 4N$ messages.
