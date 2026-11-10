@@ -2396,3 +2396,5 @@ There are two main levels of guarantee for registers in a concurrent environment
 
 ###### Regular register: Read-One Write-ALL (ROWA) algorithm
 What does "Perfect" mean? It has two absolute formal guarantees:
+1. *Strong completeness*: if a process die, every 
+2. *Strong accuracy*
