@@ -3033,24 +3033,15 @@ Before defining broadcast protocols, we must ensure that messages cannot be spoo
 **Consistent Broadcast** in the presence of Byzantine failures guarantees that all nodes agree on the same message, but _without_ the strong guarantee of universal termination if the sender fails.
 
 ###### ByzantineConsistentBroadcast (`bcb`)
-
-- **Nome istanza:** `bcb`, con mittente $s$.
-- **Eventi:**
-    
-    - Richiesta: `(bcb, Broadcast | m)` -> Eseguita **solo** dal processo mittente $s$.
-        
-    - Indicazione: `(bcb, Deliver | p, m)` -> Consegna il messaggio $m$ emesso da $p$.
-        
-
-### Proprietà:
-
-- **BCB1 (Validity):** Se un processo corretto $p$ (che funge da mittente) fa il broadcast di un messaggio $m$, allora ogni processo corretto alla fine consegna $m$.
-    
-- **BCB2 (No duplication):** Ogni processo corretto consegna al massimo un messaggio.
-    
-- **BCB3 (Integrity):** Se un processo corretto consegna un messaggio $m$ con mittente $p$ (corretto), allora $m$ è stato precedentemente trasmesso da $p$.
-    
-- **BCB4 (Consistency):** Se un processo corretto consegna un messaggio $m$ e un altro processo corretto consegna un messaggio $m'$, allora $m = m'$. _(Nota: si riferisce a un singolo evento di broadcast)._
+- **Instance Name:** `bcb`, with sender $s$.
+- **Events:**
+	- Request: `(bcb, Broadcast | m)` -> Executed **only** by the sender process $s$.
+	- Indication: `(bcb, Deliver | p, m)` -> Delivers message $m$ issued by $p$.
+###### Properties:
+- **BCB1 (Validity):** If a correct process $p$ (acting as the sender) broadcasts a message $m$, then every correct process eventually delivers $m$.
+- **BCB2 (No duplication):** Each correct process delivers at most one message.
+- **BCB3 (Integrity):** If a correct process delivers a message $m$ with sender $p$ (correct), then $m$ was previously broadcast by $p$.
+- **BCB4 (Consistency):** If a correct process delivers a message $m$ and another correct process delivers a message $m'$, then $m = m'$. _(Note: This refers to a single broadcast event.)_
 
 $$
 \begin{aligned}
@@ -3088,4 +3079,4 @@ $$
 - **Broadcast (`Broadcast | m`)**: Executed only by the sender $s$, it sends a `[SEND, m]` message to all processes on the network via authenticated links (`al`).
 - **Receiving SEND (`al, Deliver | p, [SEND, m]`)**: When a process receives the message from the correct sender $s$ (and has not yet responded with an echo), it sets `sentecho = TRUE` and sends an acknowledgement message `[Echo, m]` to all nodes.
 - **Echo Phase and Delivery Condition**: As processes receive `[ECHO, m]` messages, they record them in the `echos` vector. A process performs delivery (`bcb, Deliver`) as soon as it detects that there is a message $m$ (other than $\bot$) whose number of received echoes exceeds the safety threshold $\frac{N+f}{2}$, assuming that the system tolerates up to $f$ Byzantine faults with the fundamental condition $N > 3f$.
-
+![[Dependable distributed system 1-1794329369872.webp]]
