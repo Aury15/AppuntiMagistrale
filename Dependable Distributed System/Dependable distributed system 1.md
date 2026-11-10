@@ -2386,10 +2386,13 @@ There are two main levels of guarantee for registers in a concurrent environment
 		- A read operation that is *concurrent* with one or more writes may return the last written value *or* one of the values ​​written concurrently.
 	![[Dependable distributed system 1-1794231774237.webp]]
 - **Atomic register $(1,N)$:** Atomic registers, by contrast, impose a rigid, sequential global order, eliminating any ambiguity and ensuring that everyone sees the same timeline.
-	- *Termination*. If a correct process invokes an operation, then the operation eventually receives the corresponding confirmation. 
-	- *Validity*. A read operation returns the last value written or the value concurrently being written.
+	- *Termination* (ONRR1). If a correct process invokes an operation, then the operation eventually receives the corresponding confirmation. 
+	- *Validity* (ONRR2). A read operation returns the last value written or the value concurrently being written.
 	- *Ordering*. If a read operation returns a value $v_1$ and a subsequent read operation (in terms of time) returns $v_2$, then the write operation that introduced $v_2$ cannot have occurred before the write operation that introduced $v_1$. It is not permitted to "go back in time" by observing write operations in an order that is the reverse of the sequence actually experienced by the clients.
 	![[Dependable distributed system 1-1794319677956.webp]]
 	The process $p_1$ executes a first write, write(5), and a second write, write(6). The first write end before the start of the second write. The process $p_2$ arrives later, when both writes are already completed, and performs a read() operation that returns the value 5 (green bar). If the read had returned 5, while another previous read had returned 6, we would have violated atomicity (because time would go backwards). But here there is only one read that sees 5. Atomicity is respected because the operations can be linearized into a valid serial sequence in which write(5) happens, then write(6) happens, and the read is placed temporally in a way consistent with a view in which the value 5 is still valid or is the intercepted reference point.
 
 ![[Dependable distributed system 1-1794232190035.webp]]
+
+###### Regular register properties
+- **ONRR1** : Termination,
