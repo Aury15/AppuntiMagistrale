@@ -2487,17 +2487,16 @@ trigger < pl, Send \mid q, ACK >; \\
 $$
 	- When any process receives the write message from node $q$, it immediately updates its local copy (`val := v`) and sends an acknowledgement (`ACK`) directly to the writer using point-to-point links (`pl`).
 
-7. **Raccolta degli ACK e Chiusura della Scrittura (`writeset`)**
+7. **ACK Collection and Closing the Write (`writeset`)**
 
 $$
 upon event < pl, Deliver \mid p, ACK > do \\
-    writeset := writeset \cup \{p\};\\ 
+writeset := writeset \cup \{p\};\\ 
 \\
 upon event correct \subseteq writeset do\\
-    writeset := \emptyset;\\
-    trigger < onrr, WriteReturn >;
+writeset := \emptyset;\\
+trigger < onrr, WriteReturn >;
 $$
+	- **Write-All**: As ACKs arrive from the various $p$ processes, they are added to the `writeset`.
+	- The write is completed by unlocking the client (`WriteReturn`) **only when the set of correct nodes (`correct`) is entirely included in the `writeset`** (i.e., the writer has received ACKs from _all_ live nodes). The `writeset` is then cleared for the next write.
 
-- **Write-All**: Man mano che arrivano gli `ACK` dai vari processi $p$, questi vengono aggiunti al `writeset`.
-    
-- La scrittura si conclude sbloccando il client (`WriteReturn`) **solo quando l'insieme dei nodi corretti (`correct`) è interamente incluso nel `writeset`** (cioè lo scrittore ha ricevuto l'ACK da _tutti_ i nodi vivi). Dopodiché il `writeset` viene ripulito per la scrittura successiva.
