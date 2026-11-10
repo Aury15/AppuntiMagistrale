@@ -2733,8 +2733,55 @@ To demonstrate that the algorithm correctly implements an atomic register $(1,1)
 - **IMPORTANT NOTE:** From a network message perspective, **there are no additional messages** beyond those already provided by a regular register implementation $(1,1)$. Timestamp-based filtering occurs entirely locally on the client/reader, with no network overhead.
 
 ![[Dependable distributed system 1-1794325035328.webp]]![[Dependable distributed system 1-1794325048225.webp]]
-
-
+\begin{aligned}
+&\textbf{Algorithm 4.4:} \text{ From } (1, 1)\text{-Atomic to } (1, N)\text{-Atomic Registers} \\
+&\textbf{Implements:} \\
+&\quad (1, N)\text{-AtomicRegister, \textbf{instance } } onar. \\
+&\textbf{Uses:} \\
+&\quad (1, 1)\text{-AtomicRegister (multiple instances). \\
+& \\
+&\textbf{upon event } \langle onar, Init \rangle \textbf{ do} \\
+&\quad ts := 0; \\
+&\quad acks := 0; \\
+&\quad writing := \text{FALSE}; \\
+&\quad readval := \bot; \\
+&\quad readlist := [\bot]^N; \\
+&\quad \textbf{forall } q \in \Pi, r \in \Pi \text{ do} \\
+&\quad\quad \text{Initialize a new instance } ooar.q.r \text{ of } (1, 1)\text{-AtomicRegister} \\
+&\quad\quad \text{with writer } r \text{ and reader } q; \\
+& \\
+&\textbf{upon event } \langle onar, Write \mid v \rangle \textbf{ do} \\
+&\quad ts := ts + 1; \\
+&\quad writing := \text{TRUE}; \\
+&\quad \textbf{forall } q \in \Pi \text{ do} \\
+&\quad\quad \text{trigger } \langle ooar.q.\text{self}, Write \mid (ts, v) \rangle; \\
+& \\
+&\textbf{upon event } \langle ooar.q.\text{self}, WriteReturn \rangle \textbf{ do} \\
+&\quad acks := acks + 1; \\
+&\quad \textbf{if } acks = N \text{ then} \\
+&\quad\quad acks := 0; \\
+&\quad\quad \textbf{if } writing = \text{TRUE} \text{ then} \\
+&\quad\quad\quad \text{trigger } \langle onar, WriteReturn \rangle; \\
+&\quad\quad\quad writing := \text{FALSE}; \\
+&\quad\quad \textbf{else} \\
+&\quad\quad\quad \text{trigger } \langle onar, ReadReturn \mid readval \rangle; \\
+& \\
+&\textbf{upon event } \langle onar, Read \rangle \textbf{ do} \\
+&\quad \textbf{forall } r \in \Pi \text{ do} \\
+&\quad\quad \text{trigger } \langle ooar.self.r, Read \rangle; \\
+& \\
+&\textbf{upon event } \langle ooar.\text{self}.r, ReadReturn \mid (ts', v') \rangle \textbf{ do} \\
+&\quad readlist[r] := (ts', v'); \\
+&\quad \textbf{if } #(\text{readlist}) = N \text{ then} \\
+&\quad\quad (\text{maxts}, readval) := \text{highest}(\text{readlist}); \\
+&\quad\quad readlist := [\bot]^N; \\
+&\quad\quad \textbf{forall } q \in \Pi \text{ do} \\
+&\quad\quad\quad \text{trigger } \langle ooar.q.\text{self}, Write \mid (\text{maxts}, readval) \rangle; \\
+&\textbf{upon event } \langle ooar.q.\text{self}, WriteReturn \rangle \textbf{ do} \\
+&\quad \textbf{criptor} *// (Nota: continuazione gestione acks della fase di scrittura/propagazione della lettura)
+\end{aligned}
+$$
 ![[Dependable distributed system 1-1794325135384.webp]]
-
+![[Dependable distributed system 1-1794325150135.webp]]
+![[Dependable distributed system 1-1794325167962.webp]]
 
