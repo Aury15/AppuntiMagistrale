@@ -2912,8 +2912,18 @@ Unlike the regular version (where reading was costless), in the atomic RIWA impl
 - **Read:** Also requires a maximum of $2N$ messages. Because of the _Read-Impose_ mechanism, the read also needs to broadcast to all nodes to force the timestamp update ($N$ messages) and collect all confirmation ACKs ($N$ messages).
 
 ##### Read-Impose Write-Majority Atomic register fail-silent
-Nel modello _Fail-Stop_ (visto prima con il RIWA), potevamo permetterci di imporre la scrittura su _tutti_ i nodi vivi (`correct`), perché avevamo un detector perfetto che ci diceva esattamente chi fosse vivo. Nel mondo reale **Fail-Silent**, non possiamo sapere con certezza se un nodo è morto o solo lento. Di conseguenza:
+In the _Fail-Stop_ model (first seen with RIWA), we could force writes on _all_ live nodes (`correct`), because we had a perfect detector that told us exactly which ones were alive. In the real world **Fail-Silent**, we can't know for sure whether a node is dead or just slow. Consequently:
+- We can't demand responses from all nodes.
+- We rely on the **majority** ($> N/2$).
 
-- Non possiamo pretendere risposte da tutti i nodi.
-    
-- Ci affidiamo alla **maggioranza** ($> N/2$).
+<u>How the algorithm works:</u>
+1. **Write_:** When the writer wants to update the ledger, it sends the new value (with an incremented timestamp) and **waits for ACKs from a majority of processes**. As soon as the majority confirms, the write is considered valid.
+2. **Read-Impose_:** When a reader wants to read, it first queries a majority to find the value with the highest timestamp. Then, similar to the principle seen above, it forces that value onto a majority of processes, forcing them to update their local copies before returning the result to the client.
+
+
+**Why does it guarantee Atomicity (Linearizability)?**
+
+The combination of these two rules always leverages the mathematical magic of quorum intersection:
+- Any read forces its value onto a majority $M_1$.
+- Any subsequent read or write will query or update another majority $M_2$.
+- Since $M_1$ and $M_2$ always intersect at at least one node, the freshest value is never lost, and no future reader will ever see an outdated version.
