@@ -2853,75 +2853,65 @@ $$
 \end{aligned}
 $$
 
-1. Initialization and Variables
+1. **Initialization and Variables**
 	- `(ts, val) := (0, \bot)`: Stores the timestamp and current value.
-	
 	- `reading := \text{FALSE}`: A Boolean flag used to determine whether the process is performing a read (`TRUE`) or write (`FALSE`) operation.
-	
 	- `readval`: Temporarily stores the value the reader intends to return.
 
-2. The Read Operation (`onar, Read`)
+2. **The Read Operation (`onar, Read`)**
+	When a read request arrives
+	```
+	reading := \text{TRUE};
+	readval := val;
+	trigger \langle beb, Broadcast \mid [\textsc{Write}, ts, val] \rangle;
+	```
+	- The reader sets the `reading` flag and saves the current value locally (`readval := val`).
+	- Immediately afterward, it broadcasts the timestamp and its current value to all nodes (`[\textsc{Write}, ts, val]`). This is the _enforcement_ phase: it forces the network to align on its value.
 
-When a read request arrives:
+The Write Operation (`onar, Write \mid v`)
+
+When a request arrives to write a new value $v$:
 
 Code Snippet
 
 ```
-reading := \text{TRUE};
-readval := val;
-trigger \langle beb, Broadcast \mid [\textsc{Write}, ts, val] \rangle;
+trigger \langle beb, Broadcast \mid [\textsc{Write}, ts + 1, v] \rangle;
 ```
 
-- The reader sets the `reading` flag and saves the current value locally (`readval := val`).
+- The writer increments the timestamp by 1 (`ts + 1`) to make it more recent than any other, and broadcasts the new value to all nodes.
 
-- Immediately afterward, it broadcasts the timestamp and its current value to all nodes (`[\textsc{Write}, ts, val]`). This is the _enforcement_ phase: it forces the network to align on its value.
+4. Receiving at Nodes (`beb, Deliver`)
 
- 3. L'Operazione di Scrittura (`onar, Write \mid v`)
+When any process receives a write/enforce message `[\textsc{Write}, ts', v']`:
 
-	Quando arriva una richiesta di scrittura di un nuovo valore $v$:
-	
-	Snippet di codice
-	
-	```
-	trigger \langle beb, Broadcast \mid [\textsc{Write}, ts + 1, v] \rangle;
-	```
-	
-	- Lo scrittore incrementa il timestamp di 1 (`ts + 1`) per renderlo più recente di qualsiasi altro, e fa un broadcast a tutti i nodi con il nuovo valore.
-    
+Code Snippet
 
- 4. La Ricezione sui Nodi (`beb, Deliver`)
+```
+if ts' > ts then
+(ts, val) := (ts', v');
+trigger \langle pl, Send \mid p, [\textsc{Ack}] \rangle;
+```
 
-	Quando un qualsiasi processo riceve un messaggio di scrittura/imposizione `[\textsc{Write}, ts', v']`:
-	
-	Snippet di codice
-	
-	```
-	if ts' > ts then
-	    (ts, val) := (ts', v');
-	trigger \langle pl, Send \mid p, [\textsc{Ack}] \rangle;
-	```
-	
-	- **Controllo di freschezza:** Se il timestamp in arrivo ($ts'$) è più alto di quello che il nodo ha in memoria ($ts$), il nodo **aggiorna la sua copia locale**.
-	    
-	- **Riscontro:** In ogni caso, il nodo risponde inviando un `ACK` allo scrittore/lettore tramite i link point-to-point (`pl`).
-	    
+- **Freshness check:** If the incoming timestamp ($ts'$) is higher than the node's memory timestamp ($ts$), the node **updates its local copy**.
 
- 5. Chiusura dell'operazione (`correct \subseteq writeset`)
+- **Acknowledgement:** In any case, the node responds by sending an ACK to the writer/reader via point-to-point links (`pl`).
 
-	Snippet di codice
-	
-	```
-	if reading = \text{TRUE} then
-	    reading := \text{FALSE};
-	    trigger \langle onar, ReadReturn \mid readval \rangle;
-	else
-	    trigger \langle onar, WriteReturn \rangle;
-	```
-	
-	- Quando lo scrittore (o il lettore che ha fatto il broadcast) riceve gli `ACK` da **tutti i processi corretti** (grazie al detector perfetto $\mathcal{P}$):
-	    
-	    - Se l'operazione in corso era una **lettura** (`reading = TRUE`), resetta il flag e restituisce il valore al client (`ReadReturn | readval`).
-	        
-	    - Se era una **scrittura**, sblocca l'applicazione con `WriteReturn`.
+5. Terminate the operation (`correct \subseteq writeset`)
+
+Code snippet
+
+```
+if reading = \text{TRUE} then
+reading := \text{FALSE};
+trigger \langle onar, ReadReturn \mid readval \rangle;
+else
+trigger \langle onar, WriteReturn \rangle;
+```
+
+- When the writer (or the broadcasting reader) receives ACKs from **all valid processes** (thanks to the perfect detector $\mathcal{P}$):
+
+- If the current operation was a **read** (`reading = TRUE`), it resets the flag and returns the value to the client (`ReadReturn | readval`).
+
+- If it was a **write**, it unblocks the application with `WriteReturn`.
 
 ![[Dependable distributed system 1-1794326088156.webp]]
