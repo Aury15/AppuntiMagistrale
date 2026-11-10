@@ -2631,3 +2631,6 @@ Unlike ROWA (where reading was costless and writing was costly), here the costs 
 - **Write:** Requests a maximum of $2N$ messages. The writer broadcasts to all nodes ($N$ messages) and receives ACKs from the majority nodes (and at most $N$ responses), totaling a maximum of $2N$ messages.
 - **Read:** This also requires a maximum of $2N$ messages. The reader broadcasts the request to all nodes ($N$ messages) and collects the valuable responses from the queried nodes ($N$ messages).
 
+
+##### Implementation of atomic register (1, $N$)
+per costruire un **Registro Atomico $(1,N)$**
