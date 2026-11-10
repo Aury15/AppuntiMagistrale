@@ -2531,3 +2531,8 @@ While in the Fail-Stop model we had a “superpower” (the perfect fault detect
 To **ensure consistency** despite uncertainty about crashes, the algorithm relies on two assumptions: 
 - **Structure**: There are $N$ processes, of which only 1 is a writer and $N$ readers.
 - **Majority assumption** (Majority of correct processes): It is assumed that the majority of processes ($> N/2$) will not crash and will remain correct throughout execution. Without this assumption, an asynchronous system would be impossible to reach any agreement (*FLP theorem*).
+Communication primitives:
+- Perfect point-to-point link;
+- Best-effort broadcast.
+
+Idea of the alo
