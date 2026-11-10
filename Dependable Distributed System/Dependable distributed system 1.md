@@ -2792,11 +2792,11 @@ $$
 	- **How ​​it works:** Suppose we have a write $w_1$​ (writing a value $v_1$​ with timestamp $s_1$​) and a previous write $w_2$​ (with value $v_2$​ and timestamp $s_2$​, where $s_1 < s_2$).
 	- If a read returns $v_2$​, it means that for each process, the last value written to the $(1,1)$ registers was based on $s_2$​.
 	- Due to the ordering property of the underlying $(1,1)$ atomic registers, each subsequent read will return a value with a timestamp **greater than or equal to $s_2$​**. Consequently, the previous and lowest timestamp $s_1​$ can no longer be returned, ensuring strict global time ordering.
-        
+###### Performance (_Performance_)
+- **Write):** Each write operation to an atomic register $(1,N)$ requires performing **NNN write operations** in parallel to the underlying atomic registers $(1,1)$ (one for each reader/process).
+- **Read:**
+	- Each read operation to an atomic register $(1,N)$ is more expensive and requires two steps:
+		1. Read from **NNN different atomic registers $(1,1)$** to collect all versions.
+		2. Perform the "repair/propagation" phase by writing the freshest value to **NNN atomic registers $(1,1)$** (the write-back phase seen in the algorithm).
 
-###### Prestazioni (_Performance_)
-- **Write (Scrittura):** Ogni operazione di scrittura su un registro atomico (1,N)(1,N)(1,N) richiede di effettuare ben **NNN operazioni di scrittura** in parallelo sui registri atomici (1,1)(1,1)(1,1) sottostanti (uno per ciascun lettore/processo).
-- **Read (Lettura):**
-    - Ogni operazione di lettura su un registro atomico (1,N) è più onerosa e richiede due passaggi:
-        1. Leggere da **NNN registri atomici $(1,1)$** differenti per raccogliere tutte le versioni.
-        2. Eseguire la fase di "riparazione/propagazione" scrivendo il valore più fresco su **NNN registri atomici $(1,1)$** (fase di write-back vista nell'algoritmo).
+
