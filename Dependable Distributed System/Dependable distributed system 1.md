@@ -2504,27 +2504,18 @@ $$
 ![[Dependable distributed system 1-1794321876912.webp]]
 ![[Dependable distributed system 1-1794321861055.webp]]
 ![[Dependable distributed system 1-1794321897084.webp]]![[Dependable distributed system 1-1794321912808.webp]]![[Dependable distributed system 1-1794321930765.webp]]
-### Correttezza (_Correctness_)
+###### Correctness
+A distributed algorithm is correct if it satisfies the termination and validity properties.
+- **Termination**
+	- _Reading (`read`):_ It is trivial because it is executed entirely locally. The process reads from its memory variable without waiting for network messages, then terminates immediately.
+	- _Writing (`write`):_ It terminates thanks to the properties of the communication primitives (Best-Effort Broadcast and perfect point-to-point links) and the **Strong Completeness** of the perfect fault detector $\mathcal{P}$. Since every correct process eventually receives the message and sends the ACK, and since real crashes are detected promptly without blocking the writer indefinitely, the write operation always completes.
+- **Validity**:** Validity ensures that the value returned by a read is logically correct. Thanks to the **Strong Accuracy** of the $\mathcal{P}$ detector (which produces no false positives), a write completes only after _all_ non-crashed processes have updated their local copies. Consequently, only two possible cases occur:
+	1. _Non-concurrent read:_ If the read operation does not overlap in time with the last invoked write, the process will read exactly the last value written.
+	2. _Concurrent read:_ If the read occurs concurrently with a write, due to the "no creation" property of communication channels, the value returned will be either the last previously written value or the one currently being written (which is concurrent). This flexibility exactly respects the definition of a _regular_ register.
 
-Un algoritmo distribuito è corretto se soddisfa le proprietà di terminazione e validità.
+###### Performance (_Performance_)
+Performance is evaluated based on the number of network messages exchanged:
+- **Write:** Requests a maximum of $2N$ messages. The writer broadcasts the write message to all ($N$ messages) and receives an ACK from each surviving node ($N$ messages), totaling at most $2N$ messages.
+- **Read:** Requests **0 messages** over the network. Since each node holds an up-to-date local copy of the ledger, the operation is resolved entirely locally.
 
-- **Termination (Terminazione):**
-    
-    - _Lettura (`read`):_ È banale perché viene eseguita interamente in locale. Il processo legge dalla propria variabile di memoria senza attendere messaggi di rete, quindi termina immediatamente.
-        
-    - _Scrittura (`write`):_ Termina grazie alle proprietà delle primitive di comunicazione (Best-Effort Broadcast e link point-to-point perfetti) e alla **Strong Completeness** (completezza forte) del detector di guasti perfetto $\mathcal{P}$. Poiché ogni processo corretto prima o poi riceve il messaggio e invia l'ACK, e poiché i crash reali vengono rilevati tempestivamente senza bloccare indefinitamente lo scrittore, l'operazione di scrittura arriva sempre a compimento.
-        
-- **Validity (Validità):** La validità garantisce che il valore restituito da una lettura sia logicamente corretto. Grazie alla **Strong Accuracy** (accuratezza forte) del detector $\mathcal{P}$ (che non produce falsi positivi), una scrittura si completa solo dopo che _tutti_ i processi non crashati hanno aggiornato la propria copia locale. Di conseguenza, si verificano due soli casi possibili:
-    
-    1. _Lettura non concorrente:_ Se l'operazione di lettura non si sovrappone temporalmente con l'ultima scrittura invocata, il processo leggerà esattamente l'ultimo valore scritto.
-        
-    2. _Lettura concorrente:_ Se la lettura avviene in concomitanza con una scrittura, per la proprietà di "no creation" dei canali di comunicazione, il valore restituito sarà o l'ultimo valore precedentemente scritto o quello che è in corso di scrittura (che risulta appunto concorrente). Questa flessibilità rispetta esattamente la definizione di registro _regolare_.
-        
-
-### 2. Prestazioni (_Performance_)
-
-Le prestazioni vengono valutate in base al numero di messaggi di rete scambiati:
-
-- **Write (Scrittura):** Richiede al massimo $2N$ messaggi. Lo scrittore invia il broadcast del messaggio di scrittura a tutti ($N$ messaggi) e riceve un riscontro `ACK` da ciascun nodo superstite ($N$ messaggi), totalizzando al più $2N$ messaggi.
-    
-- **Read (Lettura):** Richiede **0 messaggi** in rete. Poiché ogni nodo detiene una copia locale aggiornata del registro, l'operazione viene risolta interamente a livello locale.
+> []
