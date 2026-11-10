@@ -2518,4 +2518,5 @@ Performance is evaluated based on the number of network messages exchanged:
 - **Write:** Requests a maximum of $2N$ messages. The writer broadcasts the write message to all ($N$ messages) and receives an ACK from each surviving node ($N$ messages), totaling at most $2N$ messages.
 - **Read:** Requests **0 messages** over the network. Since each node holds an up-to-date local copy of the ledger, the operation is resolved entirely locally.
 
-> []
+> [!Warning] Problem of the algorithm
+> The algorithm does not ensure validity if the failure detector is not perfect. 
