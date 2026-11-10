@@ -2633,4 +2633,16 @@ Unlike ROWA (where reading was costless and writing was costly), here the costs 
 
 
 ##### Implementation of atomic register (1, $N$)
-per costruire un **Registro Atomico $(1,N)$**
+To build an Atomic Register $(1,N)$ (the maximum level of consistency, or linearizability).
+The construction occurs in two distinct phases:
+1. Phase 1: Starting from a regular register $(1,N)$, we build an atomic register $(1,1)$ (a single writer, a single reader).
+2. Phase 2: Using a set of atomic registers $(1,1)$, we finally build the complete atomic register $(1,N)$ (a single writer, $N$ readers).
+Let's analyze Phase 1 in detail (from Regular $(1,N)$ to Atomic $(1,1)$):
+
+**The Key Idea**:
+- **The Context**: We have a process $p_1$ (the writer) and a process $p_2$ (the reader), and we want to implement an atomic register $(1,1)$ between them.
+- **The Underlying Tool:** We exploit an existing regular register $(1,N)$ (denoted by $rr$), where $p_1$ writes and $p_2$ reads.
+- **The Regularity Problem:** As we saw before, a _regular_ register has a temporal consistency flaw: if there are concurrent reads, a reader might paradoxically read an "old" value immediately after seeing a "new" one (time appears to run backward).
+- **The Solution (Timestamp and Filter):**
+	1. Every time $p_1$ writes to the atom, it actually writes a pair consisting of `(value, timestamp)` to the underlying register.
+	2. Reader $p_2$, when reading from the regular register, **tracks and stores the last timestamp seen**. If a read returns a value with a timestamp older than the one previously read, the reader "discards" it (or returns the last valid value stored), thus preventing time from running backward and turning regularity into **atomicity**.
