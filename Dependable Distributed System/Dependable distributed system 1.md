@@ -2520,15 +2520,5 @@ Performance is evaluated based on the number of network messages exchanged:
 
 > [!Warning] Problem of the algorithm
 > The algorithm does not ensure validity if the failure detector is not perfect. The following scenario could happen: ![[Dependable distributed system 1-1794322193528.webp]]
-> $P_1$ invokes write(6) and then falsely suspects $p_2$ . Thus, $p_1$ complet
+> $P_1$ invokes write(6) and then falsely suspects $p_2$ . Thus, $p_1$ completes the write operation without waiting for the ack of $p_2$, i.e. without being sure that the value 6 has been written in the local copy of the register at $p_2$. 
 
-completes the write
-
-operation without waiting for the ack of p2
-
-, i.e. without being sure that the value
-
-6 has been written in the local copy of the register at p2
-
-
->  
