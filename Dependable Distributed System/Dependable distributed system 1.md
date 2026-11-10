@@ -3016,8 +3016,11 @@ As in the crash failure model, we distinguish between faulty and correct process
 
 The first fundamental tool for defending against Byzantine behavior is the use of cryptography to implement Authenticated Perfect Links. But cryptography alone is not enough. If a sender is arbitrarily flawed (Byzantine), requiring it to digitally sign every broadcast message does not solve the problem. A corrupted sender can simply sign and send two different messages to two different recipients, creating network inconsistency.
 
+#### Authenticated Perfect Link
 
-**Actions**:
+Prima di definire i protocolli di broadcast, dobbiamo garantire che i messaggi non possano essere falsificati o alterati in transito tra due nodi corretti.
+
+**AuthPerfectPointToPointLinks (`al`)**
 - <u>Requested Events</u>: `(al, Send | q, m)` -> Requests sending message $m$ to process $q$.
 - <u>Indication Events</u>:` (al, Deliver | p, m)` -> Delivers message $m$ sent by process $p$.
 ###### Properties:
@@ -3060,5 +3063,4 @@ $$
 - **Initialization (`Init`)**: Each process sets the Boolean flags `sentecho` and `delivered` to false and initializes an $N$-sized `echos` array filled with empty elements ($\bot$).
 - **Broadcast (`Broadcast | m`)**: Executed only by the sender $s$, it sends a `[SEND, m]` message to all processes on the network via authenticated links (`al`).
 - **Receiving SEND (`al, Deliver | p, [SEND, m]`)**: When a process receives the message from the correct sender $s$ (and has not yet responded with an echo), it sets `sentecho = TRUE` and sends an acknowledgement message `[Echo, m]` to all nodes.
-
 - **Echo Phase and Delivery Condition**: As processes receive `[ECHO, m]` messages, they record them in the `echos` vector. A process performs delivery (`bcb, Deliver`) as soon as it detects that there is a message $m$ (other than $\bot$) whose number of received echoes exceeds the safety threshold $\frac{N+f}{2}$, assuming that the system tolerates up to $f$ Byzantine faults with the fundamental condition $N > 3f$.
