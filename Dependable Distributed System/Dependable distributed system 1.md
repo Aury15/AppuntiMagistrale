@@ -2999,18 +2999,18 @@ In the majority _Fail-Silent_ model, ensuring atomicity requires a higher messag
 	- Grand total: $N + N + N + N = 4N$ messages.
 
 ## Byzantine processes 
-A differenza dei modelli basati su **Crash-Stop** o **Crash-Failure**, nel **Modello Bizantino** i processi difettosi (chiamati _Byzantine processes_ o processi arbitrari) possono comportarsi in modo completamente ostile, imprevedibile o malevolo.
+Unlike **Crash-Stop** or **Crash-Failure** models, in the **Byzantine Model** faulty processes (called _Byzantine processes_ or arbitrary processes) can behave in a completely hostile, unpredictable, or malicious manner.
 
- **Cosa possono fare i processi Bizantini?**
-1. **Deviare arbitrariamente** dalle istruzioni dell'algoritmo:
-    - Creare messaggi falsi.
-    - Perdere o scartare messaggi.
-    - Ritardare deliberatamente le consegne.
-    - Alterare il contenuto dei messaggi in transito.
-2. **Agire attivamente per sabotare** il sistema, impedendo il raggiungimento degli obiettivi dell'algoritmo (es. impedire il consenso o la coerenza).
+**What can Byzantine processes do?**
+1. **Arbitrarily deviate** from the algorithm's instructions:
+- Create forged messages.
+- Lose or discard messages.
+- Deliberately delay deliveries.
+- Alter the content of messages in transit.
+2. **Actively act to sabotage** the system, preventing the achievement of the algorithm's objectives (e.g., preventing consensus or coherence).
 
 As in the crash failure model, we distinguish between faulty and correct processes.
 
 >[!Warning]
->A Byzantine process may act arbitrarily, and no mechanism can guarantee anything that relates to its actions.
+>A Byzantine process may act arbitrarily, and no mechanism can guarantee anything related to its actions.
 
