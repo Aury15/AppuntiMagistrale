@@ -2452,24 +2452,14 @@ The algorithm implements a Regular Register $(1,N)$** (where there is only 1 wri
 		1. `beb` (Best-Effort Broadcast): to send messages to all nodes.
 		2. `pl` (Perfect Point-to-Point Links): to exchange reliable messages in pairs.
 		3. $\mathcal{P}$ (Perfect Failure Detector): A perfect crash detector (with no false positives or false negatives).
-        
 
-#### B. Inizializzazione (`Init`)
+2. **Initialization (`Init`)**
+	$val := \bot; correct := \Pi; writeset := \emptyset;$
+	- **`val`**: Stores the current value of the local register (initialized to $\bot$).
+	- **`correct`**: The set of all processes considered healthy (initially set to $\Pi$, the set of all processes on the system).
+	- **`writeset`**: The set of processes that have confirmed writing the value during a write operation.
 
-Snippet di codice
-
-```
-val := \bot; correct := \Pi; writeset := \emptyset;
-```
-
-- **`val`**: Memorizza il valore corrente del registro locale (inizializzato a vuoto/null $\bot$).
-    
-- **`correct`**: L'insieme di tutti i processi considerati sani (inizialmente impostato a $\Pi$, l'insieme di tutti i processi del sistema).
-    
-- **`writeset`**: L'insieme dei processi che hanno confermato di aver scritto il valore durante un'operazione di scrittura.
-    
-
-#### C. Gestione dei Crash (`upon event < \mathcal{P}, Crash \mid p >`)
+3. **Gestione dei Crash (`upon event < \mathcal{P}, Crash \mid p >`)**
 
 Snippet di codice
 
