@@ -2528,3 +2528,6 @@ While in the Fail-Stop model we had a “superpower” (the perfect fault detect
 >[!important] The problem
  In a real network, if a node stops responding, you can't know if it's dead forever (crashed) or just very slow or stuck in a network delay. There's no perfect detector. Therefore, we must design algorithms that work without knowing who's alive and who's dead.
 
+To **ensure consistency** despite uncertainty about crashes, the algorithm relies on two assumptions: 
+- **Structure**: There are $N$ processes, of which only 1 is a writer and $N$ readers.
+- **Majority assumption** (Majority of correct processes): It is assumed that the majority of processes ($> N/2$) will not crash and will remain correct throughout execution. Without this assumption, an asynchronous system would be impossible to reach any agreement (*FLP theorem*).
