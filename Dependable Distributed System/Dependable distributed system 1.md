@@ -2967,7 +2967,7 @@ This algorithm combines two key concepts:
 1. **Write-Majority**: Since we can't trust all nodes and don't know which ones are dead or slow, we only need to collect responses from a strict majority of nodes ($> N/2$) to consider an operation valid.
 2. **Read-Impose**: When a reader reads, it doesn't just passively observe, but forces a majority of nodes to update with the freshest value found. This prevents future readers from encountering stale data, ensuring atomicity (linearizability).
 
-Quando un processo vuole leggere dal registro:
+ **1. Quando un processo vuole leggere dal registro:**
 - **Fase 1 (Polling):** Il lettore incrementa l'identificativo di lettura (`rid := rid + 1`) per evitare confusione con letture vecchie o concorrenti, azzera la lista e fa un broadcast di richiesta (`[READ, rid]`) a tutti i nodi.
 - **Fase 2 (Risposta dei nodi):** Ciascun nodo riceve la richiesta e risponde privatamente con il proprio stato attuale tramite un messaggio `[VALUE, r, ts, val]`.
 - **Fase 3 (Raccolta, Selezione e Imposizione):** Il lettore raccoglie le risposte nella `readlist`. Appena il numero di risposte supera la maggioranza ($\#(\text{readlist}) > N/2$):
