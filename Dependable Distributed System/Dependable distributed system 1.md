@@ -2503,3 +2503,5 @@ $$
 ![[Dependable distributed system 1-1794321842531.webp]]
 ![[Dependable distributed system 1-1794321876912.webp]]
 ![[Dependable distributed system 1-1794321861055.webp]]
+![[Dependable distributed system 1-1794321897084.webp]]![[Dependable distributed system 1-1794321912808.webp]]![[Dependable distributed system 1-1794321930765.webp]]
+
