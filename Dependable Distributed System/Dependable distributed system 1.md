@@ -2721,3 +2721,16 @@ $$
 		- _If it is not (perhaps because the regular register temporarily returned an old value due to a concurrent read), it discards it and keeps the freshest value it already knew.
 		- Finally, it always returns the updated `val` value. This filter prevents time from "going backwards," transforming regularity into **pure atomicity**.
 
+###### Correttezza (_Correctness_)
+Per dimostrare che l'algoritmo implementa correttamente un registro atomico $(1,1)$, vengono verificate tre proprietà fondamentali:
+- **Termination (Terminazione):** Deriva direttamente dalla proprietà di terminazione del registro regolare sottostante (`onrr`). Poiché sia la scrittura che la lettura sul registro regolare terminano sempre, anche le corrispondenti operazioni sul registro atomico superiore termineranno senza bloccarsi.
+- **Validity (Validità):** Garantita dalla validità del registro regolare sottostante. Ogni valore scritto o letto è semanticamente coerente con le operazioni effettuate.
+- **Ordering (Ordinamento / Atomicità):** Questa è la proprietà chiave che trasforma la _regolarità_ in _atomicità_. Grazie al meccanismo in cui lo scrittore associa un timestamp progressivo (`wts, v`) e il lettore **traccia l'ultimo timestamp letto** (scartando eventuali valori con timestamp inferiore), si elimina l'anomalia temporale tipica dei registri regolari. Una lettura restituirà sempre un valore con un timestamp **maggiore o uguale** a quello della lettura precedente, garantendo un ordinamento globale coerente (linearizzabile) nel tempo.
+        
+
+###### Prestazioni (_Performance_)
+- **Write (Scrittura):** Richiede l'esecuzione di una singola operazione di scrittura sul registro regolare sottostante $(1,N)$.
+    
+- **Read (Lettura):** Richiede l'esecuzione di una singola operazione di lettura sul registro regolare sottostante $(1,N)$.
+    
+- **NOTA IMPORTANTE:** Dal punto di vista dei messaggi di rete scambiati, **non ci sono messaggi aggiuntivi** rispetto a quelli già previsti dall'implementazione di un registro regolare $(1,1)$. Il filtro basato sui timestamp avviene interamente a livello locale sul client/lettore, senza gravare sulla rete.
