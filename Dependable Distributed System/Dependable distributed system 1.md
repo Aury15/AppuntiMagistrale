@@ -2399,3 +2399,11 @@ What does "Perfect" mean? It has two absolute formal guarantees:
 1. *Strong completeness*: if a process die, every healthy process knows that;
 2. *Strong accuracy*: if the detector say that a process is died, that process is died. 
 This accuracy is the superpower of the algorithm. To make the nodes communicate with each other the algorithm uses <u>perfect point-to-point links</u> and <u>bebBroadcast</u>.
+**Idea of the algorithm:**
+The philosophy behind this approach is to "share the burden" asymmetrically between reading and writing:
+- **Each process has a local copy of the registry:** Instead of a central server, each node has a copy of the registry value on its own disk/memory.
+- **Read-One (Reading is free):** When a process wants to read the registry value, **it doesn't send any messages over the network**. It simply reads the value stored in _its_ local copy. This makes reads extremely fast (zero network messages).
+- **Write-All (Writing is expensive):** When the writer process wants to update the registry with a new value:
+	1. Sends the new value to **all** processes that the detector considers alive (not crashed).
+	2. The write is not considered complete until the writer receives a write acknowledgement (**ACK**) from _each_ of the non-crashed processes.
+	3. 
