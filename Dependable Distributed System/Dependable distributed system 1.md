@@ -2541,7 +2541,7 @@ Communication primitives:
 - The writer and the reader processes use a set of witness processes, to track the last value written;
 -  Quorum: the intersection of any two sets of witness processes is not empty;
 -  “*Majority Voting*”: each set is constituted by a majority of processes.
-
+$$
 \begin{aligned}
 &\textbf{Algorithm 4.2:} \text{ Majority Voting Regular Register} \\
 &\textbf{Implements:} \\
@@ -2590,3 +2590,4 @@ Communication primitives:
 &\quad\quad readlist := [\bot]^N; \\
 &\quad\quad \textbf{trigger } \langle onrr, ReadReturn \mid v \rangle;
 \end{aligned}
+$$
