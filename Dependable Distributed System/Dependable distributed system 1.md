@@ -2459,22 +2459,12 @@ The algorithm implements a Regular Register $(1,N)$** (where there is only 1 wri
 	- **`correct`**: The set of all processes considered healthy (initially set to $\Pi$, the set of all processes on the system).
 	- **`writeset`**: The set of processes that have confirmed writing the value during a write operation.
 
-3. **Gestione dei Crash (`upon event < \mathcal{P}, Crash \mid p >`)**
-
-Snippet di codice
-
-```
-correct := correct \setminus \{p\};
-```
-
-- Quando il detector perfetto segnala che il processo $p$ è caduto (`Crash`), il processo lo rimuove immediatamente dall'insieme dei nodi considerati corretti (`correct`).
+3. **Gestione dei Crash (`upon event`$< \mathcal{P}, Crash \mid p >$)**
+	  $correct := correct \setminus \{p\};$
+	- Quando il detector perfetto segnala che il processo $p$ è caduto (`Crash`), il processo lo rimuove immediatamente dall'insieme dei nodi considerati corretti (`correct`).
     
 
-#### D. Operazione di Lettura (`Read`)
-
-Snippet di codice
-
-```
+4. Operazione di Lettura (`Read`)
 upon event < onrr, Read > do
     trigger < onrr, ReadReturn \mid val >;
 ```
