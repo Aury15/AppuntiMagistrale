@@ -3146,3 +3146,5 @@ $$
 ![[Dependable distributed system 1-1794390908927.webp|654]]![[Dependable distributed system 1-1794390937647.webp]]![[Dependable distributed system 1-1794390950615.webp]]![[Dependable distributed system 1-1794390964921.webp]]![[Dependable distributed system 1-1794390986135.webp]]
 ![[Dependable distributed system 1-1794391005141.webp]]
 
+## Registers in Presence of Byzantine Processes
+
