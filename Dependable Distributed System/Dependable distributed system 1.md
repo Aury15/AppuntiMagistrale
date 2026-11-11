@@ -3170,18 +3170,18 @@ In an asynchronous distributed system, if a client wants to write a value to a r
 > - Others may be **extremely slow** to respond (network delays).
 If the client waited for a response from *all* nodes to complete the operation, it would be stuck forever waiting for the slowest server. On the other hand, if it were to settle for any server, it would risk reading stale data.
 The solution is to establish a mathematical rule: **"The client doesn't have to wait for all of them, but simply receive responses from a predefined subset of nodes (the Quorum)."**
->- Write Quorum: To confirm that a write has been successful, the writer must receive confirmation (ACK) from a certain number of servers belonging to that quorum.
+>- **Write Quorum:** To confirm that a write has been successful, the writer must receive confirmation (ACK) from a certain number of servers belonging to that quorum.
 >- **Read Quorum:** To read the most recent value, the reader queries a quorum of servers and searches for the most recent version among the responses received.
+>The reason quorums work and ensure consistency (i.e., never reading stale data) is the mathematical property of intersection.
 >
->Il motivo per cui i quorum funzionano e garantiscono la consistenza (cioè che non si leggano mai dati obsoleti) è la **proprietà matematica di intersezione**.
-Qualsiasi quorum di scrittura e qualsiasi quorum di lettura **devono avere almeno un server in comune**.
->- Supponi di avere 5 server in totale.
->- Un quorum di scrittura richiede 3 server. Un quorum di lettura richiede 3 server.
->- Se scrivi aggiornando i server `{1, 2, 3}` e poi leggi interrogando i server `{3, 4, 5}`, noterai che **il server 3 è in comune** tra i due gruppi!
->- Sarà proprio quel server in comune a "passare" al lettore l'informazione aggiornata, impedendo al sistema di perdere il dato o di tornare indietro nel tempo.
->Nei documenti che stiamo studiando, le dimensioni del quorum cambiano in base al livello di sicurezza richiesto:
->1. **Modello Crash / Fail-Silent (Semplice Maggioranza):** Se i nodi possono solo spegnersi (crash) e vogliamo tollerare fino a $f$ guasti, basta una maggioranza semplice: **$\frac{N}{2}$** o **$\frac{N+1}{2}$** (cioè la metà più uno dei nodi).
->2. **Modello Bizantino (Con nodi che mentono o sabotano):**
->- Se ci sono server "bizantini" che possono inviare dati falsi a tradimento, la semplice maggioranza non basta più, perché i bugiardi potrebbero corrompere il risultato.
->- Per questo si usano quorum più grandi (come il _Masking Quorum_ pari a **$\frac{N+2f}{2}$**, cioè $3f+1$), dove $f$ è il numero massimo di traditori tollerati. In questo modo, anche se $f$ nodi mentono spudoratamente, la maggioranza pulita all'interno del quorum è così ampia da "mascherare" e correggere la falsità.
+>Any write quorum and any read quorum must have at least one server in common.
+>- Suppose you have 5 servers in total.
+>- A write quorum requires 3 servers. A read quorum requires 3 servers.
+>- If you write by updating servers `{1, 2, 3}` and then read by querying servers `{3, 4, 5}`, you'll notice that **server 3 is shared** between the two groups!
+>- It is precisely that shared server that "passes" the updated information to the reader, preventing the system from losing the data or going back in time.
+>- In the documents we are studying, the size of the quorum varies based on the required security level:
+>1. **Crash / Fail-Silent Model (Simple Majority):** If nodes can only crash and we want to tolerate up to $f$ failures, a simple majority is sufficient: **$\frac{N}{2}$** or **$\frac{N+1}{2}$** (i.e., half plus one of the nodes).
+>2. **Byzantine Model (With nodes that lie or sabotage):**
+>- If there are "Byzantine" servers that can send false data by treachery, a simple majority is no longer sufficient, because liars could corrupt the result.
+>- This is why larger quorums are used (such as the _Masking Quorum_ equal to **$\frac{N+2f}{2}$**, i.e., $3f+1$), where $f$ is the maximum number of traitors tolerated. This way, even if $f$ nodes blatantly lie, the clean majority within the quorum is large enough to "mask" and correct the falsehood.
 
