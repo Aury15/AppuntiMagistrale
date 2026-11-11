@@ -3502,7 +3502,7 @@ To solve the reliable consensus problem in the presence of $f$ Byzantine faults 
 - **Base Case OM(0):**
 1. The commander sends his value to each lieutenant.
 2. Each lieutenant uses the received value or a default value (`RETREAT` i.e., ⏊) if nothing is received.
-
+![[Dependable distributed system 1-1794404062714.webp|550]]
 - **Recursive Case OM(f) with $f > 0$:**
 1. The commander sends his value to all lieutenants.
 2. Each lieutenant $i$ receives a value $v_i$ (or `RETREAT`), and in turn acts as commander by executing the algorithm **OM(f-1)** to forward that value to the other $N-2$ lieutenants.
