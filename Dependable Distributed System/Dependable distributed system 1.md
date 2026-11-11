@@ -3080,4 +3080,4 @@ $$
 - **Receiving SEND (`al, Deliver | p, [SEND, m]`)**: When a process receives the message from the correct sender $s$ (and has not yet responded with an echo), it sets `sentecho = TRUE` and sends an acknowledgement message `[Echo, m]` to all nodes.
 - **Echo Phase and Delivery Condition**: As processes receive `[ECHO, m]` messages, they record them in the `echos` vector. A process performs delivery (`bcb, Deliver`) as soon as it detects that there is a message $m$ (other than $\bot$) whose number of received echoes exceeds the safety threshold $\frac{N+f}{2}$, assuming that the system tolerates up to $f$ Byzantine faults with the fundamental condition $N > 3f$.
 ![[Dependable distributed system 1-1794329369872.webp]]
-
+![[Dependable distributed system 1-1794390442015.webp]]
