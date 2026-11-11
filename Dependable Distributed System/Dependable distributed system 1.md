@@ -3436,7 +3436,7 @@ This is the **read phase** of the regular Byzantine fault-tolerant ledger withou
 >Without encryption, the termination property is relaxed to finite-write termination: if a read operation is concurrent with infinitely many continuous writes, it may never terminate. This restriction has been shown to be theoretically necessary in the absence of digital signatures.
 
 ## Consensus in presence of byzantine processes 
-In distributed systems exposed to Byzantine failures, processes can behave arbitrarily (invent messages, corrupt data, lie, or deliberately delay communication). The ideal **goal** would be to maintain the same properties as classical consensus with crashes, but the presence of traitors requires redefining some guarantees:
+In distributed systems exposed to Byzantine failures, processes can behave arbitrarily (invent messages, corrupt data, lie, or deliberately delay communication). The ideal **goal** would be to maintain the same properties as classical consensus with crashes, but the presence of traitors requires redefining some guarantees (properties of the algorthm + weak validity):
 - **Termination**: Every correct process ultimately decides on a value.
 - **Integrity**: No correct process decides twice.
 - **Agreement**: Two correct processes cannot decide on different values.
