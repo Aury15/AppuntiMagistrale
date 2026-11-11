@@ -3174,7 +3174,8 @@ The solution is to establish a mathematical rule: **"The client doesn't have to 
 >- **Read Quorum:** To read the most recent value, the reader queries a quorum of servers and searches for the most recent version among the responses received.
 >The reason quorums work and ensure consistency (i.e., never reading stale data) is the mathematical property of intersection.
 >
->Any write quorum and any read quorum must have at least one server in common.
+>The reason quorums work and ensure consistency (i.e., never reading stale data) is the **mathematical property of intersection.**
+>Any write quorum and any read quorum must have **at least one server in common.**
 >- Suppose you have 5 servers in total.
 >- A write quorum requires 3 servers. A read quorum requires 3 servers.
 >- If you write by updating servers `{1, 2, 3}` and then read by querying servers `{3, 4, 5}`, you'll notice that **server 3 is shared** between the two groups!
