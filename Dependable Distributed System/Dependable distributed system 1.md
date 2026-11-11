@@ -3540,4 +3540,3 @@ For each $i$:
 - If Lieutenant i receives a message of the form $v:0:j_l:...:J_k$ and $v$ is not in $V_i$ then
 	-  adds $v$ to $V_i$; 
 	- if $k$.
-di dd
