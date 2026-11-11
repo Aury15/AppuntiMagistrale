@@ -3394,12 +3394,12 @@ $$
 &\quad\quad \text{trigger } \langle bonrr, WriteReturn \rangle;
 \end{aligned}
 $$
-1. **Inizializzazione (`Init`)**: * Vengono definiti i due livelli di memoria per ciascun server: il pre-scritto (`pts, pval`) e il scritto ufficiale (`ts, val`), oltre alle liste per raccogliere le conferme (`preacklist` e `acklist`). 
-2. **Avvio della Scrittura (`Write | v`)**: * Lo scrittore incrementa il timestamp di scrittura locale (`wts := wts + 1`) associandolo al nuovo valore $v$. * Pulisce le liste di controllo e invia a tutti i nodi della rete il messaggio **`[PREWRITE, wts, wval]`** (Fase 1). 
-3. **Ricezione del PREWRITE sui Server**: * Quando un server riceve la pre-scrittura dal mittente corretto $w$, aggiorna il suo stato preliminare `(pts, pval)` e risponde subito inviando un **`[PREACK, pts]`** allo scrittore. 
-4. **Completamento della Fase 1 e Avvio della Fase 2 (`PREACK`)**: * Lo scrittore raccoglie i pre-ack. Non appena riceve conferme da almeno **$N - f$ processi** (notare che tollerando $f$ guasti, basta una soglia di $N-f$ anziché tutti i nodi per garantire la terminazione), azzera la lista e passa alla seconda fase. * Invia a tutti il messaggio effettivo **`[WRITE, wts, wval].
-5. **Ricezione del WRITE e invio ACK**: * I server ricevono il comando di scrittura definitiva, verificano che il timestamp corrisponda a quello pre-scritto e che sia più recente di quello vecchio (`ts' > ts`), quindi aggiornano lo stato ufficiale `(ts, val)` e mandano un **`[ACK]`** allo scrittore. 
-6. **Chiusura della Scrittura (`WriteReturn`)**: * Lo scrittore raccoglie gli ACK di scrittura. Non appena ne riceve almeno **$N - f$**, l'operazione di scrittura si considera completata con successo e viene sbloccato il client con l'evento `WriteReturn`.
+1. **Initialization (`Init`)**: * The two memory levels for each server are defined: the pre-written (`pts, pval`) and the official written (`ts, val`), as well as the lists for collecting acknowledgements (`preacklist` and `acklist`). 
+2. **Start Writing (`Write | v`)**: * The writer increments the local write timestamp (`wts := wts + 1`) by associating it with the new value $v$. * It clears the control lists and sends the message **`[PREWRITE, wts, wval]`** to all nodes in the network (Phase 1). 
+3. **Receiving the PREWRITE on the Servers**: * When a server receives the pre-written message from the correct sender $w$, it updates its preliminary state `(pts, pval)` and immediately responds by sending a **`[PREACK, pts]`** to the writer. 
+4. **Complete Phase 1 and Start Phase 2 (`PREACK`)**: * The writer collects pre-acks. As soon as it receives acknowledgments from at least **$N - f$ processes** (note that by tolerating $f$ failures, a threshold of $N-f$ is sufficient instead of all nodes to guarantee termination), it resets the list and moves to the second phase. * Sends the actual message **`[WRITE, wts, wval] to everyone.
+5. **Receive WRITE and send ACK**: * The servers receive the final write command, verify that the timestamp matches the pre-written one and is newer than the old one (`ts' > ts`), then update the official state `(ts, val)` and send an **`[ACK]`** to the writer.
+6. **Close Write (`WriteReturn`)**: * The writer collects write ACKs. As soon as it receives at least **$N - f$** of them, the write operation is considered successful and the client is unlocked with the `WriteReturn` event.
 $$
 \begin{aligned}
 &\textbf{Algorithm 4.17:} \text{ Double-Write Byzantine Quorum (part 2, read)} \\
@@ -3431,3 +3431,7 @@ This is the **read phase** of the regular Byzantine fault-tolerant ledger withou
 	- **Authentic(`ts, v, readlist`)** Checks that the value has actually been pre-written and written by a sufficient number of uncompromised nodes, ruling out any Byzantine node forgery.
 	- **Selectedmax(`ts, v, Q`)** Checks within a quorum subset $Q$ (of size $> \frac{N+f}{2}$) that the associated timestamp is indeed the most recent and valid.
 11. **Completion or Retry:** If the safety and majority conditions are met, the reader returns the value with ReadReturn | v and clears the list. Otherwise, it repeats the read request (Send | q, [READ, r]) until it gets consistent responses.
+
+>[!Observations] Regular Register without cryptographic assumptions
+>Without encryption, the termination property is relaxed to finite-write termination: if a read operation is concurrent with infinitely many continuous writes, it may never terminate. This restriction has been shown to be theoretically necessary in the absence of digital signatures.
+
