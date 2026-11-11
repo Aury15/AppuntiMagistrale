@@ -3508,3 +3508,23 @@ To solve the reliable consensus problem in the presence of $f$ Byzantine faults 
 2. Each lieutenant $i$ receives a value $v_i$ (or `RETREAT`), and in turn acts as commander by executing the algorithm **OM(f-1)** to forward that value to the other $N-2$ lieutenants.
 3. Finally, for  each lieutenant computes the final decision by taking a **majority** of all the collected values.
 4. For each i and j (j≠i), let vj be the value Lieutenant i received from Lieutenant j in step (2), or else RETREAT if he received no value:
+
+
+$$
+\begin{aligned}
+&\textbf{Algorithm:} \text{ Oral Message Consensus OM(f)} \\
+&\textbf{System Model:} \text{ Up to } f \text{ Byzantine processes, } N \ge 3f + 1. \\
+& \\
+&\textbf{Function } OM(0): \\
+&\quad 1. \text{ Commander sends value } v \text{ to every lieutenant.} \\
+&\quad 2. \text{ Each lieutenant uses the received value } v \text{ (or default } {Retreat}). \\
+& \\
+&\textbf{Function } OM(f) \text{ where } f > 0: \\
+&\quad 1. \text{ Commander sends value } v \text{ to every lieutenant } i. \\
+&\quad 2. \text{ Let } v_i \text{ be the value received by lieutenant } i \text{ (or } \textsc{Retreat}). \\
+&\quad 3. \text{ Lieutenant } i \text{ acts as commander and runs } OM(f-1) \\
+&\quad\quad \text{to broadcast } v_i \text{ to the other } N-2 \text{ lieutenants.} \\
+&\quad 4. \text{ Each lieutenant collects all values and computes:} \\
+&\quad\quad \text{Decision } := \text{majority}(v_1, v_2, \dots, v_{N-1}).
+\end{aligned}
+$$
