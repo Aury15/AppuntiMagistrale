@@ -3171,14 +3171,17 @@ Se il client aspettasse la risposta di _tutti_ i nodi per completare l'operazion
 La soluzione consiste nello stabilire una regola matematica: **"Il client non deve aspettare tutti, ma gli basta ricevere risposte da un sottoinsieme predefinito di nodi (il Quorum)"**.
 >- **Quorum di Scrittura:** Per dire che una scrittura è riuscita, lo scrittore deve ricevere conferma (ACK) da un certo numero di server appartenenti a quel quorum.
 >- **Quorum di Lettura:** Per leggere il valore più recente, il lettore interroga un quorum di server e cerca la versione più fresca tra le risposte ricevute.
+>
 >Il motivo per cui i quorum funzionano e garantiscono la consistenza (cioè che non si leggano mai dati obsoleti) è la **proprietà matematica di intersezione**.
 Qualsiasi quorum di scrittura e qualsiasi quorum di lettura **devono avere almeno un server in comune**.
-
-- Supponi di avere 5 server in totale.
-    
-- Un quorum di scrittura richiede 3 server. Un quorum di lettura richiede 3 server.
-    
-- Se scrivi aggiornando i server `{1, 2, 3}` e poi leggi interrogando i server `{3, 4, 5}`, noterai che **il server 3 è in comune** tra i due gruppi!
-    
-- Sarà proprio quel server in comune a "passare" al lettore l'informazione aggiornata, impedendo al sistema di perdere il dato o di tornare indietro nel tempo.
+>- Supponi di avere 5 server in totale.
+>- Un quorum di scrittura richiede 3 server. Un quorum di lettura richiede 3 server.
+>- Se scrivi aggiornando i server `{1, 2, 3}` e poi leggi interrogando i server `{3, 4, 5}`, noterai che **il server 3 è in comune** tra i due gruppi!
+>- Sarà proprio quel server in comune a "passare" al lettore l'informazione aggiornata, impedendo al sistema di perdere il dato o di tornare indietro nel tempo.
+>Nei documenti che stiamo studiando, le dimensioni del quorum cambiano in base al livello di sicurezza richiesto:
+>1. **Modello Crash / Fail-Silent (Semplice Maggioranza):**
+    - Se i nodi possono solo spegnersi (crash) e vogliamo tollerare fino a $f$ guasti, basta una maggioranza semplice: **$\frac{N}{2}$** o **$\frac{N+1}{2}$** (cioè la metà più uno dei nodi).
+>2. **Modello Bizantino (Con nodi che mentono o sabotano):**
+    - Se ci sono server "bizantini" che possono inviare dati falsi a tradimento, la semplice maggioranza non basta più, perché i bugiardi potrebbero corrompere il risultato.
+    - Per questo si usano quorum più grandi (come il _Masking Quorum_ pari a **$\frac{N+2f}{2}$**, cioè $3f+1$), dove $f$ è il numero massimo di traditori tollerati. In questo modo, anche se $f$ nodi mentono spudoratamente, la maggioranza pulita all'interno del quorum è così ampia da "mascherare" e correggere la falsità.
 
