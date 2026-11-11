@@ -3083,3 +3083,6 @@ $$
 ![[Dependable distributed system 1-1794390442015.webp]]
 ![[Dependable distributed system 1-1794390461604.webp]]
 ![[Dependable distributed system 1-1794390481211.webp]]
+
+#### Byzantine Reliable Broadcast (BRB)
+Il **Reliable Broadcast** aggiunge una proprietà fondamentale rispetto al Consistent Broadcast: la **Totality** (Totalità), ovvero se un qualsiasi nodo corretto consegna il messaggio, allora _tutti_ i nodi corretti finiranno per consegnarlo.
