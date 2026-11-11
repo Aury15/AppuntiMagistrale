@@ -3208,14 +3208,14 @@ $$
 &\quad wts := wts + 1; \\
 &\quad acklist := [\bot]^N; \\
 &\quad \textbf{forall } q \in \Pi \text{ do} \\
-&\quad\quad \text{trigger } \langle al, Send \mid q, [\textsc{Write}, wts, v] \rangle; \\
+&\quad\quad \text{trigger } \langle al, Send \mid q, [{Write}, wts, v] \rangle; \\
 & \\
-&\textbf{upon event } \langle al, Deliver \mid p, [\textsc{Write}, ts', v'] \rangle \text{ such that } p = w \text{ do} \\
+&\textbf{upon event } \langle al, Deliver \mid p, [{Write}, ts', v'] \rangle \text{ such that } p = w \text{ do} \\
 &\quad \textbf{if } ts' > ts \text{ then} \\
 &\quad\quad (ts, val) := (ts', v'); \\
-&\quad \textbf{trigger } \langle al, Send \mid p, [\textsc{Ack}, ts'] \rangle; \\
+&\quad \textbf{trigger } \langle al, Send \mid p, [{Ack}, ts'] \rangle; \\
 & \\
-&\textbf{upon event } \langle al, Deliver \mid q, [\textsc{Ack}, ts'] \rangle \text{ such that } ts' = wts \text{ do} \\
+&\textbf{upon event } \langle al, Deliver \mid q, [{Ack}, ts'] \rangle \text{ such that } ts' = wts \text{ do} \\
 &\quad acklist[q] := \text{ACK}; \\
 &\quad \textbf{if } \#(acklist) > \frac{N + 2f}{2} \text{ then} \\
 &\quad\quad acklist := [\bot]^N; \\
@@ -3225,10 +3225,10 @@ $$
 &\quad rid := rid + 1; \\
 &\quad readlist := [\bot]^N; \\
 &\quad \textbf{forall } q \in \Pi \text{ do} \\
-&\quad\quad \text{trigger } \langle al, Send \mid q, [\textsc{Read}, rid] \rangle; \\
+&\quad\quad \text{trigger } \langle al, Send \mid q, [{Read}, rid] \rangle; \\
 & \\
-&\textbf{upon event } \langle al, Deliver \mid p, [\textsc{Read}, r] \rangle \text{ do} \\
-&\quad \textbf{trigger } \langle al, Send \mid p, [\textsc{Value}, r, ts, val] \rangle; \\
+&\textbf{upon event } \langle al, Deliver \mid p, [{Read}, r] \rangle \text{ do} \\
+&\quad \textbf{trigger } \langle al, Send \mid p, [{Value}, r, ts, val] \rangle; \\
 & \\
 &\textbf{upon event } \langle al, Deliver \mid q, [\text{Value}, r, ts', v'] \rangle \text{ such that } r = rid \text{ do} \\
 &\quad readlist[q] := (ts', v'); \\
@@ -3267,7 +3267,7 @@ $$
 &\textbf{upon event } \langle bonrr, Write \mid v \rangle \text{ do} \\
 &\quad wts := wts + 1; \\
 &\quad acklist := [\bot]^N; \\
-&\quad \sigma := \text{sign}(self, bonrr \parallel self \parallel \textsc{Write} \parallel wts \parallel v); \\
+&\quad \sigma := \text{sign}(self, bonrr \parallel self \parallel {Write} \parallel wts \parallel v); \\
 &\quad \textbf{forall } q \in \Pi \text{ do} \\
 &\quad\quad \text{trigger } \langle al, Send \mid q, [{Write}, wts, v, \sigma] \rangle; \\
 & \\
