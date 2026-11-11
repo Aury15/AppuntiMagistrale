@@ -3448,5 +3448,4 @@ In distributed systems exposed to Byzantine failures, processes can behave arbit
 
 Therefore the strong validity provides superior protection even when Byzantine processes attempt to corrupt the initial proposal. 
 **BC2 (Strong Validity) Property:** If all valid processes propose the same value $v$, no valid process can decide otherwise; otherwise, a valid process can only decide on a value proposed by a valid process or a special default value.
-
-
+#### The Byzantine Generals Problem
