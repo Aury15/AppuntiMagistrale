@@ -3337,8 +3337,11 @@ Reader $r$ is faced with a dead end and **is unable to choose which value to ret
 2. **The value $x$ may be a fake:** The reader sees the value $x$ with a timestamp of `1`, but it comes from $q$ (who is Byzantine and lying). Without the cryptographic signature to prove its authenticity, the reader doesn't know whether $x$ was actually written by writer $p$ or whether it's a lie invented by $q$.
 Faced with this total confusion, the single-phase algorithm fails and the reader is forced to return a failure (`read() $\to \perp$)` or make a mistake.
 
-**Come si risolve questo problema? (La soluzione a Due Fasi)**
-Proprio per evitare che un server lento si mescoli con un server corrotto e che un nodo Bizantino possa confondere le acque, l'algoritmo adotta la strategia del **Double-Write (Due Fasi)**:
-- **Fase 1 (Pre-Write):** Lo scrittore invia un pre-avviso (`PREWRITE`) e aspetta $N - f$ conferme per assicurarsi che una maggioranza di nodi sia "allertata" sull'intenzione di scrivere quel timestamp.
-- **Fase 2 (Write):** Solo dopo aver messo in sicurezza la fase preliminare, invia il `WRITE` effettivo.
-Ogni server, così facendo, memorizza **due coppie** (quella del pre-write e quella del write). Questo permette al lettore di fare una "triangolazione" logica: se nota discrepanze, riesce a smascherare quale processo sta mentendo (escludendo i dati corrotti) e a ricostruire con certezza matematica se il valore è legittimo o meno, superando l'ambiguità mostrata in questo grafico.
+**How ​​do you solve this problem? (The Two-Phase Solution)**
+Precisely to prevent a slow server from mixing with a corrupted server and a Byzantine node from muddying the waters, the algorithm adopts the **Double-Write (Two-Phase)** strategy:
+- **Phase 1 (Pre-Write):** The writer sends a pre-warning (`PREWRITE`) and waits for $N - f$ confirmations to ensure a majority of nodes are "alerted" to the intention to write that timestamp.
+- **Phase 2 (Write):** Only after securing the preliminary phase does it send the actual `WRITE`.
+Each server, in this way, stores **two pairs** (the pre-write and the write). This allows the reader to perform logical "triangulation": if they notice discrepancies, they can unmask which process is lying (excluding corrupted data) and reconstruct with mathematical certainty whether the value is legitimate or not, overcoming the ambiguity shown in this graph.
+
+**Intuition**
+
