@@ -3148,12 +3148,13 @@ $$
 
 ## Registers in Presence of Byzantine Processes
 In previous lessons, we analyzed registers in the presence of crash-related failures (_Crash-Stop_ and _Crash-Failure_). In this lesson, we extend the study to Byzantine fault-tolerant registers (with 1 writer and $N$ readers, i.e., $(1, N)$ registers).
-### Modello del Sistema:
+###### System Model:
+- **Client-Server Paradigm:** We have 1 Writer ($W$), $n$ Readers (the clients), and $N$ Servers/Replicas (where $N$ is the total number of servers).
+- **Careful Terminology:** Do not confuse $n$ (the number of readers) with $N$ (the number of replica servers).
+- **Failures:** Up to $f$ servers can be **Byzantine** (arbitrary and malicious behavior). Clients can crash but cannot be Byzantine.
+- **Communication Channels:** They use flawless, authenticated (`al`) point-to-point links.
 
-- **Paradigma Client-Server:** Abbiamo 1 Scrittore ($W$), $n$ Lettori (i client) e $N$ Server/Repliche (dove $N$ è il numero totale di server).
-    
-- **Attenzione alla terminologia:** Non bisogna confondere $n$ (il numero di lettori) con $N$ (il numero di server di replica).
-    
-- **Guasti:** Fino a $f$ server possono essere **Bizantini** (comportamento arbitrario e malevolo). I client possono subire crash ma non possono essere Bizantini.
-    
-- **Canali di comunicazione:** Utilizzano link point-to-point perfetti e autenticati (`al`).
+#### Safe register
+We have two properties for this type of register:
+- **BONSR1 (Termination):** Se un processo corretto invoca un'operazione, essa alla fine completa.
+- **BONSR2 (Validity):** Una lettura che non è concorrente con una scrittura restituisce l'ultimo valore scritto.
