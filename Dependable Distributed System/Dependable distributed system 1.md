@@ -3525,4 +3525,13 @@ $$
 &\quad\quad \text{Decision } := \text{majority}(v_1, v_2, \dots, v_{N-1}).
 \end{aligned}
 $$![[Dependable distributed system 1-1794404379542.webp]]![[Dependable distributed system 1-1794404393413.webp]]![[Dependable distributed system 1-1794404402924.webp]]![[Dependable distributed system 1-1794404432528.webp]]
->[]
+>[!Observations]
+>**Strongly inefficient algorithm** 
+>	◦ Recursion creates a large number of messages 
+>	
+The complexity lies in the fact that a Byzantine process can easily change the content of messages
+
+<u>What happens if we use message authentication codes ? A solution for 3 processes exists !</u>
+The commander signs and sends his value (v:0) to every lieutenant. 
+For each i: 
+- If Lieutenant i receives a message of the form v:0 from the commander and he has not yet received any order, then ◦ Vi={v} ◦ Sends message v:0:i to every other lieutenant ◦ If Lieutenant i receives a message of the form v:0:jl:...:Jk and v is not in Vi then ◦ adds v to Vi; ◦ if k
