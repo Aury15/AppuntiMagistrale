@@ -3494,3 +3494,17 @@ This abstract problem captures many of the issues we face if we want to implemen
 	- Message source is known to the receiver
 	- Message omissions can be detected
 - The default decision for lieutenants is *RETREAT*
+To solve the reliable consensus problem in the presence of $f$ Byzantine faults assuming $N \ge 3f + 1$, we use the recursive algorithm **Oral Message OM(f)**. 
+
+#### Oral Message Algorithm
+
+ **Struttura ricorsiva dell'algoritmo:**
+- **Caso Base OM(0):**
+    1. Il comandante invia il suo valore a ogni luogotenente.
+    2. Ciascun luogotenente usa il valore ricevuto o un valore di default (`RETREAT`) se non riceve nulla.
+        
+- **Caso Ricorsivo OM(f) con $f > 0$:**
+    1. Il comandante invia il suo valore a tutti i luogotenenti.
+    2. Ogni luogotenente $i$ riceve un valore $v_i$ (o `RETREAT`), e agisce a sua volta da comandante eseguendo l'algoritmo **OM(f-1)** per inoltrare quel valore agli altri $N-2$ luogonenti.
+        
+    3. Alla fine, ogni luogotenente calcola la decisione finale facendo la **maggioranza** di tutti i valori raccolti.
