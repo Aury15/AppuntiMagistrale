@@ -3163,9 +3163,22 @@ In Byzantine broadcast, a quorum of $\frac{N+f}{2}$ was sufficient (with $N > 3f
 To achieve this guarantee, **Masking Quorums** are used:
 $$\text{Quorum} = \frac{N + 2f}{2} \quad (\text{ i.e. } 3f + 1), \quad \text{with} N > 4f$$
 
->[!Quorum] Quorum
+>[!definitions] Quorum
 >Immagina un **quorum** semplicemente come **un comitato o una sotto-fetta di server (o nodi) di dimensione ben definita**. In un sistema distribuito asincrono, se un client vuole scrivere un valore su un registro, vorrebbe teoricamente aggiornare tutti i server della rete. Ma questo è impossibile nella realtà perché: 
 > - Alcuni server potrebbero essersi **guasti** (crash).
 > - Altri potrebbero essere **estremamente lenti** a rispondere (ritardi di rete).
 Se il client aspettasse la risposta di _tutti_ i nodi per completare l'operazione, rimarrebbe bloccato per sempre in attesa del server più lento. D'altra parte, se si accontentasse di un server qualsiasi, rischierebbe di leggere un dato vecchio.
+La soluzione consiste nello stabilire una regola matematica: **"Il client non deve aspettare tutti, ma gli basta ricevere risposte da un sottoinsieme predefinito di nodi (il Quorum)"**.
+>- **Quorum di Scrittura:** Per dire che una scrittura è riuscita, lo scrittore deve ricevere conferma (ACK) da un certo numero di server appartenenti a quel quorum.
+>- **Quorum di Lettura:** Per leggere il valore più recente, il lettore interroga un quorum di server e cerca la versione più fresca tra le risposte ricevute.
+>Il motivo per cui i quorum funzionano e garantiscono la consistenza (cioè che non si leggano mai dati obsoleti) è la **proprietà matematica di intersezione**.
+Qualsiasi quorum di scrittura e qualsiasi quorum di lettura **devono avere almeno un server in comune**.
+
+- Supponi di avere 5 server in totale.
+    
+- Un quorum di scrittura richiede 3 server. Un quorum di lettura richiede 3 server.
+    
+- Se scrivi aggiornando i server `{1, 2, 3}` e poi leggi interrogando i server `{3, 4, 5}`, noterai che **il server 3 è in comune** tra i due gruppi!
+    
+- Sarà proprio quel server in comune a "passare" al lettore l'informazione aggiornata, impedendo al sistema di perdere il dato o di tornare indietro nel tempo.
 
