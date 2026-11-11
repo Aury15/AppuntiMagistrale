@@ -3058,14 +3058,14 @@ $$
 & \\
 &\textbf{upon event } \langle bcb, \text{Broadcast} \mid m \rangle \text{ do} && \text{// only process } s \\
 &\quad \textbf{forall } q \in \Pi \text{ do} \\
-&\quad\quad \text{trigger } \langle al, \text{Send} \mid q, [\textsc{Send}, m] \rangle; \\
+&\quad\quad \text{trigger } \langle al, \text{Send} \mid q, [{Send}, m] \rangle; \\
 & \\
-&\textbf{upon event } \langle al, \text{Deliver} \mid p, [\textsc{Send}, m] \rangle \text{ such that } p = s \text{ and } sentecho = \text{FALSE} \text{ do} \\
+&\textbf{upon event } \langle al, \text{Deliver} \mid p, [{Send}, m] \rangle \text{ such that } p = s \text{ and } sentecho = \text{FALSE} \text{ do} \\
 &\quad sentecho := \text{TRUE}; \\
 &\quad \textbf{forall } q \in \Pi \text{ do} \\
-&\quad\quad \text{trigger } \langle al, \text{Send} \mid q, [\textsc{Echo}, m] \rangle; \\
+&\quad\quad \text{trigger } \langle al, \text{Send} \mid q, [{Echo}, m] \rangle; \\
 & \\
-&\textbf{upon event } \langle al, \text{Deliver} \mid p, [\textsc{Echo}, m] \rangle \text{ do} \\
+&\textbf{upon event } \langle al, \text{Deliver} \mid p, [{Echo}, m] \rangle \text{ do} \\
 &\quad \textbf{if } echos[p] = \bot \text{ then} \\
 &\quad\quad echos[p] := m; \\
 & \\
@@ -3300,6 +3300,11 @@ $$
 &\quad\quad \text{trigger } \langle bonrr, ReadReturn \mid v \rangle;
 \end{aligned}
 $$
+**seq**
+![[Dependable distributed system 1-1794393443375.webp]]
+![[Dependable distributed system 1-1794393461466.webp]]
+
+
 >[!warning]
 >👺 A Byzantine process is prevented from returning an arbitrary timestamp
 and value in the VALUE message, although it may include a signed value with
