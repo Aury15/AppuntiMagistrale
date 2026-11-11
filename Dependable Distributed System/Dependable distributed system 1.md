@@ -3468,5 +3468,11 @@ The classic problem models abstract consensus through a military analogy:
 **Rephrasing the goal**: 
 1. Every loyal general must obtain the same information $v(1),...,v(n)$ (<u>agreement</u>)
 2. If the $i-th$ general is loyal, then the value that he sends must be used by every loyal general as the value of $v(i)$ (<u>validity</u>)
-Therefore 1. can be rephrased: 1. Any two loyal generals use the same value of $v(i)$
+Therefore $1.$ can be rephrased: 1. Any two loyal generals use the same value of $v(i)$
+Both conditions $1$ and $2$ are expressed on the single value sent by the $i-th$ general. Therefore, we can restrict the problem to how a general communicate its value to loyal generals.
+
+The problem boils down to how a single commander (_Commander_) transmits his order to $N-1$ lieutenants (_Lieutenants_):
+1. **IC1 (Agreement):** All loyal lieutenants must obey the exact same order.
+2. **IC2 (Validity):** If the commander is loyal, every loyal lieutenant must follow the order sent by the commander exactly.
+3. The order is "Use $v(i)$ as my value"
 
