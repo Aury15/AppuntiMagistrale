@@ -3435,4 +3435,4 @@ This is the **read phase** of the regular Byzantine fault-tolerant ledger withou
 >[!Observations] Regular Register without cryptographic assumptions
 >Without encryption, the termination property is relaxed to finite-write termination: if a read operation is concurrent with infinitely many continuous writes, it may never terminate. This restriction has been shown to be theoretically necessary in the absence of digital signatures.
 
-## Consensus in presence of ONSENSUS IN PRESEN CE OF BYZANTINE PROCESSES
+## Consensus in presence of byzantine processes 
