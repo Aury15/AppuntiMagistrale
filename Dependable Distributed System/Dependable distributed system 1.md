@@ -3524,4 +3524,5 @@ $$
 &\quad 4. \text{ Each lieutenant collects all values and computes:} \\
 &\quad\quad \text{Decision } := \text{majority}(v_1, v_2, \dots, v_{N-1}).
 \end{aligned}
-$$![[Dependable distributed system 1-1794404379542.webp]]
+$$![[Dependable distributed system 1-1794404379542.webp]]![[Dependable distributed system 1-1794404393413.webp]]![[Dependable distributed system 1-1794404402924.webp]]![[Dependable distributed system 1-1794404432528.webp]]
+>[]
