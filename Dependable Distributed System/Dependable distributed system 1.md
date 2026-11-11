@@ -3085,8 +3085,60 @@ $$
 ![[Dependable distributed system 1-1794390481211.webp]]
 
 #### Byzantine Reliable Broadcast (BRB)
-Il **Reliable Broadcast** aggiunge una proprietà fondamentale rispetto al Consistent Broadcast: la **Totality** (Totalità), ovvero se un qualsiasi nodo corretto consegna il messaggio, allora _tutti_ i nodi corretti finiranno per consegnarlo.
+**Reliable Broadcast** adds a fundamental property over Consistent Broadcast: **Totality**, meaning that if any correct node delivers the message, then all correct nodes will eventually deliver it.
 
-- **Proprietà BRB1-BRB4:** Identiche alle proprietà BCB1-BCB4 del Consistent Broadcast.
-- **BRB5 (Totality):** Se un messaggio viene consegnato da un qualsiasi processo corretto, allora ogni processo corretto alla fine consegna un messaggio.
-Per ottenere un Reliable Broadcast in presenza di processi bizantini, si utilizza un protocollo a due fasi (Echo + Ready), noto come **Double-Echo Broadcast**.
+- **BRB1-BRB4 Properties:** Identical to the BCB1-BCB4 properties of Consistent Broadcast.
+- **BRB5 (Totality):** If a message is delivered by any correct process, then every correct process eventually delivers a message.
+To achieve Reliable Broadcast in the presence of Byzantine processes, a two-phase protocol (Echo + Ready), known as **Double-Echo Broadcast**, is used.
+
+$$
+\begin{aligned}
+&\textbf{Algorithm 3.18:} \text{ Authenticated Double-Echo Broadcast} \\
+&\textbf{Implements:} \\
+&\quad \text{ByzantineReliableBroadcast, instance } brb \text{ with sender } s. \\
+&\textbf{Uses:} \\
+&\quad \text{AuthPerfectPointToPointLinks, instance } al. \\
+& \\
+&\textbf{upon event } \langle brb, Init \rangle \text{ do} \\
+&\quad sentecho := \text{FALSE}; \\
+&\quad sentready := \text{FALSE}; \\
+&\quad delivered := \text{FALSE}; \\
+&\quad echos := [\bot]^N; \\
+&\quad readys := [\bot]^N; \\
+& \\
+&\textbf{upon event } \langle brb, Broadcast \mid m \rangle \text{ do} \\
+&\quad \textbf{forall } q \in \Pi \text{ do} \\
+&\quad\quad \text{trigger } \langle al, Send \mid q, [\text{SEND}, m] \rangle; \\
+& \\
+&\textbf{upon event } \langle al, Deliver \mid p, [\text{SEND}, m] \rangle \text{ such that } p = s \text{ and } sentecho = \text{FALSE} \text{ do} \\
+&\quad sentecho := \text{TRUE}; \\
+&\quad \textbf{forall } q \in \Pi \text{ do} \\
+&\quad\quad \text{trigger } \langle al, Send \mid q, [\text{ECHO}, m] \rangle; \\
+& \\
+&\textbf{upon event } \langle al, Deliver \mid p, [\text{ECHO}, m] \rangle \text{ do} \\
+&\quad \textbf{if } echos[p] = \bot \text{ then} \\
+&\quad\quad echos[p] := m; \\
+& \\
+&\textbf{upon exists } m \neq \bot \text{ such that } \#(\{p \in \Pi \mid echos[p] = m\}) > \frac{N + f}{2} \text{ and } sentready = \text{FALSE} \text{ do} \\
+&\quad sentready := \text{TRUE}; \\
+&\quad \textbf{forall } q \in \Pi \text{ do} \\
+&\quad\quad \text{trigger } \langle al, Send \mid q, [\text{READY}, m] \rangle; \\
+& \\
+&\textbf{upon event } \langle al, Deliver \mid p, [\text{READY}, m] \rangle \text{ do} \\
+&\quad \textbf{if } readys[p] = \bot \text{ then} \\
+&\quad\quad readys[p] := m; \\
+& \\
+&\textbf{upon exists } m \neq \bot \text{ such that } \#(\{p \in \Pi \mid readys[p] = m\}) > f \text{ and } sentready = \text{FALSE} \text{ do} \\
+&\quad sentready := \text{TRUE}; \\
+&\quad \textbf{forall } q \in \Pi \text{ do} \\
+&\quad\quad \text{trigger } \langle al, Send \mid q, [\text{READY}, m] \rangle; \\
+& \\
+&\textbf{upon exists } m \neq \bot \text{ such that } \#(\{p \in \Pi \mid readys[p] = m\}) > 2f \text{ and } delivered = \text{FALSE} \text{ do} \\
+&\quad delivered := \text{TRUE}; \\
+&\quad \text{trigger } \langle brb, Deliver \mid s, m \rangle;
+\end{aligned}
+$$- **Fase ECHO:** Funziona in modo analogo al Consistent Broadcast. Quando si raccoglie un numero di echo superiore a $\frac{N + f}{2}$, il nodo invia un messaggio di `READY`.
+    
+- **Fase READY e Propagazione:Se un nodo vede che almeno $f$ nodi hanno inviato un messaggio `READY` per lo stesso $m$ (anche senza aver fatto in tempo a fare l'echo), si unisce inviando a sua volta il `READY` (`sentready := TRUE`). Questo garantisce la **Totality**, propagando l'intenzione di consegna a tutta la rete nonostante i comportamenti bizantini.
+- **Condizione di Consegna (Deliver):** Un nodo consegna definitivamente il messaggio $m$ tramite `brb, Deliver` quando riceve messaggi `READY` da un numero di processi maggiore di $2f$ (`#> 2f`).
+- **Resilienza:** Anche in questo caso, l'intero sistema è matemolarmente sicuro e corretto assumendo la condizione fondamentale di tolleranza ai guasti $N > 3f$.
