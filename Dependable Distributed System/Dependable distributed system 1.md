@@ -3506,9 +3506,7 @@ To solve the reliable consensus problem in the presence of $f$ Byzantine faults 
 - **Recursive Case OM(f) with $f > 0$:**
 1. The commander sends his value to all lieutenants.
 2. Each lieutenant $i$ receives a value $v_i$ (or `RETREAT`), and in turn acts as commander by executing the algorithm **OM(f-1)** to forward that value to the other $N-2$ lieutenants.
-3. For each i and j (j≠i), let vj be the value Lieutenant i received from Lieutenant j in step (2), or else RETREAT if he received no value
-
-
+3. For each i and j (j≠i), let vj be the value Lieutenant i received from Lieutenant j in step (2), or else RETREAT if he received no value: Lieutenant i uses the value **majority** $v_l, ..., v_{N-1})$.
 $$
 \begin{aligned}
 &\textbf{Algorithm:} \text{ Oral Message Consensus OM(f)} \\
@@ -3520,10 +3518,10 @@ $$
 & \\
 &\textbf{Function } OM(f) \text{ where } f > 0: \\
 &\quad 1. \text{ Commander sends value } v \text{ to every lieutenant } i. \\
-&\quad 2. \text{ Let } v_i \text{ be the value received by lieutenant } i \text{ (or } \textsc{Retreat}). \\
+&\quad 2. \text{ Let } v_i \text{ be the value received by lieutenant } i \text{ (or } {Retreat}). \\
 &\quad 3. \text{ Lieutenant } i \text{ acts as commander and runs } OM(f-1) \\
 &\quad\quad \text{to broadcast } v_i \text{ to the other } N-2 \text{ lieutenants.} \\
 &\quad 4. \text{ Each lieutenant collects all values and computes:} \\
 &\quad\quad \text{Decision } := \text{majority}(v_1, v_2, \dots, v_{N-1}).
 \end{aligned}
-$$
+$$![[Dependable distributed system 1-1794404379542.webp]]
