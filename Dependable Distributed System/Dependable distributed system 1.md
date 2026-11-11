@@ -3479,5 +3479,9 @@ The problem boils down to how a single commander (_Commander_) transmits his ord
 >[!Warning] Impossibility Result 
 >If generals can only exchange plain text messages, there is no solution that can tolerate traitors unless more than two-thirds of the generals are loyal (i.e., $N \ge 3f + 1$, where $f$ is the maximum number of traitors).
 
+![[Dependable distributed system 1-1794403752389.webp]]![[Dependable distributed system 1-1794403766166.webp]]
+This abstract problem captures many of the issues we face if we want to implement a RSM in a byzantine failure model: 
+	◦ How can correct replicas agree on a common order for client requests ? 
+	◦ How can correct replicas decide what is the correct answer to a client request ? 
+	◦ How can correct replicas maintain their state consistent ?
 
-![[Dependable distributed system 1-1794403723545.webp|839]]
