@@ -3086,3 +3086,7 @@ $$
 
 #### Byzantine Reliable Broadcast (BRB)
 Il **Reliable Broadcast** aggiunge una proprietà fondamentale rispetto al Consistent Broadcast: la **Totality** (Totalità), ovvero se un qualsiasi nodo corretto consegna il messaggio, allora _tutti_ i nodi corretti finiranno per consegnarlo.
+
+- **Proprietà BRB1-BRB4:** Identiche alle proprietà BCB1-BCB4 del Consistent Broadcast.
+- **BRB5 (Totality):** Se un messaggio viene consegnato da un qualsiasi processo corretto, allora ogni processo corretto alla fine consegna un messaggio.
+Per ottenere un Reliable Broadcast in presenza di processi bizantini, si utilizza un protocollo a due fasi (Echo + Ready), noto come **Double-Echo Broadcast**.
