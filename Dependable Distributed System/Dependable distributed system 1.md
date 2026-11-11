@@ -3533,5 +3533,10 @@ The complexity lies in the fact that a Byzantine process can easily change the c
 
 <u>What happens if we use message authentication codes ? A solution for 3 processes exists !</u>
 The commander signs and sends his value (v:0) to every lieutenant. 
-For each i: 
-- If Lieutenant i receives a message of the form v:0 from the commander and he has not yet received any order, then ◦ Vi={v} ◦ Sends message v:0:i to every other lieutenant ◦ If Lieutenant i receives a message of the form v:0:jl:...:Jk and v is not in Vi then ◦ adds v to Vi; ◦ if k
+For each $i$: 
+- If Lieutenant i receives a message of the form $v:0$ from the commander and he has not yet received any order, then 
+	- $V_i={v}$ 
+	- Sends message $v:0:i$ to every other lieutenant 
+- If Lieutenant i receives a message of the form $v:0:j_l:...:J_k$ and $v$ is not in $V_i$ then
+	-  adds v to Vi; 
+	- if k
