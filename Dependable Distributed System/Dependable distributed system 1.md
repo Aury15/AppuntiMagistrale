@@ -3498,13 +3498,12 @@ To solve the reliable consensus problem in the presence of $f$ Byzantine faults 
 
 #### Oral Message Algorithm
 
- **Struttura ricorsiva dell'algoritmo:**
-- **Caso Base OM(0):**
-    1. Il comandante invia il suo valore a ogni luogotenente.
-    2. Ciascun luogotenente usa il valore ricevuto o un valore di default (`RETREAT`) se non riceve nulla.
-        
-- **Caso Ricorsivo OM(f) con $f > 0$:**
-    1. Il comandante invia il suo valore a tutti i luogotenenti.
-    2. Ogni luogotenente $i$ riceve un valore $v_i$ (o `RETREAT`), e agisce a sua volta da comandante eseguendo l'algoritmo **OM(f-1)** per inoltrare quel valore agli altri $N-2$ luogonenti.
-        
-    3. Alla fine, ogni luogotenente calcola la decisione finale facendo la **maggioranza** di tutti i valori raccolti.
+**Recursive Algorithm Structure:**
+- **Base Case OM(0):**
+1. The commander sends his value to each lieutenant.
+2. Each lieutenant uses the received value or a default value (`RETREAT` i.e., ⏊) if nothing is received.
+
+- **Recursive Case OM(f) with $f > 0$:**
+1. The commander sends his value to all lieutenants.
+2. Each lieutenant $i$ receives a value $v_i$ (or `RETREAT`), and in turn acts as commander by executing the algorithm **OM(f-1)** to forward that value to the other $N-2$ lieutenants.
+3. Finally, each lieutenant computes the final decision by taking a **majority** of all the collected values.
