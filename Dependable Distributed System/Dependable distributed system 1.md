@@ -3461,4 +3461,6 @@ The classic problem models abstract consensus through a military analogy:
 ![[Dependable distributed system 1-1794402728587.webp]]
 **Goal**: $f(values_i)$ must be defined in a way that:
 	 A. all loyal generals decide upon the same plan of action (<u>agreement</u>)
-	 B. a small number of traitors cannot cause the loyal generals to adopt a bad plan ()
+	 B. a small number of traitors cannot cause the loyal generals to adopt a bad plan 
+
+ Condition A is achieved by having all generals use the same method for combining the information so the $f$ must be deterministi  ◦ Condition B is achieved by using a robust method
