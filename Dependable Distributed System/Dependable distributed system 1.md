@@ -3490,3 +3490,7 @@ This abstract problem captures many of the issues we face if we want to implemen
 - Up to $f$ processes can be byzantine;
 - $N \ge 3f + 1$ 
 - The "oral message" communication model is assumed
+	- Every message that is sent is delivered correctly
+	- Message source is known to the receiver
+	- Message omissions can be detected
+- The default decision for lieutenants is *RETREAT*
