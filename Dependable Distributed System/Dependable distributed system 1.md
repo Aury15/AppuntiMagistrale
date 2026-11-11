@@ -3269,14 +3269,14 @@ $$
 &\quad acklist := [\bot]^N; \\
 &\quad \sigma := \text{sign}(self, bonrr \parallel self \parallel \textsc{Write} \parallel wts \parallel v); \\
 &\quad \textbf{forall } q \in \Pi \text{ do} \\
-&\quad\quad \text{trigger } \langle al, Send \mid q, [\textsc{Write}, wts, v, \sigma] \rangle; \\
+&\quad\quad \text{trigger } \langle al, Send \mid q, [{Write}, wts, v, \sigma] \rangle; \\
 & \\
-&\textbf{upon event } \langle al, Deliver \mid p, [\textsc{Write}, ts', v', \sigma'] \rangle \text{ such that } p = w \text{ do} \\
+&\textbf{upon event } \langle al, Deliver \mid p, [{Write}, ts', v', \sigma'] \rangle \text{ such that } p = w \text{ do} \\
 &\quad \textbf{if } ts' > ts \text{ then} \\
 &\quad\quad (ts, val, \sigma) := (ts', v', \sigma'); \\
-&\quad \textbf{trigger } \langle al, Send \mid p, [\textsc{Ack}, ts'] \rangle; \\
+&\quad \textbf{trigger } \langle al, Send \mid p, [{Ack}, ts'] \rangle; \\
 & \\
-&\textbf{upon event } \langle al, Deliver \mid q, [\textsc{Ack}, ts'] \rangle \text{ such that } ts' = wts \text{ do} \\
+&\textbf{upon event } \langle al, Deliver \mid q, [{Ack}, ts'] \rangle \text{ such that } ts' = wts \text{ do} \\
 &\quad acklist[q] := \text{ACK}; \\
 &\quad \textbf{if } \#(acklist) > \frac{N + f}{2} \text{ then} \\
 &\quad\quad acklist := [\bot]^N; \\
@@ -3286,13 +3286,13 @@ $$
 &\quad rid := rid + 1; \\
 &\quad readlist := [\bot]^N; \\
 &\quad \textbf{forall } q \in \Pi \text{ do} \\
-&\quad\quad \text{trigger } \langle al, Send \mid q, [\textsc{Read}, rid] \rangle; \\
+&\quad\quad \text{trigger } \langle al, Send \mid q, [{Read}, rid] \rangle; \\
 & \\
-&\textbf{upon event } \langle al, Deliver \mid p, [\textsc{Read}, r] \rangle \text{ do} \\
-&\quad \textbf{trigger } \langle al, Send \mid p, [\textsc{Value}, r, ts, val, \sigma] \rangle; \\
+&\textbf{upon event } \langle al, Deliver \mid p, [{Read}, r] \rangle \text{ do} \\
+&\quad \textbf{trigger } \langle al, Send \mid p, [{Value}, r, ts, val, \sigma] \rangle; \\
 & \\
-&\textbf{upon event } \langle al, Deliver \mid q, [\textsc{Value}, r, ts', v', \sigma'] \rangle \text{ such that } r = rid \text{ do} \\
-&\quad \textbf{if } \text{verifysig}(q, bonrr \parallel w \parallel \textsc{Write} \parallel ts' \parallel v' \parallel \sigma') \text{ then} \\
+&\textbf{upon event } \langle al, Deliver \mid q, [{Value}, r, ts', v', \sigma'] \rangle \text{ such that } r = rid \text{ do} \\
+&\quad \textbf{if } \text{verifysig}(q, bonrr \parallel w \parallel {Write} \parallel ts' \parallel v' \parallel \sigma') \text{ then} \\
 &\quad\quad readlist[q] := (ts', v'); \\
 &\quad \textbf{if } \#(readlist) > \frac{N + f}{2} \text{ then} \\
 &\quad\quad v := \text{highestval}(readlist); \\
