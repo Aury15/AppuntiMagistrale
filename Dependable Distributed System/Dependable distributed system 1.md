@@ -3444,4 +3444,8 @@ In distributed systems exposed to Byzantine failures, processes can behave arbit
 
 >[!warning]
 >Weak Validity allows to decide an arbitrary value if some process is Byzantine.
+>**WBC2 Property (Weak Validity):** If _all_ processes are correct and propose the same value $v$, then no correct process can decide on a value other than $v$; furthermore, if all are correct and one process decides on $v$, then $v$ was proposed by someone.
+
+
+
 
