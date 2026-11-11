@@ -3302,6 +3302,8 @@ $$
 $$
 **seq**
 ![[Dependable distributed system 1-1794393443375.webp]]
+
+**concurrent**
 ![[Dependable distributed system 1-1794393461466.webp]]
 
 
