@@ -3241,3 +3241,11 @@ $$
 ![[Dependable distributed system 1-1794392807593.webp]]
 #### Regular Register with cryptographic assumptions
 
+Without the aid of cryptography, a Byzantine process (a compromised node) has complete destructive power: it can invent data out of thin air, alter messages in transit, or blatantly lie by pretending to be someone else. To prevent a reader from falling for a trick and accepting a completely false value invented by a traitor, the system is forced to use a very heavy defense structure called _Masking Quorum_, which requires extremely strict constraints: $N > 4f$ and a quorum of $\frac{N+2f}{2}$ (equal to $3f+1$). This means a huge majority is needed to "mask" and neutralize the data invented by malicious nodes.
+With asymmetric cryptography, the writer possesses a secret **private key**. When writing a value, it digitally signs the `(timestamp, value)` pair, producing a cryptographic signature $\sigma$:
+$$\sigma = \text{sign}(\text{writer}, \dots, \text{WRITE}, \text{timestamp}, \text{value})$$
+- **The role of servers:** Servers store the value along with its respective $\sigma$ signature.
+- **The reader's filter:** When the reader receives response messages (`VALUE`) from servers, it **verifies the digital signature** using the writer's public key. If the signature is invalid (because a Byzantine node attempted to modify or forge it), the reader **immediately discards the message**.
+Grazie a questo blocco crittografico, i poteri del nodo traditore vengono notevolmente limitati:
+1. **Non può inventare dati falsi:** Poiché non possiede la chiave privata dello scrittore, un nodo Bizantino **non è in grado di generare una firma valida** per un valore arbitrario o inventato di sua spontanea volontà.
+2. **Cosa _può_ ancora fare?** L'unica cosa che un nodo Bizantino può fare è un attacco di _replay_, ovvero riproporre un messaggio vecchio e legittimo (con un timestamp passato) che aveva salvato correttamente in precedenza. Tuttavia, questo comportamento "obsoleto" è facilmente gestibile confrontando i timestamp e selezionando sempre il più recente.
