@@ -3239,3 +3239,5 @@ $$
 \end{aligned}
 $$
 ![[Dependable distributed system 1-1794392807593.webp]]
+#### Regular Register with cryptographic assumptions
+
