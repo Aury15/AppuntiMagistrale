@@ -3476,3 +3476,7 @@ The problem boils down to how a single commander (_Commander_) transmits his ord
 2. **IC2 (Validity):** If the commander is loyal, every loyal lieutenant must follow the order sent by the commander exactly.
 3. The order is "Use $v(i)$ as my value"
 
+>[!Warning] Impossibility Result 
+>If generals can only exchange plain text messages, there is no solution that can tolerate traitors unless more than two-thirds of the generals are loyal (i.e., $N \ge 3f + 1$, where $f$ is the maximum number of traitors).
+
+
