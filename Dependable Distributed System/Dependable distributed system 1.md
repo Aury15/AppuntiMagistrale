@@ -3313,48 +3313,32 @@ and value in the VALUE message, although it may include a signed value with
 an outdated timestamp.
 
 ![[Dependable distributed system 1-1794393585960.webp]]
- **Il contesto dello scenario (L'Immagine)**
-Immagina un sistema con $N = 4$ processi in totale:
-- $p$ = Lo scrittore (corretto).
-- $q$ = Un processo **Bizantino** (il diavoletto, cattivo/traditore).
-- $r$ = Il lettore (corretto).
-- $s$ = Un server corretto ma **estremamente lento**.
-- Assumiamo di poter tollerare $f = 1$ guasto (quindi $N > 3f \implies 4 > 3$). Per terminare senza bloccarsi, lo scrittore può attendere al massimo $N - f = 3$ conferme (ACK).
-    
- **Cosa fa lo scrittore in una sola fase (e perché si crea il caos)**
-1. Lo scrittore $p$ vuole scrivere il valore $x$ con timestamp `1` (`write(x)`).
-2. Invia il messaggio ai server, ma poiché deve attendere solo $N - f = 3$ ACK per terminare in fretta, riceve le conferme da $p$ stesso, dal processo Bizantino $q$ e termina subito.
-    
-3. Il server $s$ è rimasto **troppo lento** e non ha fatto in tempo a ricevere il messaggio con il nuovo valore $(1, x)$. Quindi, nella memoria di $s$ è rimasto il vecchio valore $(0, \perp)$.
-    
+**The Context of the Scenario (The Image)**
+Imagine a system with $N = 4$ processes in total:
+- $p$ = The (correct) writer.
+- $q$ = A **Byzantine** process (the evil/traitor devil).
+- $r$ = The (correct) reader.
+- $s$ = A correct but **extremely slow** server.
+- Assume we can tolerate $f = 1$ failure (so $N > 3f \implies 4 > 3$). To terminate without blocking, the writer can wait for a maximum of $N - f = 3$ acknowledgments (ACKs).
 
-### 3. La trappola durante la lettura (`read()`)
+**What the writer does in a single phase (and why chaos occurs)**
+1. Writer $p$ wants to write the value $x$ with timestamp `1` (`write(x)`).
+2. It sends the message to the servers, but since it only has to wait for $N - f = 3$ ACKs to finish quickly, it receives acknowledgements from $p$ itself, from the Byzantine process $q$, and immediately terminates.
+3. Server $s$ was **too slow** and didn't have time to receive the message with the new value $(1, x)$. Therefore, the old value $(0, \perp)$ remained in $s$'s memory.
 
-Successivamente, il processo $r$ prova a leggere (`read()`) interroghiamo i server. Interroga un quorum e riceve queste risposte:
+**The read trap (`read()`)**
+Next, the process $r$ tries to read (`read()`) the servers. It queries a quorum and receives these responses:
+- From the **server** $r$ (itself) and the slow server $s$, it receives the old value: **$[VALUE, 0, \perp]$**.
+- From the **Byzantine** process $q$, it receives a manipulated or fake value: **$[VALUE, 1, x]$** (or $q$ shamelessly lies by pretending there is a timestamp or an altered value).
 
-- Dal server $r$ (se stesso) e dal server lento $s$, riceve il vecchio valore: **$[VALUE, 0, \perp]$**.
-    
-- Dal processo Bizantino $q$, riceve un valore manipolato o finto: **$[VALUE, 1, x]$** (oppure $q$ mente spudoratamente fingendo che ci sia un timestamp o un valore alterato).
-    
+**The Reader's Drama (Why Does It Fail?)**
+Reader $r$ is faced with a dead end and **is unable to choose which value to return**, for two insurmountable logical reasons (indicated in the blue box on the right):
+1. **The value $\perp$ may be old:** The reader sees an empty/old value coming from $s$, but doesn't know that $s$ is just a server that fell behind due to a network delay, while the real value has been written elsewhere.
+2. **The value $x$ may be a fake:** The reader sees the value $x$ with a timestamp of `1`, but it comes from $q$ (who is Byzantine and lying). Without the cryptographic signature to prove its authenticity, the reader doesn't know whether $x$ was actually written by writer $p$ or whether it's a lie invented by $q$.
+Faced with this total confusion, the single-phase algorithm fails and the reader is forced to return a failure (`read() $\to \perp$)` or make a mistake.
 
-#### Il dramma del lettore (Perché fallisce?)
-
-Il lettore $r$ si trova davanti a un vicolo cieco e **non è in grado di scegliere quale valore restituire**, per due motivi logici insormontabili (indicati nel box blu a destra):
-
-1. **Il valore $\perp$ potrebbe essere vecchio:** Il lettore vede un valore vuoto/vecchio proveniente da $s$, ma non sa che $s$ è solo un server rimasto indietro a causa di un ritardo di rete, mentre il valore reale è stato scritto altrove.
-    
-2. **Il valore $x$ potrebbe essere un falso:** Il lettore vede il valore $x$ con timestamp `1`, ma gli arriva da $q$ (che è Bizantino e mente). Non avendo la firma crittografica a provarne l'autenticità, il lettore non sa se $x$ è stato veramente scritto dallo scrittore $p$ o se è una balla inventata da $q$.
-    
-
-Di fronte a questa confusione totale, l'algoritmo a fase singola fallisce e il lettore è costretto a restituire un fallimento (`read() $\to \perp$)` oppure a prendere una cantonata.
-
-### 4. Come si risolve questo problema? (La soluzione a Due Fasi)
-
+**Come si risolve questo problema? (La soluzione a Due Fasi)**
 Proprio per evitare che un server lento si mescoli con un server corrotto e che un nodo Bizantino possa confondere le acque, l'algoritmo adotta la strategia del **Double-Write (Due Fasi)**:
-
 - **Fase 1 (Pre-Write):** Lo scrittore invia un pre-avviso (`PREWRITE`) e aspetta $N - f$ conferme per assicurarsi che una maggioranza di nodi sia "allertata" sull'intenzione di scrivere quel timestamp.
-    
 - **Fase 2 (Write):** Solo dopo aver messo in sicurezza la fase preliminare, invia il `WRITE` effettivo.
-    
-
 Ogni server, così facendo, memorizza **due coppie** (quella del pre-write e quella del write). Questo permette al lettore di fare una "triangolazione" logica: se nota discrepanze, riesce a smascherare quale processo sta mentendo (escludendo i dati corrotti) e a ricostruire con certezza matematica se il valore è legittimo o meno, superando l'ambiguità mostrata in questo grafico.
