@@ -3238,3 +3238,4 @@ $$
 &\quad\quad \text{trigger } \langle bonsr, ReadReturn \mid v \rangle;
 \end{aligned}
 $$
+![[Dependable distributed system 1-1794392807593.webp]]
