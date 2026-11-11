@@ -3453,4 +3453,7 @@ The classic problem models abstract consensus through a military analogy:
 - Several army divisions (Army 1, 2, 3, 4) encamped around an enemy city communicate through messengers.
 - The generals must agree on a common plan of action: **Attack or Retreat**.
 - Some generals may be traitors (Byzantines) and try to prevent the army from reaching unanimous agreement.
-
+**An Intuitive Algorithm**
+1. Each general starts with its own value $v(i)$
+2. v(i) must be communicated by the $i-th$ general to others 
+3. Each general uses some method for combining the values $v(1)..... v(n)$ into a single plan of action, where n is the number of generals ◦ We need to define a function $f(values_i)$
