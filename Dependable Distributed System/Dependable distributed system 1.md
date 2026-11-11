@@ -3456,4 +3456,6 @@ The classic problem models abstract consensus through a military analogy:
 **An Intuitive Algorithm**
 1. Each general starts with its own value $v(i)$
 2. v(i) must be communicated by the $i-th$ general to others 
-3. Each general uses some method for combining the values $v(1)..... v(n)$ into a single plan of action, where n is the number of generals ◦ We need to define a function $f(values_i)$
+3. Each general uses some method for combining the values $v(1)..... v(n)$ into a single plan of action, where n is the number of generals 
+	1. We need to define a function $f(values_i)$
+![[Dependable distributed system 1-1794402728587.webp]]
