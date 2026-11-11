@@ -3246,6 +3246,57 @@ With asymmetric cryptography, the writer possesses a secret **private key**. Whe
 $$\sigma = \text{sign}(\text{writer}, \dots, \text{WRITE}, \text{timestamp}, \text{value})$$
 - **The role of servers:** Servers store the value along with its respective $\sigma$ signature.
 - **The reader's filter:** When the reader receives response messages (`VALUE`) from servers, it **verifies the digital signature** using the writer's public key. If the signature is invalid (because a Byzantine node attempted to modify or forge it), the reader **immediately discards the message**.
-Grazie a questo blocco crittografico, i poteri del nodo traditore vengono notevolmente limitati:
-1. **Non può inventare dati falsi:** Poiché non possiede la chiave privata dello scrittore, un nodo Bizantino **non è in grado di generare una firma valida** per un valore arbitrario o inventato di sua spontanea volontà.
-2. **Cosa _può_ ancora fare?** L'unica cosa che un nodo Bizantino può fare è un attacco di _replay_, ovvero riproporre un messaggio vecchio e legittimo (con un timestamp passato) che aveva salvato correttamente in precedenza. Tuttavia, questo comportamento "obsoleto" è facilmente gestibile confrontando i timestamp e selezionando sempre il più recente.
+Thanks to this cryptographic block, the rogue node's powers are significantly limited:
+1. **It cannot invent false data:** Since it doesn't possess the writer's private key, a Byzantine node **cannot generate a valid signature** for an arbitrary or invented value.
+2. **What else can it do?** The only thing a Byzantine node can do is a _replay_ attack, that is, replay an old, legitimate message (with a past timestamp) that it had previously saved correctly. However, this "outdated" behavior is easily managed by comparing timestamps and always selecting the most recent one.
+$$
+\begin{aligned}
+&\textbf{Algorithm 4.15:} \text{ Authenticated-Data Byzantine Quorum} \\
+&\textbf{Implements:} \\
+&\quad (1, N)\text{-ByzantineRegularRegister, \textbf{instance } } bonrr, \text{ with writer } w. \\
+&\textbf{Uses:} \\
+&\quad \text{AuthPerfectPointToPointLinks, \textbf{instance } } al. \\
+& \\
+&\textbf{upon event } \langle bonrr, Init \rangle \text{ do} \\
+&\quad (ts, val, \sigma) := (0, \bot, \bot); \\
+&\quad wts := 0; \\
+&\quad acklist := [\bot]^N; \\
+&\quad rid := 0; \\
+&\quad readlist := [\bot]^N; \\
+& \\
+&\textbf{upon event } \langle bonrr, Write \mid v \rangle \text{ do} \\
+&\quad wts := wts + 1; \\
+&\quad acklist := [\bot]^N; \\
+&\quad \sigma := \text{sign}(self, bonrr \parallel self \parallel \textsc{Write} \parallel wts \parallel v); \\
+&\quad \textbf{forall } q \in \Pi \text{ do} \\
+&\quad\quad \text{trigger } \langle al, Send \mid q, [\textsc{Write}, wts, v, \sigma] \rangle; \\
+& \\
+&\textbf{upon event } \langle al, Deliver \mid p, [\textsc{Write}, ts', v', \sigma'] \rangle \text{ such that } p = w \text{ do} \\
+&\quad \textbf{if } ts' > ts \text{ then} \\
+&\quad\quad (ts, val, \sigma) := (ts', v', \sigma'); \\
+&\quad \textbf{trigger } \langle al, Send \mid p, [\textsc{Ack}, ts'] \rangle; \\
+& \\
+&\textbf{upon event } \langle al, Deliver \mid q, [\textsc{Ack}, ts'] \rangle \text{ such that } ts' = wts \text{ do} \\
+&\quad acklist[q] := \text{ACK}; \\
+&\quad \textbf{if } \#(acklist) > \frac{N + f}{2} \text{ then} \\
+&\quad\quad acklist := [\bot]^N; \\
+&\quad\quad \text{trigger } \langle bonrr, WriteReturn \rangle; \\
+& \\
+&\textbf{upon event } \langle bonrr, Read \rangle \text{ do} \\
+&\quad rid := rid + 1; \\
+&\quad readlist := [\bot]^N; \\
+&\quad \textbf{forall } q \in \Pi \text{ do} \\
+&\quad\quad \text{trigger } \langle al, Send \mid q, [\textsc{Read}, rid] \rangle; \\
+& \\
+&\textbf{upon event } \langle al, Deliver \mid p, [\textsc{Read}, r] \rangle \text{ do} \\
+&\quad \textbf{trigger } \langle al, Send \mid p, [\textsc{Value}, r, ts, val, \sigma] \rangle; \\
+& \\
+&\textbf{upon event } \langle al, Deliver \mid q, [\textsc{Value}, r, ts', v', \sigma'] \rangle \text{ such that } r = rid \text{ do} \\
+&\quad \textbf{if } \text{verifysig}(q, bonrr \parallel w \parallel \textsc{Write} \parallel ts' \parallel v' \parallel \sigma') \text{ then} \\
+&\quad\quad readlist[q] := (ts', v'); \\
+&\quad \textbf{if } \#(readlist) > \frac{N + f}{2} \text{ then} \\
+&\quad\quad v := \text{highestval}(readlist); \\
+&\quad\quad readlist := [\bot]^N; \\
+&\quad\quad \text{trigger } \langle bonrr, ReadReturn \mid v \rangle;
+\end{aligned}
+$$
