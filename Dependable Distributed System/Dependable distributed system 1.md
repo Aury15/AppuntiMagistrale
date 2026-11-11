@@ -3237,4 +3237,4 @@ $$
 &\quad\quad readlist := [\bot]^N; \\
 &\quad\quad \text{trigger } \langle bonsr, ReadReturn \mid v \rangle;
 \end{aligned}
-```
+$$
