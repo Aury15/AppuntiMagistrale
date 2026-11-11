@@ -3300,3 +3300,8 @@ $$
 &\quad\quad \text{trigger } \langle bonrr, ReadReturn \mid v \rangle;
 \end{aligned}
 $$
+>[!warning]
+>👺 A Byzantine process is prevented from returning an arbitrary timestamp
+and value in the VALUE message, although it may include a signed value with
+an outdated timestamp.
+
