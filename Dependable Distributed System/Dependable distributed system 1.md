@@ -3137,8 +3137,10 @@ $$
 &\quad delivered := \text{TRUE}; \\
 &\quad \text{trigger } \langle brb, Deliver \mid s, m \rangle;
 \end{aligned}
-$$- **Fase ECHO:** Funziona in modo analogo al Consistent Broadcast. Quando si raccoglie un numero di echo superiore a $\frac{N + f}{2}$, il nodo invia un messaggio di `READY`.
-    
-- **Fase READY e Propagazione:Se un nodo vede che almeno $f$ nodi hanno inviato un messaggio `READY` per lo stesso $m$ (anche senza aver fatto in tempo a fare l'echo), si unisce inviando a sua volta il `READY` (`sentready := TRUE`). Questo garantisce la **Totality**, propagando l'intenzione di consegna a tutta la rete nonostante i comportamenti bizantini.
-- **Condizione di Consegna (Deliver):** Un nodo consegna definitivamente il messaggio $m$ tramite `brb, Deliver` quando riceve messaggi `READY` da un numero di processi maggiore di $2f$ (`#> 2f`).
-- **Resilienza:** Anche in questo caso, l'intero sistema è matemolarmente sicuro e corretto assumendo la condizione fondamentale di tolleranza ai guasti $N > 3f$.
+$$
+- **ECHO Phase:** This works similarly to Consistent Broadcast. When it receives more than $\frac{N + f}{2}$ of echoes, the node sends a `READY` message.
+- **READY and Propagation Phase:** If a node sees that at least $f$ nodes have sent a `READY` message for the same $m$ (even without having had time to echo), it joins by sending a `READY` message of its own (`sentready := TRUE`). This guarantees **Totality**, propagating the delivery intent throughout the network despite Byzantine behaviors.
+- **Deliver Condition:** A node definitively delivers the message $m$ via `brb, Deliver` when it receives `READY` messages from more than $2f$ (`#> 2f`).
+- **Resilience:** Again, the entire system is mathematically safe and correct assuming the fundamental fault-tolerance condition $N > 3f$.
+
+![[Dependable distributed system 1-1794390908927.webp]]
