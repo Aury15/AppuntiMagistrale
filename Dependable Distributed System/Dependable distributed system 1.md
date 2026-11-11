@@ -3485,3 +3485,8 @@ This abstract problem captures many of the issues we face if we want to implemen
 	◦ How can correct replicas decide what is the correct answer to a client request ? 
 	◦ How can correct replicas maintain their state consistent ?
 
+#### Byzantine reliable consensus 
+**System model**:
+- Up to $f$ processes can be byzantine;
+- $N \ge 3f + 1$ 
+- The "oral message" communication model is assumed
