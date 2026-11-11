@@ -3348,3 +3348,49 @@ Each server, in this way, stores **two pairs** (the pre-write and the write). Th
 
 #### Regular Register write Implementation without cryptographic assumptions
 
+$$
+\begin{aligned}
+&\textbf{Algorithm 4.16:} \text{ Double-Write Byzantine Quorum (part 1, write)} \\
+&\textbf{Implements:} \\
+&\quad (1, N)\text{-ByzantineRegularRegister, \textbf{instance } } bonrr, \text{ with writer } w. \\
+&\textbf{Uses:} \\
+&\quad \text{AuthPerfectPointToPointLinks, \textbf{instance } } al. \\
+& \\
+&\textbf{upon event } \langle bonrr, Init \rangle \text{ do} \\
+&\quad (pts, pval) := (0, \bot); \\
+&\quad (ts, val) := (0, \bot); \\
+&\quad (wts, wval) := (0, \bot); \\
+&\quad preacklist := [\bot]^N; \\
+&\quad acklist := [\bot]^N; \\
+&\quad rid := 0; \\
+&\quad readlist := [\bot]^N; \\
+& \\
+&\textbf{upon event } \langle bonrr, Write \mid v \rangle \text{ do} \\
+&\quad (wts, wval) := (wts + 1, v); \\
+&\quad preacklist := [\bot]^N; \\
+&\quad acklist := [\bot]^N; \\
+&\quad \textbf{forall } q \in \Pi \text{ do} \\
+&\quad\quad \text{trigger } \langle al, Send \mid q, [\textsc{PreWrite}, wts, wval] \rangle; \\
+& \\
+&\textbf{upon event } \langle al, Deliver \mid p, [\textsc{PreWrite}, pts', pval'] \rangle \text{ such that } p = w \land pts' = pts + 1 \text{ do} \\
+&\quad (pts, pval) := (pts', pval'); \\
+&\quad \text{trigger } \langle al, Send \mid p, [\textsc{PreAck}, pts] \rangle; \\
+& \\
+&\textbf{upon event } \langle al, Deliver \mid q, [\textsc{PreAck}, pts'] \rangle \text{ such that } pts' = wts \text{ do} \\
+&\quad preacklist[q] := \text{PREACK}; \\
+&\quad \text{if } \#(preacklist) > N - f \text{ then} \\
+&\quad\quad preacklist := [\bot]^N; \\
+&\quad\quad \textbf{forall } q \in \Pi \text{ do} \\
+&\quad\quad\quad \text{trigger } \langle al, Send \mid q, [\textsc{Write}, wts, wval] \rangle; \\
+& \\
+&\textbf{upon event } \langle al, Deliver \mid p, [\textsc{Write}, ts', val'] \rangle \text{ such that } p = w \land ts' = pts \land ts' > ts \text{ do} \\
+&\quad (ts, val) := (ts', val'); \\
+&\quad \text{trigger } \langle al, Send \mid p, [\textsc{Ack}, ts] \rangle; \\
+& \\
+&\textbf{upon event } \langle al, Deliver \mid q, [\textsc{Ack}, ts'] \rangle \text{ such that } ts' = wts \text{ do} \\
+&\quad acklist[q] := \text{ACK}; \\
+&\quad \text{if } \#(acklist) > N - f \text{ then} \\
+&\quad\quad acklist := [\bot]^N; \\
+&\quad\quad \text{trigger } \langle bonrr, WriteReturn \rangle;
+\end{aligned}
+$$
