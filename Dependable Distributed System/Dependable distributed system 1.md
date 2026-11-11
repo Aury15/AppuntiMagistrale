@@ -3179,9 +3179,8 @@ Qualsiasi quorum di scrittura e qualsiasi quorum di lettura **devono avere almen
 >- Se scrivi aggiornando i server `{1, 2, 3}` e poi leggi interrogando i server `{3, 4, 5}`, noterai che **il server 3 è in comune** tra i due gruppi!
 >- Sarà proprio quel server in comune a "passare" al lettore l'informazione aggiornata, impedendo al sistema di perdere il dato o di tornare indietro nel tempo.
 >Nei documenti che stiamo studiando, le dimensioni del quorum cambiano in base al livello di sicurezza richiesto:
->1. **Modello Crash / Fail-Silent (Semplice Maggioranza):**
-    - Se i nodi possono solo spegnersi (crash) e vogliamo tollerare fino a $f$ guasti, basta una maggioranza semplice: **$\frac{N}{2}$** o **$\frac{N+1}{2}$** (cioè la metà più uno dei nodi).
+>1. **Modello Crash / Fail-Silent (Semplice Maggioranza):** Se i nodi possono solo spegnersi (crash) e vogliamo tollerare fino a $f$ guasti, basta una maggioranza semplice: **$\frac{N}{2}$** o **$\frac{N+1}{2}$** (cioè la metà più uno dei nodi).
 >2. **Modello Bizantino (Con nodi che mentono o sabotano):**
-    - Se ci sono server "bizantini" che possono inviare dati falsi a tradimento, la semplice maggioranza non basta più, perché i bugiardi potrebbero corrompere il risultato.
-    - Per questo si usano quorum più grandi (come il _Masking Quorum_ pari a **$\frac{N+2f}{2}$**, cioè $3f+1$), dove $f$ è il numero massimo di traditori tollerati. In questo modo, anche se $f$ nodi mentono spudoratamente, la maggioranza pulita all'interno del quorum è così ampia da "mascherare" e correggere la falsità.
+>- Se ci sono server "bizantini" che possono inviare dati falsi a tradimento, la semplice maggioranza non basta più, perché i bugiardi potrebbero corrompere il risultato.
+>- Per questo si usano quorum più grandi (come il _Masking Quorum_ pari a **$\frac{N+2f}{2}$**, cioè $3f+1$), dove $f$ è il numero massimo di traditori tollerati. In questo modo, anche se $f$ nodi mentono spudoratamente, la maggioranza pulita all'interno del quorum è così ampia da "mascherare" e correggere la falsità.
 
