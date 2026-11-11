@@ -3506,4 +3506,5 @@ To solve the reliable consensus problem in the presence of $f$ Byzantine faults 
 - **Recursive Case OM(f) with $f > 0$:**
 1. The commander sends his value to all lieutenants.
 2. Each lieutenant $i$ receives a value $v_i$ (or `RETREAT`), and in turn acts as commander by executing the algorithm **OM(f-1)** to forward that value to the other $N-2$ lieutenants.
-3. Finally, each lieutenant computes the final decision by taking a **majority** of all the collected values.
+3. Finally, for  each lieutenant computes the final decision by taking a **majority** of all the collected values.
+4. For each i and j (j≠i), let vj be the value Lieutenant i received from Lieutenant j in step (2), or else RETREAT if he received no value:
