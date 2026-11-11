@@ -3159,9 +3159,12 @@ We have two properties for this type of register:
 - **BONSR1 (Termination):** If a valid process invokes an operation, it eventually completes.
 - **BONSR2 (Validity):** A read that is not concurrent with a write returns the last value written.
 
+
+
 In Byzantine broadcast, a quorum of $\frac{N+f}{2}$ was sufficient (with $N > 3f$). However, for **Safe Registers** the semantics are stronger: we require that a write be visible to everyone once it finishes.
 To achieve this guarantee, **Masking Quorums** are used:
 $$\text{Quorum} = \frac{N + 2f}{2} \quad (\text{ i.e. } 3f + 1), \quad \text{with} N > 4f$$
+![[Dependable distributed system 1-1794392162100.webp]]
 
 >[!definitions] Quorum
 >Imagine a **quorum** as simply a **committee or subset of servers (or nodes) of a well-defined size.**
@@ -3186,3 +3189,52 @@ The solution is to establish a mathematical rule: **"The client doesn't have to 
 >- If there are "Byzantine" servers that can send false data by treachery, a simple majority is no longer sufficient, because liars could corrupt the result.
 >- This is why larger quorums are used (such as the _Masking Quorum_ equal to **$\frac{N+2f}{2}$**, i.e., $3f+1$), where $f$ is the maximum number of traitors tolerated. This way, even if $f$ nodes blatantly lie, the clean majority within the quorum is large enough to "mask" and correct the falsehood.
 
+$$
+\begin{aligned}
+&\textbf{Algorithm 4.14:} \text{ Byzantine Masking Quorum} \\
+&\textbf{Implements:} \\
+&\quad (1, N)\text{-ByzantineSafeRegister, \textbf{instance } } bonsr, \text{ with writer } w. \\
+&\textbf{Uses:} \\
+&\quad \text{AuthPerfectPointToPointLinks, \textbf{instance } } al. \\
+& \\
+&\textbf{upon event } \langle bonsr, Init \rangle \text{ do} \\
+&\quad (ts, val) := (0, \bot); \\
+&\quad wts := 0; \\
+&\quad acklist := [\bot]^N; \\
+&\quad rid := 0; \\
+&\quad readlist := [\bot]^N; \\
+& \\
+&\textbf{upon event } \langle bonsr, Write \mid v \rangle \text{ do} \\
+&\quad wts := wts + 1; \\
+&\quad acklist := [\bot]^N; \\
+&\quad \textbf{forall } q \in \Pi \text{ do} \\
+&\quad\quad \text{trigger } \langle al, Send \mid q, [\textsc{Write}, wts, v] \rangle; \\
+& \\
+&\textbf{upon event } \langle al, Deliver \mid p, [\textsc{Write}, ts', v'] \rangle \text{ such that } p = w \text{ do} \\
+&\quad \textbf{if } ts' > ts \text{ then} \\
+&\quad\quad (ts, val) := (ts', v'); \\
+&\quad \textbf{trigger } \langle al, Send \mid p, [\textsc{Ack}, ts'] \rangle; \\
+& \\
+&\textbf{upon event } \langle al, Deliver \mid q, [\textsc{Ack}, ts'] \rangle \text{ such that } ts' = wts \text{ do} \\
+&\quad acklist[q] := \text{ACK}; \\
+&\quad \textbf{if } \#(acklist) > \frac{N + 2f}{2} \text{ then} \\
+&\quad\quad acklist := [\bot]^N; \\
+&\quad\quad \text{trigger } \langle bonsr, WriteReturn \rangle; \\
+& \\
+&\textbf{upon event } \langle bonsr, Read \rangle \text{ do} \\
+&\quad rid := rid + 1; \\
+&\quad readlist := [\bot]^N; \\
+&\quad \textbf{forall } q \in \Pi \text{ do} \\
+&\quad\quad \text{trigger } \langle al, Send \mid q, [\textsc{Read}, rid] \rangle; \\
+& \\
+&\textbf{upon event } \langle al, Deliver \mid p, [\textsc{Read}, r] \rangle \text{ do} \\
+&\quad \textbf{trigger } \langle al, Send \mid p, [\textsc{Value}, r, ts, val] \rangle; \\
+& \\
+&\textbf{upon event } \langle al, Deliver \mid q, [\text{Value}, r, ts', v'] \rangle \text{ such that } r = rid \text{ do} \\
+&\quad readlist[q] := (ts', v'); \\
+&\quad \textbf{if } \#(readlist) > \frac{N + 2f}{2} \text{ do} \\
+&\quad\quad v := \text{byzhighestval}(readlist); \\
+&\quad\quad readlist := [\bot]^N; \\
+&\quad\quad \text{trigger } \langle bonsr, ReadReturn \mid v \rangle;
+\end{aligned}
+```
