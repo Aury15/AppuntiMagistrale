@@ -3395,4 +3395,27 @@ $$
 \end{aligned}
 $$
 
+$$
+\begin{aligned}
+&\textbf{Algorithm 4.17:} \text{ Double-Write Byzantine Quorum (part 2, read)} \\
+&\textbf{upon event } \langle \text{bonrr}, \text{Read} \rangle \text{ do} \\
+&\quad rid := rid + 1; \\
+&\quad readlist := [\bot]^N; \\
+&\quad \textbf{forall } q \in \Pi \text{ do} \\
+&\quad\quad \text{trigger } \langle al, \text{Send} \mid q, [\text{READ}, rid] \rangle; \\
+& \\
+&\textbf{upon event } \langle al, \text{Deliver} \mid p, [\text{READ}, r] \rangle \text{ do} \\
+&\quad \text{trigger } \langle al, \text{Send} \mid p, [\text{VALUE}, r, pts, pval, ts, val] \rangle; \\
+& \\
+&\textbf{upon event } \langle al, \text{Deliver} \mid q, [\text{VALUE}, r, pts', pval', ts', val'] \rangle \text{ such that } r = rid \text{ do} \\
+&\quad \textbf{if } pts' = ts' + 1 \lor (pts', pval') = (ts', val') \text{ then} \\
+&\quad\quad readlist[q] := (pts', pval', ts', val'); \\
+&\quad \textbf{if } \exists (ts, v) \text{ in an entry of } readlist \text{ such that } authentic(ts, v, readlist) = \text{TRUE} \\
+&\quad\quad \textbf{and } \exists Q \subseteq readlist \text{ such that } \#(Q) > \frac{N + f}{2} \land selectedmax(ts, v, Q) = \text{TRUE} \text{ then} \\
+&\quad\quad readlist := [\bot]^N; \\
+&\quad\quad \text{trigger } \langle \text{bonrr}, \text{ReadReturn} \mid v \rangle; \\
+&\quad \textbf{else} \\
+&\quad\quad \text{trigger } \langle al, \text{Send} \mid q, [\text{READ}, r] \rangle;
+\end{aligned}
+$$
 
