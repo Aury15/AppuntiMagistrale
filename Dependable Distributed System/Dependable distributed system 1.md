@@ -3394,7 +3394,12 @@ $$
 &\quad\quad \text{trigger } \langle bonrr, WriteReturn \rangle;
 \end{aligned}
 $$
-
+1. **Inizializzazione (`Init`)**: * Vengono definiti i due livelli di memoria per ciascun server: il pre-scritto (`pts, pval`) e il scritto ufficiale (`ts, val`), oltre alle liste per raccogliere le conferme (`preacklist` e `acklist`). 
+2. **Avvio della Scrittura (`Write | v`)**: * Lo scrittore incrementa il timestamp di scrittura locale (`wts := wts + 1`) associandolo al nuovo valore $v$. * Pulisce le liste di controllo e invia a tutti i nodi della rete il messaggio **`[PREWRITE, wts, wval]`** (Fase 1). 
+3. **Ricezione del PREWRITE sui Server**: * Quando un server riceve la pre-scrittura dal mittente corretto $w$, aggiorna il suo stato preliminare `(pts, pval)` e risponde subito inviando un **`[PREACK, pts]`** allo scrittore. 
+4. **Completamento della Fase 1 e Avvio della Fase 2 (`PREACK`)**: * Lo scrittore raccoglie i pre-ack. Non appena riceve conferme da almeno **$N - f$ processi** (notare che tollerando $f$ guasti, basta una soglia di $N-f$ anziché tutti i nodi per garantire la terminazione), azzera la lista e passa alla seconda fase. * Invia a tutti il messaggio effettivo **`[WRITE, wts, wval].
+5. **Ricezione del WRITE e invio ACK**: * I server ricevono il comando di scrittura definitiva, verificano che il timestamp corrisponda a quello pre-scritto e che sia più recente di quello vecchio (`ts' > ts`), quindi aggiornano lo stato ufficiale `(ts, val)` e mandano un **`[ACK]`** allo scrittore. 
+6. **Chiusura della Scrittura (`WriteReturn`)**: * Lo scrittore raccoglie gli ACK di scrittura. Non appena ne riceve almeno **$N - f$**, l'operazione di scrittura si considera completata con successo e viene sbloccato il client con l'evento `WriteReturn`.
 $$
 \begin{aligned}
 &\textbf{Algorithm 4.17:} \text{ Double-Write Byzantine Quorum (part 2, read)} \\
@@ -3419,10 +3424,10 @@ $$
 \end{aligned}
 $$
 This is the **read phase** of the regular Byzantine fault-tolerant ledger without the use of encryption (_Double-Write_ method).
-1. **Read Request (`Read`)**: The reader increments the read identifier (`rid`), resets the `readlist`, and sends a `[READ, rid]` message to all servers via authenticated links (`al`).
-2. **Server Response (`VALUE`)**: Each server responds by returning its state, composed of two saved pairs (the _pre-write_ phase: `pts, pval`, and the _write_ phase: `ts, val`).
-3. **Format Validity Check**: The reader verifies that the response is structurally consistent (`pts' = ts' + 1` or the two values ​​match) before storing it in the `readlist`.
-4. **Validation with Quorum and Support Functions:**
+7. **Read Request (`Read`)**: The reader increments the read identifier (`rid`), resets the `readlist`, and sends a `[READ, rid]` message to all servers via authenticated links (`al`).
+8. **Server Response (`VALUE`)**: Each server responds by returning its state, composed of two saved pairs (the _pre-write_ phase: `pts, pval`, and the _write_ phase: `ts, val`).
+9. **Format Validity Check**: The reader verifies that the response is structurally consistent (`pts' = ts' + 1` or the two values ​​match) before storing it in the `readlist`.
+10. **Validation with Quorum and Support Functions:**
 	- **Authentic(`ts, v, readlist`)** Checks that the value has actually been pre-written and written by a sufficient number of uncompromised nodes, ruling out any Byzantine node forgery.
 	- **Selectedmax(`ts, v, Q`)** Checks within a quorum subset $Q$ (of size $> \frac{N+f}{2}$) that the associated timestamp is indeed the most recent and valid.
-5. **Completion or Retry:** If the safety and majority conditions are met, the reader returns the value with ReadReturn | v and clears the list. Otherwise, it repeats the read request (Send | q, [READ, r]) until it gets consistent responses.
+11. **Completion or Retry:** If the safety and majority conditions are met, the reader returns the value with ReadReturn | v and clears the list. Otherwise, it repeats the read request (Send | q, [READ, r]) until it gets consistent responses.
