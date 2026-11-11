@@ -3464,4 +3464,9 @@ The classic problem models abstract consensus through a military analogy:
 	 B. a small number of traitors cannot cause the loyal generals to adopt a bad plan 
 
  Condition A is achieved by having all generals use the same method for combining the information so the $f$ must be deterministic. Condition B is achieved by using a robust method.
- Each general $i$ sends its opinion represented by the value $v(i)$ to all Rephrasing the goal: 1. Every loyal general must obtain the same information v(1),...,v(n) 2. If the i-th general is loyal, then the value that he sends must be used by every loyal general as the value of v(i) Therefore 1. can be rephrased: 1. Any two loyal generals use the same value of v(i
+ Each general $i$ sends its opinion represented by the value $v(i)$ to all.
+**Rephrasing the goal**: 
+1. Every loyal general must obtain the same information $v(1),...,v(n)$ (<u>agreement</u>)
+2. If the $i-th$ general is loyal, then the value that he sends must be used by every loyal general as the value of $v(i)$ (<u>validity</u>)
+Therefore 1. can be rephrased: 1. Any two loyal generals use the same value of $v(i)$
+
