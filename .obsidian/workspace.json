@@ -11,10 +11,14 @@
             "id": "1b6ce1ae2c6be9bd",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "Dependable Distributed System/Dependable distributed system 1.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "Nuova scheda"
+              "title": "Dependable distributed system 1"
             }
           }
         ]
@@ -187,17 +191,18 @@
   },
   "active": "1b6ce1ae2c6be9bd",
   "lastOpenFiles": [
+    "immagini DS/Remark.md",
+    "immagini DS/Dependable distributed system 1-1794404432528.webp",
+    "immagini DS/Dependable distributed system 1-1794404402924.webp",
+    "immagini DS/Dependable distributed system 1-1794404393413.webp",
+    "immagini DS/Dependable distributed system 1-1794404379542.webp",
+    "immagini DS/Dependable distributed system 1-1794404062714.webp",
+    "immagini DS/Dependable distributed system 1-1794404057943.webp",
+    "immagini DS/Dependable distributed system 1-1794403766166.webp",
+    "immagini DS/Dependable distributed system 1-1794403752389.webp",
+    "immagini DS/Dependable distributed system 1-1794403723545.webp",
+    "immagini DS/Dependable distributed system 1-1794402728587.webp",
     "Dependable Distributed System/Dependable distributed system 1.md",
-    "immagini DS/Dependable distributed system 1-1794064694938.webp",
-    "immagini DS/Dependable distributed system 1-1794064432960.webp",
-    "immagini DS/Dependable distributed system 1-1794063846265.webp",
-    "immagini DS/Dependable distributed system 1-1794063748711.webp",
-    "immagini DS/Dependable distributed system 1-1794063677428.webp",
-    "immagini DS/Dependable distributed system 1-1794063162496.webp",
-    "immagini DS/Dependable distributed system 1-1794062366984.webp",
-    "immagini DS/Dependable distributed system 1-1794060669854.webp",
-    "immagini DS/Dependable distributed system 1-1794059581268.webp",
-    "immagini DS/Dependable distributed system 1-1794059567279.webp",
     "Dependable Distributed System/lectures_16_17_distributed_registers.md",
     "Dependable Distributed System/lecture_14_software_replication (1).md",
     "Dependable Distributed System/lecture_14_software_replication.md",
