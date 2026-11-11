@@ -3156,5 +3156,9 @@ In previous lessons, we analyzed registers in the presence of crash-related fail
 
 #### Safe register
 We have two properties for this type of register:
-- **BONSR1 (Termination):** Se un processo corretto invoca un'operazione, essa alla fine completa.
-- **BONSR2 (Validity):** Una lettura che non è concorrente con una scrittura restituisce l'ultimo valore scritto.
+- **BONSR1 (Termination):** If a valid process invokes an operation, it eventually completes.
+- **BONSR2 (Validity):** A read that is not concurrent with a write returns the last value written.
+
+In Byzantine broadcast, a quorum of $\frac{N+f}{2}$ was sufficient (with $N > 3f$). However, for **Safe Registers** the semantics are stronger: we require that a write be visible to everyone once it finishes.
+To achieve this guarantee, **Masking Quorums** are used:
+$$\text{Quorum} = \frac{N + 2f}{2} \quad (\text{ i.e. } 3f + 1), \quad \text{with} N > 4f$$
