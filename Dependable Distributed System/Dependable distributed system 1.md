@@ -3344,4 +3344,7 @@ Precisely to prevent a slow server from mixing with a corrupted server and a Byz
 Each server, in this way, stores **two pairs** (the pre-write and the write). This allows the reader to perform logical "triangulation": if they notice discrepancies, they can unmask which process is lying (excluding corrupted data) and reconstruct with mathematical certainty whether the value is legitimate or not, overcoming the ambiguity shown in this graph.
 
 **Intuition**
+![[Dependable distributed system 1-1794393893423.webp]]
+
+#### Regular Register write Implementation without cryptographic assumptions
 
