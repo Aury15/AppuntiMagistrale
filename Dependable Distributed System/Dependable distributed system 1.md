@@ -3418,11 +3418,11 @@ $$
 &\quad\quad \text{trigger } \langle al, \text{Send} \mid q, [\text{READ}, r] \rangle;
 \end{aligned}
 $$
-Questa è la **fase di lettura** del registro regolare tollerante ai guasti Bizantini senza l'uso di crittografia (metodo _Double-Write_).
-1. **Richiesta di Lettura (`Read`)**: Il lettore incrementa l'identificativo di lettura (`rid`), azzera la `readlist` e invia un messaggio `[READ, rid]` a tutti i server tramite link autenticati (`al`).
-2. **Risposta dei Server (`VALUE`)**: Ciascun server risponde restituendo il proprio stato composto da due coppie salvate (la fase di _pre-write_: `pts, pval`, e la fase di _write_: `ts, val`).
-3. **Controllo di validità del formato**: Il lettore verifica che la risposta sia strutturalmente coerente (`pts' = ts' + 1` oppure i due valori coincidano) prima di memorizzarla nella `readlist`.
-4. **Validazione con Quorum e Funzioni di Supporto**:
-    - **`authentic(ts, v, readlist)`**: Verifica che il valore sia stato effettivamente pre-scritto e scritto da una quantità sufficiente di nodi non compromessi, escludendo eventuali falsificazioni dei nodi Bizantini.
-    - **`selectedmax(ts, v, Q)`**: Controlla all'interno di un sottoinsieme di quorum $Q$ (di dimensione $> \frac{N+f}{2}$) che il timestamp associato sia effettivamente il più recente e valido.
-5. **Completamento o Ripetizione**: Se le condizioni di sicurezza e maggioranza sono soddisfatte, il lettore restituisce il valore con `ReadReturn | v` e pulisce la lista. Altrimenti, ripete la richiesta di lettura (`Send | q, [READ, r]`) finché non ottiene risposte consistenti.
+This is the **read phase** of the regular Byzantine fault-tolerant ledger without the use of encryption (_Double-Write_ method).
+1. **Read Request (`Read`)**: The reader increments the read identifier (`rid`), resets the `readlist`, and sends a `[READ, rid]` message to all servers via authenticated links (`al`).
+2. **Server Response (`VALUE`)**: Each server responds by returning its state, composed of two saved pairs (the _pre-write_ phase: `pts, pval`, and the _write_ phase: `ts, val`).
+3. **Format Validity Check**: The reader verifies that the response is structurally consistent (`pts' = ts' + 1` or the two values ​​match) before storing it in the `readlist`.
+4. **Validation with Quorum and Support Functions:**
+	- **Authentic(`ts, v, readlist`)** Checks that the value has actually been pre-written and written by a sufficient number of uncompromised nodes, ruling out any Byzantine node forgery.
+	- **Selectedmax(`ts, v, Q`)** Checks within a quorum subset $Q$ (of size $> \frac{N+f}{2}$) that the associated timestamp is indeed the most recent and valid.
+5. **Completion or Retry:** If the safety and majority conditions are met, the reader returns the value with ReadReturn | v and clears the list. Otherwise, it repeats the read request (Send | q, [READ, r]) until it gets consistent responses.
