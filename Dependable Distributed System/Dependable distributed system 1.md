@@ -3312,3 +3312,4 @@ $$
 and value in the VALUE message, although it may include a signed value with
 an outdated timestamp.
 
+![[Dependable distributed system 1-1794393585960.webp]]
