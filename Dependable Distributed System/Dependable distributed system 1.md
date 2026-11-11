@@ -3164,13 +3164,14 @@ To achieve this guarantee, **Masking Quorums** are used:
 $$\text{Quorum} = \frac{N + 2f}{2} \quad (\text{ i.e. } 3f + 1), \quad \text{with} N > 4f$$
 
 >[!definitions] Quorum
->Immagina un **quorum** semplicemente come **un comitato o una sotto-fetta di server (o nodi) di dimensione ben definita**. In un sistema distribuito asincrono, se un client vuole scrivere un valore su un registro, vorrebbe teoricamente aggiornare tutti i server della rete. Ma questo è impossibile nella realtà perché: 
-> - Alcuni server potrebbero essersi **guasti** (crash).
-> - Altri potrebbero essere **estremamente lenti** a rispondere (ritardi di rete).
-Se il client aspettasse la risposta di _tutti_ i nodi per completare l'operazione, rimarrebbe bloccato per sempre in attesa del server più lento. D'altra parte, se si accontentasse di un server qualsiasi, rischierebbe di leggere un dato vecchio.
-La soluzione consiste nello stabilire una regola matematica: **"Il client non deve aspettare tutti, ma gli basta ricevere risposte da un sottoinsieme predefinito di nodi (il Quorum)"**.
->- **Quorum di Scrittura:** Per dire che una scrittura è riuscita, lo scrittore deve ricevere conferma (ACK) da un certo numero di server appartenenti a quel quorum.
->- **Quorum di Lettura:** Per leggere il valore più recente, il lettore interroga un quorum di server e cerca la versione più fresca tra le risposte ricevute.
+>Imagine a **quorum** as simply a **committee or subset of servers (or nodes) of a well-defined size.**
+In an asynchronous distributed system, if a client wants to write a value to a register, it would theoretically want to update all the servers on the network. But this is impossible in reality because:
+> - Some servers may have **failed** (crashed).
+> - Others may be **extremely slow** to respond (network delays).
+If the client waited for a response from *all* nodes to complete the operation, it would be stuck forever waiting for the slowest server. On the other hand, if it were to settle for any server, it would risk reading stale data.
+The solution is to establish a mathematical rule: **"The client doesn't have to wait for all of them, but simply receive responses from a predefined subset of nodes (the Quorum)."**
+>- Write Quorum: To confirm that a write has been successful, the writer must receive confirmation (ACK) from a certain number of servers belonging to that quorum.
+>- **Read Quorum:** To read the most recent value, the reader queries a quorum of servers and searches for the most recent version among the responses received.
 >
 >Il motivo per cui i quorum funzionano e garantiscono la consistenza (cioè che non si leggano mai dati obsoleti) è la **proprietà matematica di intersezione**.
 Qualsiasi quorum di scrittura e qualsiasi quorum di lettura **devono avere almeno un server in comune**.
