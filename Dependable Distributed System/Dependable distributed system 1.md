@@ -3143,4 +3143,4 @@ $$
 - **Deliver Condition:** A node definitively delivers the message $m$ via `brb, Deliver` when it receives `READY` messages from more than $2f$ (`#> 2f`).
 - **Resilience:** Again, the entire system is mathematically safe and correct assuming the fundamental fault-tolerance condition $N > 3f$.
 
-![[Dependable distributed system 1-1794390908927.webp]]
+![[Dependable distributed system 1-1794390908927.webp|654]]![[Dependable distributed system 1-1794390937647.webp]]![[Dependable distributed system 1-1794390950615.webp]]![[Dependable distributed system 1-1794390964921.webp]]
