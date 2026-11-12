@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "8bdfc8cf517012b6",
+        "id": "2d700cd5a8687e9a",
         "type": "tabs",
         "children": [
           {
-            "id": "65ca72f126357c0e",
+            "id": "ea86bca3a818e7f0",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Dependable Distributed System/DDS part 2.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "DDS part 2"
+              "title": "Nuova scheda"
             }
           }
         ]
@@ -83,8 +79,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "f6cc322df633c375",
@@ -190,8 +185,9 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "65ca72f126357c0e",
+  "active": "ea86bca3a818e7f0",
   "lastOpenFiles": [
+    "Machine Learning.md",
     "Dependable Distributed System/DDS part 2.md",
     "Dependable Distributed System/Dependable distributed system 1 1.md",
     "Dependable Distributed System/Dependable distributed system 1.md",
@@ -212,7 +208,6 @@
     "Dependable Distributed System/lecture_14_software_replication.md",
     "Dependable Distributed System/Dependable distributed system 1 (bella copia).pdf",
     "Dependable Distributed System/Dependable distributed system 1.pdf",
-    "Machine Learning.md",
     "immagini DS/blockchain_process.pdf",
     "immagini DS/beb_vs_rb.pdf",
     "immagini DS",
