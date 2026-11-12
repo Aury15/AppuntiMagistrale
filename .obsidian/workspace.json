@@ -11,14 +11,12 @@
             "id": "ea86bca3a818e7f0",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "pdf",
               "state": {
-                "file": "Dependable Distributed System/DDS part 2.md",
-                "mode": "source",
-                "source": false
+                "file": "Dependable Distributed System/Dependable distributed system 1.pdf"
               },
-              "icon": "lucide-file",
-              "title": "DDS part 2"
+              "icon": "lucide-file-text",
+              "title": "Dependable distributed system 1"
             }
           }
         ]
@@ -83,8 +81,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "f6cc322df633c375",
@@ -192,8 +189,8 @@
   },
   "active": "ea86bca3a818e7f0",
   "lastOpenFiles": [
-    "Machine Learning.md",
     "Dependable Distributed System/DDS part 2.md",
+    "Machine Learning.md",
     "Dependable Distributed System/Dependable distributed system 1 1.md",
     "Dependable Distributed System/Dependable distributed system 1.md",
     "Dependable Distributed System/Dependable distributed system 1 (bella copia).md",
