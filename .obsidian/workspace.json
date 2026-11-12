@@ -4,19 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "2d700cd5a8687e9a",
+        "id": "fe491b4778256529",
         "type": "tabs",
         "children": [
           {
-            "id": "ea86bca3a818e7f0",
+            "id": "d1347f858b87cccf",
             "type": "leaf",
             "state": {
-              "type": "pdf",
+              "type": "markdown",
               "state": {
-                "file": "Dependable Distributed System/Dependable distributed system 1.pdf"
+                "file": "Dependable Distributed System/DDS part 2.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-file-text",
-              "title": "Dependable distributed system 1"
+              "icon": "lucide-file",
+              "title": "DDS part 2"
             }
           }
         ]
@@ -187,12 +189,13 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "ea86bca3a818e7f0",
+  "active": "d1347f858b87cccf",
   "lastOpenFiles": [
+    "Dependable Distributed System/Dependable distributed system 1.md",
+    "Dependable Distributed System/Dependable distributed system 1 1.md",
+    "Dependable Distributed System/Dependable distributed system 1.pdf",
     "Dependable Distributed System/DDS part 2.md",
     "Machine Learning.md",
-    "Dependable Distributed System/Dependable distributed system 1 1.md",
-    "Dependable Distributed System/Dependable distributed system 1.md",
     "Dependable Distributed System/Dependable distributed system 1 (bella copia).md",
     "immagini DS/Remark.md",
     "immagini DS/Dependable distributed system 1-1794404432528.webp",
@@ -209,7 +212,6 @@
     "Dependable Distributed System/lecture_14_software_replication (1).md",
     "Dependable Distributed System/lecture_14_software_replication.md",
     "Dependable Distributed System/Dependable distributed system 1 (bella copia).pdf",
-    "Dependable Distributed System/Dependable distributed system 1.pdf",
     "immagini DS/blockchain_process.pdf",
     "immagini DS/beb_vs_rb.pdf",
     "immagini DS",
