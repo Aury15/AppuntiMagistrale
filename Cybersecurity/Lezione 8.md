@@ -94,7 +94,7 @@ the construction used to combine them.
 
 A seed of 16 bits has only
 
-\[ 2\^{16}=65,536 \]
+$2^{16}=65,536$
 
 possible values. An attacker can potentially enumerate every candidate,
 generate the corresponding output sequence, and compare it with observed
