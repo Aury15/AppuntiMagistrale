@@ -27,4 +27,21 @@ Every standard round applies four operations on the state matrix:
 3. `MixColumns`: After `ShiftRows` distributes the bytes horizontally, `MixColumns` shuffles them vertically. Each column of the matrix is ​​multiplied by a constant matrix $4 \times 4$:After `ShiftRows` distributes the bytes horizontally, `MixColumns` shuffles them vertically. Each column of the matrix is ​​multiplied by a constant matrix $4 \times 4$:
 
 $$\begin{pmatrix} 02 & 03 & 01 & 01 \\ 01 & 02 & 03 & 01 \\ 01 & 01 & 02 & 03 \\ 03 & 01 & 01 & 02 \end{pmatrix} \times \begin{pmatrix} s_{0,c} \\ s_{1,c} \\ s_{2,c} \\ s_{3,c} \end{pmatrix} = \begin{pmatrix} s'_{0,c} \\ s'_{1,c} \\ s'_{2,c} \\ s'_{3,c} \end{pmatrix}$$
-The operations (multiplication and sum) are in the $GF(2^8)$
+The operations (multiplication and sum (xor)) are in the $GF(2^8)$.
+
+>[!Observations] Avalanche effect
+>The combinations between `ShiftRows` and `MixColumns` means that, after just a few rounds, every single bit of the result depends on every bit of the initial message. Changing even a single bit in the original text or the key changes about half of the 128 bits of the ciphertext completely. 
+
+4. `AddRoundKey`: This is the only phase where the secret key is involved. The 16 bytes of the State matrix are combined cell by cell with the 16 bytes of that round's subkey using the bitwise **XOR operation** ($\oplus$). 
+	1. <u>Why XOR?</u> It's a very fast operation and is perfectly reversible: if you XOR the same key twice ($A \oplus K \oplus K$), you get exactly $A$.
+
+![[Lesson 9 - AES-1794742084237.webp|601]]
+
+![[Lesson 9 - AES-1794742410306.webp|601]]![[Lesson 9 - AES-1794742474744.webp|598]]
+
+>[!Recap] Recap
+>The text is divided into 16-byte blocks, and the initial key is expanded into 11 subkeys. The only small nuance to remember is the order in which they are used: the first subkey locks the message chunk right at the beginning, while the other 10 are applied one at a time at the end of each of the 10 shuffling rounds, until the block becomes completely unrecognizable. (Using a longer initial key, 24 or 32 bytes, only increases the number of rounds and the number of generated subkeys, but the logic remains the same.)
+
+#### Key expansion
+
+Key Expansion is the deterministic AES algorithm that takes the initial secret key as input and generates a linear sequence of distinct subkeys (Round Keys): one for the initial AddRoundKey operation and one for each of the encryption rounds.
