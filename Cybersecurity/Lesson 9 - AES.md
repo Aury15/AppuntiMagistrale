@@ -27,4 +27,4 @@ Every standard round applies four operations on the state matrix:
 3. `MixColumns`: After `ShiftRows` distributes the bytes horizontally, `MixColumns` shuffles them vertically. Each column of the matrix is ​​multiplied by a constant matrix $4 \times 4$:After `ShiftRows` distributes the bytes horizontally, `MixColumns` shuffles them vertically. Each column of the matrix is ​​multiplied by a constant matrix $4 \times 4$:
 
 $$\begin{pmatrix} 02 & 03 & 01 & 01 \\ 01 & 02 & 03 & 01 \\ 01 & 01 & 02 & 03 \\ 03 & 01 & 01 & 02 \end{pmatrix} \times \begin{pmatrix} s_{0,c} \\ s_{1,c} \\ s_{2,c} \\ s_{3,c} \end{pmatrix} = \begin{pmatrix} s'_{0,c} \\ s'_{1,c} \\ s'_{2,c} \\ s'_{3,c} \end{pmatrix}$$
-The operations (multiplication and sum) are in the $g$
+The operations (multiplication and sum) are in the $GF(2^8)$
