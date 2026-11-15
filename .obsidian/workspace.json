@@ -83,8 +83,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "f6cc322df633c375",
@@ -190,14 +189,24 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "e60e5dc78f0afd74",
+  "active": "e085b63d3534c645",
   "lastOpenFiles": [
+    "Cybersecurity/Lesson 10 - Block cipher operations.md",
+    "Cybersecurity/Immagini CYBER/AES_Equivalent_Decipher.svg",
+    "Cybersecurity/Lezione 8.md",
+    "Cybersecurity/Lesson 9 - AES.md",
+    "Cybersecurity/Immagini CYBER/AES_Key_Expansion.svg",
+    "Cybersecurity/Assets/SLIDES/06 AES.pdf",
+    "Cybersecurity/Immagini CYBER/AES_Inputs_Single_Round.svg",
+    "Cybersecurity/Immagini CYBER/AES_Row_and_Column_Operations.svg",
+    "Cybersecurity/Assets/SLIDES",
+    "Cybersecurity/Assets",
+    "Lesson 9 - AES-1794743977008.webp",
     "Lesson 9 - AES-1794742474744.webp",
-    "Lesson 9 - AES-1794742410306.webp",
+    "Cybersecurity/Immagini CYBER/Lesson 9 - AES-1794742410306.webp",
     "Cybersecurity/Immagini CYBER",
     "Cybersecurity/Immagini CYBER/Lesson 9 - AES-1794742084237.webp",
     "Cybersecurity/Lesson 6 - Block ciphers and DES.md",
-    "Cybersecurity/Lesson 9 - AES.md",
     "Senza nome.md",
     "Cybersecurity/Lesson 7 - Finite Fields.md",
     "Cybersecurity/Lesson 5 - Classic cryptography.md",
@@ -205,7 +214,6 @@
     "Cybersecurity/Lesson 3 - E-mail security.md",
     "Cybersecurity/Lesson 2-4 - Number Theory.md",
     "Cybersecurity/Lesson 1 - Fundamental Key concept.md",
-    "Cybersecurity/Lezione 8.md",
     "Dependable Distributed System/Dependable distributed system 1 1.md",
     "Dependable Distributed System/Dependable distributed system 1.md",
     "Dependable Distributed System/DDS part 2.md",
@@ -216,12 +224,6 @@
     "immagini DS/Remark.md",
     "immagini DS/Dependable distributed system 1-1794404432528.webp",
     "immagini DS/Dependable distributed system 1-1794404402924.webp",
-    "immagini DS/Dependable distributed system 1-1794404393413.webp",
-    "immagini DS/Dependable distributed system 1-1794404379542.webp",
-    "immagini DS/Dependable distributed system 1-1794404062714.webp",
-    "immagini DS/Dependable distributed system 1-1794404057943.webp",
-    "immagini DS/Dependable distributed system 1-1794403766166.webp",
-    "immagini DS/Dependable distributed system 1-1794403752389.webp",
     "Dependable Distributed System/lectures_16_17_distributed_registers.md",
     "Dependable Distributed System/lecture_14_software_replication (1).md",
     "Dependable Distributed System/lecture_14_software_replication.md",

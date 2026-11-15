@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 880" width="760" height="880">
+
+  <defs>
+    <filter id="softShadow" x="-8%" y="-8%" width="116%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0F172A" flood-opacity="0.06"/>
+    </filter>
+    <marker id="arrow-slate" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 1 1.5 L 9 5 L 1 8.5 z" fill="#334155"/>
+    </marker>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 1 1.5 L 9 5 L 1 8.5 z" fill="#EA580C"/>
+    </marker>
+    <marker id="arrow-violet" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 1 1.5 L 9 5 L 1 8.5 z" fill="#7C3AED"/>
+    </marker>
+  </defs>
+
+<rect x="0" y="0" width="760" height="880" rx="16" fill="#F4F6F9"/>
+<text x="573.0" y="34" text-anchor="middle" dominant-baseline="central" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="15.5" font-weight="700" fill="#0F172A">Ciphertext</text>
+<line x1="573.0" y1="48" x2="573.0" y2="66" stroke="#334155" stroke-width="1.9" marker-end="url(#arrow-slate)"/>
+<g filter="url(#softShadow)"><rect x="482" y="72" width="182" height="34" rx="8" fill="#FFF7ED" stroke="#EA580C" stroke-width="2.0"/><text x="573.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="13.5" font-weight="700" fill="#9A3412">Add round key</text></g>
+<rect x="466" y="126" width="244" height="204" rx="12" fill="#E2E8F0"/>
+<text x="692" y="228.0" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 692 228.0)" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="13.5" font-weight="700" fill="#475569">Round 1</text>
+<line x1="573.0" y1="106" x2="573.0" y2="133" stroke="#334155" stroke-width="1.9" marker-end="url(#arrow-slate)"/>
+<g filter="url(#softShadow)"><rect x="482" y="138" width="182" height="34" rx="8" fill="#FFFFFF" stroke="#334155" stroke-width="1.8"/><text x="573.0" y="155.0" text-anchor="middle" dominant-baseline="central" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="13.5" font-weight="600" fill="#0F172A">Inverse sub bytes</text></g>
+<line x1="573.0" y1="172" x2="573.0" y2="181" stroke="#334155" stroke-width="1.9" marker-end="url(#arrow-slate)"/>
+<g filter="url(#softShadow)"><rect x="482" y="186" width="182" height="34" rx="8" fill="#FFFFFF" stroke="#334155" stroke-width="1.8"/><text x="573.0" y="203.0" text-anchor="middle" dominant-baseline="central" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="13.5" font-weight="600" fill="#0F172A">Inverse shift rows</text></g>
+<line x1="573.0" y1="220" x2="573.0" y2="229" stroke="#334155" stroke-width="1.9" marker-end="url(#arrow-slate)"/>
+<g filter="url(#softShadow)"><rect x="482" y="234" width="182" height="34" rx="8" fill="#FFFFFF" stroke="#334155" stroke-width="1.8"/><text x="573.0" y="251.0" text-anchor="middle" dominant-baseline="central" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="13.5" font-weight="600" fill="#0F172A">Inverse mix cols</text></g>
+<line x1="573.0" y1="268" x2="573.0" y2="277" stroke="#334155" stroke-width="1.9" marker-end="url(#arrow-slate)"/>
+<g filter="url(#softShadow)"><rect x="482" y="282" width="182" height="34" rx="8" fill="#FFF7ED" stroke="#EA580C" stroke-width="2.0"/><text x="573.0" y="299.0" text-anchor="middle" dominant-baseline="central" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="13.5" font-weight="700" fill="#9A3412">Add round key</text></g>
+<line x1="573.0" y1="316" x2="573.0" y2="338" stroke="#334155" stroke-width="1.9" marker-end="url(#arrow-slate)"/>
+<circle cx="573.0" cy="351" r="2.4" fill="#334155"/>
+<circle cx="573.0" cy="363" r="2.4" fill="#334155"/>
+<circle cx="573.0" cy="375" r="2.4" fill="#334155"/>
+<rect x="466" y="396" width="244" height="204" rx="12" fill="#E2E8F0"/>
+<text x="692" y="498.0" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 692 498.0)" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="13.5" font-weight="700" fill="#475569">Round 9</text>
+<line x1="573.0" y1="382" x2="573.0" y2="403" stroke="#334155" stroke-width="1.9" marker-end="url(#arrow-slate)"/>
+<g filter="url(#softShadow)"><rect x="482" y="408" width="182" height="34" rx="8" fill="#FFFFFF" stroke="#334155" stroke-width="1.8"/><text x="573.0" y="425.0" text-anchor="middle" dominant-baseline="central" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="13.5" font-weight="600" fill="#0F172A">Inverse sub bytes</text></g>
+<line x1="573.0" y1="442" x2="573.0" y2="451" stroke="#334155" stroke-width="1.9" marker-end="url(#arrow-slate)"/>
+<g filter="url(#softShadow)"><rect x="482" y="456" width="182" height="34" rx="8" fill="#FFFFFF" stroke="#334155" stroke-width="1.8"/><text x="573.0" y="473.0" text-anchor="middle" dominant-baseline="central" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="13.5" font-weight="600" fill="#0F172A">Inverse shift rows</text></g>
+<line x1="573.0" y1="490" x2="573.0" y2="499" stroke="#334155" stroke-width="1.9" marker-end="url(#arrow-slate)"/>
+<g filter="url(#softShadow)"><rect x="482" y="504" width="182" height="34" rx="8" fill="#FFFFFF" stroke="#334155" stroke-width="1.8"/><text x="573.0" y="521.0" text-anchor="middle" dominant-baseline="central" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="13.5" font-weight="600" fill="#0F172A">Inverse mix cols</text></g>
+<line x1="573.0" y1="538" x2="573.0" y2="547" stroke="#334155" stroke-width="1.9" marker-end="url(#arrow-slate)"/>
+<g filter="url(#softShadow)"><rect x="482" y="552" width="182" height="34" rx="8" fill="#FFF7ED" stroke="#EA580C" stroke-width="2.0"/><text x="573.0" y="569.0" text-anchor="middle" dominant-baseline="central" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="13.5" font-weight="700" fill="#9A3412">Add round key</text></g>
+<rect x="466" y="612" width="244" height="156" rx="12" fill="#E2E8F0"/>
+<text x="692" y="690.0" text-anchor="middle" dominant-baseline="central" transform="rotate(-90 692 690.0)" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="13.5" font-weight="700" fill="#475569">Round 10</text>
+<line x1="573.0" y1="586" x2="573.0" y2="619" stroke="#334155" stroke-width="1.9" marker-end="url(#arrow-slate)"/>
+<g filter="url(#softShadow)"><rect x="482" y="624" width="182" height="34" rx="8" fill="#FFFFFF" stroke="#334155" stroke-width="1.8"/><text x="573.0" y="641.0" text-anchor="middle" dominant-baseline="central" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="13.5" font-weight="600" fill="#0F172A">Inverse sub bytes</text></g>
+<line x1="573.0" y1="658" x2="573.0" y2="667" stroke="#334155" stroke-width="1.9" marker-end="url(#arrow-slate)"/>
+<g filter="url(#softShadow)"><rect x="482" y="672" width="182" height="34" rx="8" fill="#FFFFFF" stroke="#334155" stroke-width="1.8"/><text x="573.0" y="689.0" text-anchor="middle" dominant-baseline="central" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="13.5" font-weight="600" fill="#0F172A">Inverse shift rows</text></g>
+<line x1="573.0" y1="706" x2="573.0" y2="715" stroke="#334155" stroke-width="1.9" marker-end="url(#arrow-slate)"/>
+<g filter="url(#softShadow)"><rect x="482" y="720" width="182" height="34" rx="8" fill="#FFF7ED" stroke="#EA580C" stroke-width="2.0"/><text x="573.0" y="737.0" text-anchor="middle" dominant-baseline="central" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="13.5" font-weight="700" fill="#9A3412">Add round key</text></g>
+<line x1="573.0" y1="754" x2="573.0" y2="788" stroke="#334155" stroke-width="1.9" marker-end="url(#arrow-slate)"/>
+<text x="573.0" y="806" text-anchor="middle" dominant-baseline="central" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="15.5" font-weight="700" fill="#0F172A">Plaintext</text>
+<text x="112" y="806" text-anchor="middle" dominant-baseline="central" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="15.5" font-weight="700" fill="#0F172A">Key</text>
+<line x1="112" y1="792" x2="112" y2="712" stroke="#EA580C" stroke-width="2.1" marker-end="url(#arrow-orange)"/>
+<circle cx="112" cy="737" r="3.8" fill="#EA580C"/>
+<g filter="url(#softShadow)"><rect x="44.0" y="672" width="136" height="34" rx="8" fill="#FFEDD5" stroke="#EA580C" stroke-width="2.0"/><text x="112.0" y="689.0" text-anchor="middle" dominant-baseline="central" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="13.5" font-weight="700" fill="#9A3412">Expand key</text></g>
+<line x1="112" y1="737" x2="476" y2="737" stroke="#EA580C" stroke-width="2" marker-end="url(#arrow-orange)"/>
+<g filter="url(#softShadow)"><rect x="194" y="724" width="72" height="26" rx="13" fill="#FFF7ED" stroke="#FDBA74" stroke-width="1.2"/><text x="230.0" y="737.0" text-anchor="middle" dominant-baseline="central" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="700" fill="#C2410C">w[0, 3]</text></g>
+<path d="M 112 672 L 112 97.0 Q 112 89.0 120 89.0 L 476 89.0" fill="none" stroke="#EA580C" stroke-width="2.1" marker-end="url(#arrow-orange)"/>
+<g filter="url(#softShadow)"><rect x="194" y="76.0" width="82" height="26" rx="13" fill="#FFF7ED" stroke="#FDBA74" stroke-width="1.2"/><text x="235.0" y="89.0" text-anchor="middle" dominant-baseline="central" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="700" fill="#C2410C">w[40, 43]</text></g>
+<circle cx="112" cy="337" r="3.8" fill="#EA580C"/>
+<path d="M 112 337 L 340.0 337 Q 348.0 337 348.0 329 L 348.0 322.0" fill="none" stroke="#EA580C" stroke-width="2" marker-end="url(#arrow-orange)"/>
+<g filter="url(#softShadow)"><rect x="156" y="324" width="82" height="26" rx="13" fill="#FFF7ED" stroke="#FDBA74" stroke-width="1.2"/><text x="197.0" y="337.0" text-anchor="middle" dominant-baseline="central" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="700" fill="#C2410C">w[36, 39]</text></g>
+<g filter="url(#softShadow)"><rect x="272" y="282.0" width="152" height="34" rx="8" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2.0"/><text x="348.0" y="299.0" text-anchor="middle" dominant-baseline="central" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="13.5" font-weight="700" fill="#5B21B6">Inverse mix cols</text></g>
+<line x1="424" y1="299" x2="476" y2="299" stroke="#7C3AED" stroke-width="2" marker-end="url(#arrow-violet)"/>
+<circle cx="112" cy="607" r="3.8" fill="#EA580C"/>
+<path d="M 112 607 L 340.0 607 Q 348.0 607 348.0 599 L 348.0 592.0" fill="none" stroke="#EA580C" stroke-width="2" marker-end="url(#arrow-orange)"/>
+<g filter="url(#softShadow)"><rect x="156" y="594" width="82" height="26" rx="13" fill="#FFF7ED" stroke="#FDBA74" stroke-width="1.2"/><text x="197.0" y="607.0" text-anchor="middle" dominant-baseline="central" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="12.5" font-weight="700" fill="#C2410C">w[4, 7]</text></g>
+<g filter="url(#softShadow)"><rect x="272" y="552.0" width="152" height="34" rx="8" fill="#EDE9FE" stroke="#7C3AED" stroke-width="2.0"/><text x="348.0" y="569.0" text-anchor="middle" dominant-baseline="central" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="13.5" font-weight="700" fill="#5B21B6">Inverse mix cols</text></g>
+<line x1="424" y1="569" x2="476" y2="569" stroke="#7C3AED" stroke-width="2" marker-end="url(#arrow-violet)"/>
+<text x="380.0" y="852" text-anchor="middle" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-size="16.5" font-weight="700" fill="#0F172A">Equivalent Inverse Cipher</text>
+</svg>
