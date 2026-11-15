@@ -1,3 +1,3 @@
 ## AES structure
 
-AES 
+AES processes fixed-size blocks of data (plaintext) of 16 bytes ()
