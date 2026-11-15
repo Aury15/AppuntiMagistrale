@@ -6,5 +6,6 @@
     "quadretti",
     "margini",
     "giustifica"
-  ]
+  ],
+  "showRibbon": true
 }
