@@ -13,28 +13,15 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Dependable Distributed System/Dependable distributed system 1 1.md",
+                "file": "Dependable Distributed System/DDS part 2.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Dependable distributed system 1 1"
-            }
-          },
-          {
-            "id": "4b9bbfc4f20ed1ea",
-            "type": "leaf",
-            "state": {
-              "type": "release-notes",
-              "state": {
-                "currentVersion": "1.15.1"
-              },
-              "icon": "lucide-book-up",
-              "title": "Note di rilascio 1.15.1"
+              "title": "DDS part 2"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -96,7 +83,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "f6cc322df633c375",
@@ -202,11 +190,11 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "4b9bbfc4f20ed1ea",
+  "active": "c6851ae8c99c5151",
   "lastOpenFiles": [
+    "Dependable Distributed System/Dependable distributed system 1 1.md",
     "Dependable Distributed System/Dependable distributed system 1.md",
     "Dependable Distributed System/DDS part 2.md",
-    "Dependable Distributed System/Dependable distributed system 1 1.md",
     "Dependable Distributed System/Dependable distributed system 1.pdf",
     "Machine Learning.md",
     "Dependable Distributed System/Dependable distributed system 1 (bella copia).md",
