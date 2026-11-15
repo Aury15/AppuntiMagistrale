@@ -1,23 +1,85 @@
 /* ==========================================================================
-   DDS · stile "dispensa" — replica l'impaginazione del PDF
-   Attivo solo sulle note con (frontmatter):
+   DDS · stile "dispensa" colorato + modalità scura blu notte
+   Attivo sulle note con (frontmatter):
        cssclasses:
          - dds-notes
-   Non tocca il resto della vault e non dipende dal tema.
+   In modalità scura tinge di blu notte anche lo sfondo di Obsidian.
    ========================================================================== */
 
+/* --------------------------------- sfondo blu globale in modalità scura --- */
+body.theme-dark {
+  --background-primary: #0b1426;       /* Sfondo principale note (blu notte) */
+  --background-primary-alt: #12203b;   /* Superfici alternate / blocchi */
+  --background-secondary: #0f1b33;     /* Sidebar e pannelli laterali */
+  --background-secondary-alt: #182a4c; /* Hover e pannelli secondari */
+
+  --titlebar-background: #08101f;
+  --titlebar-background-focused: #0b1426;
+  --ribbon-background: #08101f;
+  --ribbon-background-collapsed: #08101f;
+  --tab-container-background: #08101f;
+  --tab-background-active: #0b1426;
+  --status-bar-background: #08101f;
+  --modal-background: #0e1a30;
+  --modal-border-color: #243b6b;
+
+  --background-modifier-hover: rgba(56, 189, 248, 0.12);
+  --background-modifier-active-hover: rgba(56, 189, 248, 0.2);
+  --background-modifier-border: #1e3158;
+  --background-modifier-border-hover: #2d4880;
+  --background-modifier-border-focus: #38bdf8;
+  --background-modifier-form-field: #111f3a;
+  --divider-color: #1b2d52;
+
+  --text-normal: #e4eeff;
+  --text-muted: #93add4;
+  --text-faint: #577199;
+  --text-accent: #38bdf8;
+  --text-accent-hover: #7dd3fc;
+  --interactive-accent: #3b82f6;
+  --interactive-accent-hover: #60a5fa;
+
+  --scrollbar-thumb-bg: rgba(96, 165, 250, 0.25);
+  --scrollbar-active-thumb-bg: rgba(96, 165, 250, 0.45);
+}
+
+/* Usa background-color per non coprire la griglia di quadretti.css */
+body.theme-dark .workspace-leaf-content,
+body.theme-dark .view-content,
+body.theme-dark .markdown-preview-view,
+body.theme-dark .markdown-source-view {
+  background-color: var(--background-primary);
+}
+
+/* ----------------------------------------------- variabili tema dds-notes -- */
 .dds-notes {
-  --dds-accent: #2663f2;
-  --dds-accent-dark: #1b4dd8;
-  --dds-ink: #1c2331;
-  --dds-muted: #5b667c;
-  --dds-line: #e2e7f0;
-  --dds-panel: #f7f9fd;
+  --dds-accent: #2563eb;
+  --dds-accent-dark: #1e40af;
+  --dds-indigo: #4f46e5;
+  --dds-cyan: #0284c7;
+  --dds-teal: #0d9488;
+  --dds-purple: #7c3aed;
+  --dds-magenta: #c026d3;
+  --dds-rose: #e11d48;
+  --dds-amber: #d97706;
+  --dds-green: #059669;
+
+  --dds-ink: #182235;
+  --dds-muted: #526482;
+  --dds-line: #d6e2f5;
+  --dds-panel: #f2f6ff;
+
+  --dds-strong: #1e3a8a;
+  --dds-em: #6d28d9;
+  --dds-code-fg: #be185d;
+  --dds-code-bg: #fdf2f8;
+  --dds-code-border: #fbcfe8;
 }
 
 /* ------------------------------------------------------------- tipografia -- */
 .dds-notes.markdown-rendered,
-.dds-notes .markdown-rendered {
+.dds-notes .markdown-rendered,
+.dds-notes.markdown-source-view.mod-cm6 .cm-scroller {
   font-family: "Inter", "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: var(--dds-ink);
   line-height: 1.58;
@@ -25,10 +87,12 @@
 }
 
 /* titolo della nota */
-.dds-notes .inline-title {
+.dds-notes .inline-title,
+.dds-notes h1 {
   margin-bottom: 0.55em;
   padding-bottom: 0.28em;
-  border-bottom: 3px solid var(--dds-accent);
+  border-bottom: 3px solid transparent;
+  border-image: linear-gradient(90deg, var(--dds-accent), var(--dds-purple), var(--dds-cyan)) 1;
   font-size: 2.2em;
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -39,8 +103,9 @@
 /* capitoli */
 .dds-notes h2 {
   margin-block: 1.9em 0.65em;
-  padding-bottom: 0.12em;
-  border-bottom: 1.5px solid rgba(38, 99, 242, 0.35);
+  padding-bottom: 0.16em;
+  border-bottom: 2px solid transparent;
+  border-image: linear-gradient(90deg, var(--dds-accent), var(--dds-purple), transparent 88%) 1;
   font-size: 1.8em;
   font-weight: 700;
   letter-spacing: -0.015em;
@@ -51,39 +116,63 @@
 /* paragrafi / sezioni */
 .dds-notes h3 {
   margin-block: 1.6em 0.5em;
-  padding-left: 0.55em;
-  border-left: 4px solid var(--dds-accent);
+  padding: 0.14em 0.6em;
+  border-left: 4px solid var(--dds-teal);
+  border-radius: 0 6px 6px 0;
+  background: linear-gradient(90deg, rgba(13, 148, 136, 0.09), transparent 70%);
   font-size: 1.3em;
   font-weight: 700;
   line-height: 1.3;
-  color: var(--dds-ink) !important;
+  color: var(--dds-teal) !important;
 }
 
+/* sottosezioni */
 .dds-notes h4 {
   margin-block: 1.35em 0.4em;
+  padding-left: 0.5em;
+  border-left: 3px solid var(--dds-purple);
   font-size: 1.12em;
   font-weight: 700;
-  color: #22304d !important;
+  color: var(--dds-purple) !important;
 }
 
-/* etichette (es. "ALGORITHM: ...") */
+/* etichette (es. "Example: ...", "Event-Driven...") */
 .dds-notes h5 {
-  margin-block: 1.25em 0.35em;
-  font-size: 0.8em;
+  width: fit-content;
+  margin-block: 1.25em 0.4em;
+  padding: 0.2em 0.65em;
+  border-left: 3px solid var(--dds-amber);
+  border-radius: 0 6px 6px 0;
+  background: rgba(217, 119, 6, 0.11);
+  font-size: 0.82em;
   font-weight: 700;
-  letter-spacing: 0.09em;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
-  color: var(--dds-muted) !important;
+  color: var(--dds-amber) !important;
 }
 
+/* etichette algoritmi (es. "Algorithm: ...") */
 .dds-notes h6 {
-  margin-block: 1.1em 0.3em;
-  font-size: 0.78em;
+  width: fit-content;
+  margin-block: 1.1em 0.35em;
+  padding: 0.18em 0.6em;
+  border-left: 3px solid var(--dds-green);
+  border-radius: 0 6px 6px 0;
+  background: rgba(5, 150, 105, 0.11);
+  font-size: 0.8em;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--dds-muted) !important;
+  color: var(--dds-green) !important;
 }
+
+/* Colori titoli anche in Live Preview (Modifica) */
+.dds-notes .cm-header-1 { color: var(--dds-accent-dark); }
+.dds-notes .cm-header-2 { color: var(--dds-accent); }
+.dds-notes .cm-header-3 { color: var(--dds-teal); }
+.dds-notes .cm-header-4 { color: var(--dds-purple); }
+.dds-notes .cm-header-5 { color: var(--dds-amber); }
+.dds-notes .cm-header-6 { color: var(--dds-green); }
 
 /* --------------------------------------------------------------- testi ---- */
 .dds-notes p {
@@ -102,21 +191,72 @@
   margin-block: 0.4em 0.7em;
 }
 
-.dds-notes li::marker {
-  color: var(--dds-accent);
-  font-weight: 600;
+.dds-notes ul > li::marker {
+  color: var(--dds-teal);
+  font-weight: 700;
 }
 
-.dds-notes strong {
+.dds-notes ul ul > li::marker {
+  color: var(--dds-purple);
+}
+
+.dds-notes ol > li::marker {
+  color: var(--dds-accent);
   font-weight: 700;
+}
+
+.dds-notes ol ol > li::marker {
+  color: var(--dds-amber);
+}
+
+.dds-notes strong,
+.dds-notes .cm-strong {
+  font-weight: 700;
+  color: var(--dds-strong);
+}
+
+.dds-notes em,
+.dds-notes .cm-em {
+  color: var(--dds-em);
+}
+
+.dds-notes mark,
+.dds-notes .cm-highlight {
+  padding: 0.05em 0.3em;
+  border-radius: 4px;
+  background: #fef08a;
+  color: #713f12;
+}
+
+.dds-notes a,
+.dds-notes .internal-link,
+.dds-notes .cm-hmd-internal-link .cm-underline,
+.dds-notes .cm-link {
+  color: var(--dds-cyan);
+  text-decoration-color: rgba(2, 132, 199, 0.4);
+}
+
+.dds-notes a:hover,
+.dds-notes .internal-link:hover {
+  color: var(--dds-purple);
+}
+
+.dds-notes blockquote:not(.callout) {
+  margin-block: 0.9em;
+  padding: 0.5em 1em;
+  border: 0;
+  border-left: 4px solid var(--dds-indigo);
+  border-radius: 0 8px 8px 0;
+  background: rgba(79, 70, 229, 0.07);
 }
 
 /* -------------------------------------------------------- separatori ------ */
 .dds-notes hr {
-  height: 1px;
+  height: 2px;
   margin-block: 1.9em;
   border: 0;
-  background: var(--dds-line);
+  background: linear-gradient(90deg, transparent, var(--dds-accent), var(--dds-purple), var(--dds-teal), transparent);
+  opacity: 0.65;
 }
 
 /* --------------------------------------------------------------- code ----- */
@@ -125,31 +265,40 @@
   font-size: 0.88em;
 }
 
-.dds-notes :not(pre) > code {
-  padding: 0.1em 0.35em;
-  border: 1px solid var(--dds-line);
+.dds-notes :not(pre) > code,
+.dds-notes .cm-inline-code {
+  padding: 0.1em 0.38em;
+  border: 1px solid var(--dds-code-border);
   border-radius: 4px;
-  background: var(--dds-panel);
-  color: #1f2a44;
+  background: var(--dds-code-bg);
+  color: var(--dds-code-fg);
+}
+
+.dds-notes pre {
+  border: 1px solid var(--dds-line);
+  border-left: 4px solid var(--dds-cyan);
+  border-radius: 8px;
+  background-color: var(--dds-panel);
 }
 
 /* ------------------------------------------------------------ callout ----- */
 .dds-notes .callout {
+  --callout-color: 79, 70, 229;
   --callout-border-width: 0px;
   --callout-radius: 10px;
   --callout-padding: 0;
   margin-block: 1em;
   padding: 0.75em 1em 0.55em 1.05em;
-  border: 0 !important;
+  border: 1px solid rgba(var(--callout-color), 0.22) !important;
   border-left: 4px solid rgb(var(--callout-color)) !important;
   border-radius: 10px !important;
-  background: #f3f7ff;
+  background: linear-gradient(135deg, rgba(var(--callout-color), 0.09), rgba(var(--callout-color), 0.03));
   box-shadow: none;
   mix-blend-mode: normal !important;
 }
 
 .dds-notes .callout-title {
-  padding: 0 0 0.25em;
+  padding: 0 0 0.28em;
   font-size: 0.88em;
   font-weight: 700;
   letter-spacing: 0.035em;
@@ -158,7 +307,9 @@
 }
 
 .dds-notes .callout-icon {
-  display: none;
+  display: flex;
+  align-items: center;
+  color: rgb(var(--callout-color)) !important;
 }
 
 .dds-notes .callout-content {
@@ -179,54 +330,50 @@
   text-align: left;
 }
 
-/* colori per tipo, come nel PDF */
-.dds-notes .callout[data-callout="definition"] {
-  --callout-color: 38, 99, 242;
-  background: #f2f6ff;
-}
-
-.dds-notes .callout[data-callout="definition"] .callout-title {
-  color: #1b4dd8 !important;
+/* colori differenziati per tipo di callout */
+.dds-notes .callout[data-callout="definition"],
+.dds-notes .callout[data-callout="definitions"],
+.dds-notes .callout[data-callout="defeinitions"],
+.dds-notes .callout[data-callout="definitiosn"] {
+  --callout-color: 37, 99, 235;
 }
 
 .dds-notes .callout[data-callout="note"],
-.dds-notes .callout[data-callout="info"] {
-  --callout-color: 71, 85, 105;
-  background: #f6f7f9;
+.dds-notes .callout[data-callout="info"],
+.dds-notes .callout[data-callout="abstract"],
+.dds-notes .callout[data-callout="summary"] {
+  --callout-color: 2, 132, 199;
 }
 
-.dds-notes .callout[data-callout="note"] .callout-title,
-.dds-notes .callout[data-callout="info"] .callout-title {
-  color: #475569 !important;
+.dds-notes .callout[data-callout="tip"],
+.dds-notes .callout[data-callout="hint"] {
+  --callout-color: 5, 150, 105;
 }
 
 .dds-notes .callout[data-callout="warning"],
-.dds-notes .callout[data-callout="important"] {
-  --callout-color: 180, 83, 9;
-  background: #fff8ee;
+.dds-notes .callout[data-callout="caution"] {
+  --callout-color: 217, 119, 6;
 }
 
-.dds-notes .callout[data-callout="warning"] .callout-title,
-.dds-notes .callout[data-callout="important"] .callout-title {
-  color: #b45309 !important;
+.dds-notes .callout[data-callout="important"],
+.dds-notes .callout[data-callout="danger"],
+.dds-notes .callout[data-callout="error"] {
+  --callout-color: 225, 29, 72;
 }
 
-.dds-notes .callout[data-callout="question"] {
-  --callout-color: 109, 40, 217;
-  background: #f8f4ff;
-}
-
-.dds-notes .callout[data-callout="question"] .callout-title {
-  color: #6d28d9 !important;
+.dds-notes .callout[data-callout="question"],
+.dds-notes .callout[data-callout="faq"] {
+  --callout-color: 124, 58, 237;
 }
 
 .dds-notes .callout[data-callout="example"] {
-  --callout-color: 15, 118, 110;
-  background: #eefbf8;
+  --callout-color: 13, 148, 136;
 }
 
-.dds-notes .callout[data-callout="example"] .callout-title {
-  color: #0f766e !important;
+.dds-notes .callout[data-callout="observation"],
+.dds-notes .callout[data-callout="observations"],
+.dds-notes .callout[data-callout="remark"] {
+  --callout-color: 192, 38, 211;
 }
 
 /* ------------------------------------------------------------ tabelle ----- */
@@ -248,7 +395,7 @@
 .dds-notes thead th {
   padding: 0.55em 0.8em;
   border: 0 !important;
-  background: var(--dds-accent) !important;
+  background: linear-gradient(135deg, var(--dds-accent), var(--dds-indigo)) !important;
   font-weight: 600;
   font-size: 0.94em;
   letter-spacing: 0.015em;
@@ -266,17 +413,23 @@
   background: var(--dds-panel);
 }
 
+.dds-notes tbody tr:hover td {
+  background: rgba(37, 99, 235, 0.07);
+}
+
 /* --------------------------------------------------------- matematica ----- */
 .dds-notes mjx-container[display="true"] {
   margin-block: 0.9em !important;
-  padding: 0.55em 0.6em !important;
+  padding: 0.55em 0.7em !important;
+  border: 1px solid var(--dds-line);
+  border-left: 3px solid var(--dds-purple);
   border-radius: 8px;
   background: var(--dds-panel);
   overflow-x: auto;
 }
 
 .dds-notes .math-block > mjx-container {
-  padding: 0.55em 0.6em !important;
+  padding: 0.55em 0.7em !important;
 }
 
 .dds-notes mjx-container {
@@ -288,20 +441,20 @@
   display: block;
   max-width: 100%;
   margin: 1em auto;
-  border: 1px solid #dbe1ec;
+  border: 1px solid var(--dds-line);
   border-radius: 8px;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1);
 }
 
 /* embed di note / PDF */
 .dds-notes .markdown-embed,
 .dds-notes .file-embed {
   margin-block: 0.9em;
-  padding: 0.4em 0.9em;
-  border: 0;
-  border-left: 3px solid var(--dds-line);
+  padding: 0.45em 0.95em;
+  border: 1px solid var(--dds-line);
+  border-left: 3px solid var(--dds-cyan);
   border-radius: 0 8px 8px 0;
-  background: #fbfcff;
+  background: var(--dds-panel);
 }
 
 .dds-notes .markdown-embed-title {
@@ -326,38 +479,111 @@
 
 /* --------------------------------------------------- modalità scura ------ */
 body.theme-dark .dds-notes {
-  --dds-ink: #e7eefb;
-  --dds-muted: #9fb0c9;
-  --dds-line: #2b3549;
-  --dds-panel: #1a2334;
+  --dds-accent: #60a5fa;
+  --dds-accent-dark: #93c5fd;
+  --dds-indigo: #818cf8;
+  --dds-cyan: #38bdf8;
+  --dds-teal: #2dd4bf;
+  --dds-purple: #c084fc;
+  --dds-magenta: #e879f9;
+  --dds-rose: #fb7185;
+  --dds-amber: #fbbf24;
+  --dds-green: #34d399;
+
+  --dds-ink: #e4eeff;
+  --dds-muted: #93add4;
+  --dds-line: #233863;
+  --dds-panel: #111f3a;
+
+  --dds-strong: #7dd3fc;
+  --dds-em: #d8b4fe;
+  --dds-code-fg: #f472b6;
+  --dds-code-bg: #162445;
+  --dds-code-border: rgba(244, 114, 182, 0.32);
+}
+
+body.theme-dark .dds-notes h3 {
+  background: linear-gradient(90deg, rgba(45, 212, 191, 0.12), transparent 70%);
+}
+
+body.theme-dark .dds-notes h5 {
+  background: rgba(251, 191, 36, 0.13);
+}
+
+body.theme-dark .dds-notes h6 {
+  background: rgba(52, 211, 153, 0.13);
+}
+
+body.theme-dark .dds-notes mark,
+body.theme-dark .dds-notes .cm-highlight {
+  background: rgba(251, 191, 36, 0.22);
+  color: #fde68a;
+}
+
+body.theme-dark .dds-notes blockquote:not(.callout) {
+  background: rgba(129, 140, 248, 0.12);
 }
 
 body.theme-dark .dds-notes .callout {
-  background: rgba(38, 99, 242, 0.12);
+  --callout-color: 129, 140, 248;
+  border-color: rgba(var(--callout-color), 0.28) !important;
+  background: linear-gradient(135deg, rgba(var(--callout-color), 0.16), rgba(15, 27, 51, 0.72));
+}
+
+body.theme-dark .dds-notes .callout[data-callout="definition"],
+body.theme-dark .dds-notes .callout[data-callout="definitions"],
+body.theme-dark .dds-notes .callout[data-callout="defeinitions"],
+body.theme-dark .dds-notes .callout[data-callout="definitiosn"] {
+  --callout-color: 96, 165, 250;
 }
 
 body.theme-dark .dds-notes .callout[data-callout="note"],
-body.theme-dark .dds-notes .callout[data-callout="info"] {
-  background: rgba(148, 163, 184, 0.12);
+body.theme-dark .dds-notes .callout[data-callout="info"],
+body.theme-dark .dds-notes .callout[data-callout="abstract"],
+body.theme-dark .dds-notes .callout[data-callout="summary"] {
+  --callout-color: 56, 189, 248;
+}
+
+body.theme-dark .dds-notes .callout[data-callout="tip"],
+body.theme-dark .dds-notes .callout[data-callout="hint"] {
+  --callout-color: 52, 211, 153;
 }
 
 body.theme-dark .dds-notes .callout[data-callout="warning"],
-body.theme-dark .dds-notes .callout[data-callout="important"] {
-  background: rgba(217, 119, 6, 0.14);
+body.theme-dark .dds-notes .callout[data-callout="caution"] {
+  --callout-color: 251, 191, 36;
 }
 
-body.theme-dark .dds-notes .callout[data-callout="question"] {
-  background: rgba(124, 58, 237, 0.14);
+body.theme-dark .dds-notes .callout[data-callout="important"],
+body.theme-dark .dds-notes .callout[data-callout="danger"],
+body.theme-dark .dds-notes .callout[data-callout="error"] {
+  --callout-color: 251, 113, 133;
+}
+
+body.theme-dark .dds-notes .callout[data-callout="question"],
+body.theme-dark .dds-notes .callout[data-callout="faq"] {
+  --callout-color: 192, 132, 252;
 }
 
 body.theme-dark .dds-notes .callout[data-callout="example"] {
-  background: rgba(14, 148, 136, 0.14);
+  --callout-color: 45, 212, 191;
+}
+
+body.theme-dark .dds-notes .callout[data-callout="observation"],
+body.theme-dark .dds-notes .callout[data-callout="observations"],
+body.theme-dark .dds-notes .callout[data-callout="remark"] {
+  --callout-color: 232, 121, 249;
+}
+
+body.theme-dark .dds-notes thead th {
+  background: linear-gradient(135deg, #2563eb, #6366f1) !important;
+}
+
+body.theme-dark .dds-notes tbody tr:hover td {
+  background: rgba(56, 189, 248, 0.1);
 }
 
 body.theme-dark .dds-notes img {
-  border-color: #33405a;
-}
-
-body.theme-dark .dds-notes :not(pre) > code {
-  color: #d7e3f8;
+  border-color: #294170;
+  box-shadow: 0 6px 18px rgba(4, 9, 22, 0.45);
 }

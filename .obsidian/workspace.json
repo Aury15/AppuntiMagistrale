@@ -83,7 +83,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "f6cc322df633c375",
@@ -191,8 +192,12 @@
   },
   "active": "e60e5dc78f0afd74",
   "lastOpenFiles": [
-    "Cybersecurity/Lesson 9 - AES.md",
+    "Cybersecurity/Lesson 4 - Email system and security challenges.md",
+    "Dependable Distributed System/Dependable distributed system 1 1.md",
+    "Dependable Distributed System/Dependable distributed system 1.md",
     "Cybersecurity/Lesson 10 - Block cipher operations.md",
+    "Cybersecurity/Assets/SLIDES/07 Block cipher operations.pdf",
+    "Cybersecurity/Lesson 9 - AES.md",
     "Cybersecurity/Immagini CYBER/AES_Equivalent_Decipher.svg",
     "Cybersecurity/Lezione 8.md",
     "Cybersecurity/Immagini CYBER/AES_Key_Expansion.svg",
@@ -210,12 +215,9 @@
     "Senza nome.md",
     "Cybersecurity/Lesson 7 - Finite Fields.md",
     "Cybersecurity/Lesson 5 - Classic cryptography.md",
-    "Cybersecurity/Lesson 4 - Email system and security challenges.md",
     "Cybersecurity/Lesson 3 - E-mail security.md",
     "Cybersecurity/Lesson 2-4 - Number Theory.md",
     "Cybersecurity/Lesson 1 - Fundamental Key concept.md",
-    "Dependable Distributed System/Dependable distributed system 1 1.md",
-    "Dependable Distributed System/Dependable distributed system 1.md",
     "Dependable Distributed System/DDS part 2.md",
     "Dependable Distributed System/Dependable distributed system 1 (bella copia).md",
     "Dependable Distributed System/Dependable distributed system.md",
@@ -232,7 +234,6 @@
     "immagini DS/beb_vs_rb.pdf",
     "immagini DS",
     "Dependable Distributed System/Lezione 1.md",
-    "Dependable Distributed System",
     "Machine Learning 1.md"
   ]
 }

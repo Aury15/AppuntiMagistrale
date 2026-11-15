@@ -7,5 +7,6 @@
     "margini",
     "giustifica"
   ],
-  "showRibbon": true
+  "showRibbon": true,
+  "theme": "system"
 }
