@@ -1057,28 +1057,3 @@ The topics in the lecture form one connected security chain:
 > feasible attacks, including attacks that exploit the seed, internal
 > state, or previous outputs.
 
-## Review Questions
-
--   Why is a deterministic PRNG not a source of new physical randomness?
--   Why can a generator with a long output still be insecure if it has a
-    small seed space?
--   Why is the current time often a poor seed?
--   What did the Netscape and Debian examples teach about entropy and
-    implementation mistakes?
--   What is the difference between an ordinary PRNG and a
-    cryptographically secure PRNG?
--   What does the next-bit test require?
--   What do the monobit/frequency, poker, runs, longruns,
-    autocorrelation, and Maurer tests examine?
--   How do uniformity and independence differ?
--   What is the difference between a TRNG, a PRNG, and a PRF?
--   What are forward and backward unpredictability in the terminology
-    used by the slides?
--   What is the LCG recurrence, and why is it unsuitable for
-    cryptographic use?
--   What is the basic state update and output rule of Blum Blum Shub?
--   How does a stream cipher use XOR for encryption and decryption?
--   How do synchronous and asynchronous stream ciphers differ?
--   Why does the history of A5/1 illustrate the limits of relying on
-    secrecy of design?
--   Which block-cipher modes are mentioned as building blocks for PRNGs?
