@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Cybersecurity/Lesson 9 - AES.md",
+                "file": "Cybersecurity/Lesson 10 - Block cipher operations.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Lesson 9 - AES"
+              "title": "Lesson 10 - Block cipher operations"
             }
           }
         ]
@@ -189,20 +189,20 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "e085b63d3534c645",
+  "active": "e60e5dc78f0afd74",
   "lastOpenFiles": [
+    "Cybersecurity/Lesson 9 - AES.md",
     "Cybersecurity/Lesson 10 - Block cipher operations.md",
     "Cybersecurity/Immagini CYBER/AES_Equivalent_Decipher.svg",
     "Cybersecurity/Lezione 8.md",
-    "Cybersecurity/Lesson 9 - AES.md",
     "Cybersecurity/Immagini CYBER/AES_Key_Expansion.svg",
     "Cybersecurity/Assets/SLIDES/06 AES.pdf",
     "Cybersecurity/Immagini CYBER/AES_Inputs_Single_Round.svg",
     "Cybersecurity/Immagini CYBER/AES_Row_and_Column_Operations.svg",
     "Cybersecurity/Assets/SLIDES",
     "Cybersecurity/Assets",
-    "Lesson 9 - AES-1794743977008.webp",
-    "Lesson 9 - AES-1794742474744.webp",
+    "Cybersecurity/Immagini CYBER/Lesson 9 - AES-1794743977008.webp",
+    "Cybersecurity/Immagini CYBER/Lesson 9 - AES-1794742474744.webp",
     "Cybersecurity/Immagini CYBER/Lesson 9 - AES-1794742410306.webp",
     "Cybersecurity/Immagini CYBER",
     "Cybersecurity/Immagini CYBER/Lesson 9 - AES-1794742084237.webp",
