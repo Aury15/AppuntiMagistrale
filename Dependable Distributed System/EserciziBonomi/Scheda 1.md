@@ -23,16 +23,9 @@ Applichiamole agli eventi interessati nel diagramma:
 - **Valore di $CK_1$ associato a $e_1$​:**
     - Al tempo t, $CK_1$ = 0 
     - $e_1$ è il primo evento su $p_1​$ (un invio verso $p_3$​), quindi incrementa di 1 il proprio orologio: $CK_1(e_1) = 0 + 1$ $= 1$
-- **Valore di CK2$CK_2$CK2​ associato a e6e_6e6​:**
-    
+- **Valore di $CK_2$​ associato a $e_6$**
     - Al tempo t, $CK_2 = 0$
     - Osservando la linea temporale di p2$p_2$p2​ dopo l'istante ttt, non ci sono altri eventi prima di $e_6$​ (il messaggio proveniente da p1$p_1$p1​ arriva dopo, in $e_7$​, e quello da $p_3$​ arriva in $e_{10}$).
+    - $e_6$​ è quindi il primo evento su $p_2$​ (un invio verso $p_3$​), perciò incrementa di $1$il proprio orologio: $CK_2(e_6) = 0 + 1 = 1$
 
-    - e6$e_6$e6​ è quindi il primo evento su $p_2$​ (un invio verso $p_3$​), perciò incrementa di $1$il proprio orologio:
-        
-        $CK_2(e_6) = 0 + 1 = 1$
-        
-
-### Conclusione
-
-Poiché CK2(e6)=1CK_2(e_6) = 1CK2​(e6​)=1 e CK1(e1)=1CK_1(e_1) = 1CK1​(e1​)=1, il valore associato a e6e_6e6​ **non è strettamente maggiore** (1≯11 \not> 11>1) di quello associato a e1e_1e1​, rendendo l'affermazione **Falsa (F)**.
+Poiché $CK_2(e_6) = 1$ e $CK_1(e_1) = 1$, il valore associato a $e_6$​ **non è strettamente maggiore** (1≯ 1$ \not> 1$1>1) di quello associato a e1e_1e1​, rendendo l'affermazione **Falsa (F)**.
