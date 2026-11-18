@@ -7,4 +7,5 @@ We have two type of sync:
 	1) $p_1 \rightarrow$ $D_{ext} = \frac{RTT}{2} = \frac{2 m/s}{2} - 0 = 1m/s$ 
 	2) $p_2 \rightarrow$ $D_{ext} = \frac{RTT}{2} = \frac{4 m/s}{2} - 0 = 2m/s$ 
 2) Yes because a process externally sync within D is internally sync with 2D:
-	1) $|C_1(t) - C_2(t)| < D \rightarrow |C_1(t) - S(t) + SC_2(t)|$
+	1) $|C_1(t) - C_2(t)| < D \rightarrow |C_1(t) - S(t) + S(t) - C_2(t)| \leq |C_1(t) - S(t)| + |S - C_2(t)| = D _{ext}+ D_{ext}$
+	2) 
