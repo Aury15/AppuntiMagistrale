@@ -27,6 +27,64 @@ Let's apply them to the relevant events in the diagram:
 	- $e_6$​ is therefore the first event on $p_2$​ (a send to $p_3$​), so it increments its clock by $1$: $CK_2(e_6) = 0 + 1 = 1$
 Since $CK_2(e_6) = 1$ and $CK_1(e_1) = 1$, the value associated with $e_6$​ is not strictly greater ($1 \not> 1$) than that associated with $e_1$, making the statement **False (F)**.
 d) <font color="#ff0000">FALSE</font>. 
+- Orologi Logici Scalari (Lamport) — Calcolo di $CK_3(e_8)$
+  Seguiamo l'evoluzione dell'orologio scalare di Lamport $CK_3$ sul processo $p_3$, partendo da $CK_3 = 0$ al tempo $t$:
+- **Evento $e_2$ (ricezione da $e_1$):**
+  - Sappiamo dal punto precedente che $e_1$ invia il messaggio con timestamp $ts = 1$.
+  - $CK_3(e_2) = \max(0, 1) + 1 = 2$
+- **Evento $e_3$ (invio multiplo / interno):**
+  - Su $p_3$, l'evento $e_3$ corrisponde all'invio del messaggio verso $p_1$ (ricevuto in $e_4$), verso $p_2$ (ricevuto in $e_{10}$) e verso sé stesso (ricevuto in $e_5$).
+  - Essendo un evento di invio, incrementa l'orologio locale di $1$:
+    $$CK_3(e_3) = 2 + 1 = 3$$
+  - Il messaggio auto-inviato da $e_3$ a $e_5$ porta quindi il timestamp $ts = 3$.
+- **Evento $e_5$ (ricezione dell'auto-messaggio da $e_3$):**
+  - Applicando la regola di ricezione:
+    $$CK_3(e_5) = \max(CK_3(e_3), ts) + 1 = \max(3, 3) + 1 = 4$$
+
+- **Evento $e_8$ (ricezione del messaggio da $e_6$):**
+  - Sappiamo dal punto precedente che $e_6$ su $p_2$ ha timestamp $ts = 1$.
+  - Applicando la regola di ricezione su $p_3$:
+    $$CK_3(e_8) = \max(CK_3(e_5), ts) + 1 = \max(4, 1) + 1 = 5$$
+
+> [!success] Risultato Orologio Scalare
+> Il valore dell'orologio logico scalare associato all'evento $e_8$ è **$CK_3(e_8) = 5$**.
+
+---
+
+## Vector Clocks — Calcolo di $CK_3(e_8)$
+
+> [!info] Regole dei Vector Clocks
+> Con $3$ processi ($p_1, p_2, p_3$), ogni processo $p_i$ mantiene un vettore $CK_i = [v_1, v_2, v_3]$, inizializzato a $[0, 0, 0]$ al tempo $t$:
+> 1. **Evento locale o di invio:** $p_i$ incrementa di $1$ solo la propria posizione ($i$-esima):
+>    $$CK_i[i] = CK_i[i] + 1$$
+> 2. **Evento di ricezione** (di un messaggio con vettore $V_{msg}$):
+>    - Prima aggiorna ogni componente prendendo il massimo elemento per elemento:
+>      $$CK_i[k] = \max(CK_i[k], V_{msg}[k]) \quad \forall k \in \{1, 2, 3\}$$
+>    - Poi incrementa di $1$ la propria posizione:
+>      $$CK_i[i] = CK_i[i] + 1$$
+
+### Calcolo passo-passo fino a $e_8$
+
+Prima determiniamo i vettori degli eventi su $p_1$ e $p_2$ che inviano messaggi verso $p_3$:
+- **Su $p_1$ — Evento $e_1$ (invio verso $e_2$):** parte da $[0, 0, 0]$ e incrementa la $1^\text{a}$ posizione $\implies CK_1(e_1) = [1, 0, 0]$.
+- **Su $p_2$ — Evento $e_6$ (invio verso $e_8$):** è il primo evento su $p_2$, quindi parte da $[0, 0, 0]$ e incrementa la $2^\text{a}$ posizione $\implies CK_2(e_6) = [0, 1, 0]$.
+
+Ora seguiamo la riga di $p_3$ partendo da $[0, 0, 0]$ (dove $p_3$ aggiorna sempre la $3^\text{a}$ posizione):
+
+1. **Evento $e_2$ (ricezione da $e_1 = [1, 0, 0]$):**
+   - Massimo elemento per elemento tra $[0, 0, 0]$ e $[1, 0, 0] \rightarrow [1, 0, 0]$
+   - $+1$ alla $3^\text{a}$ posizione $\implies CK_3(e_2) = [1, 0, 1]$
+2. **Evento $e_3$ (invio):**
+   - $+1$ alla $3^\text{a}$ posizione $\implies CK_3(e_3) = [1, 0, 2]$
+3. **Evento $e_5$ (ricezione dell'auto-messaggio da $e_3 = [1, 0, 2]$):**
+   - Massimo tra $[1, 0, 2]$ e $[1, 0, 2] \rightarrow [1, 0, 2]$
+   - $+1$ alla $3^\text{a}$ posizione $\implies CK_3(e_5) = [1, 0, 3]$
+4. **Evento $e_8$ (ricezione da $e_6 = [0, 1, 0]$):**
+   - Massimo elemento per elemento tra $[1, 0, 3]$ e $[0, 1, 0] \rightarrow [1, 1, 3]$
+   - $+1$ alla $3^\text{a}$ posizione $\implies CK_3(e_8) = \mathbf{[1, 1, 4]}$
+
+> [!failure] Conclusione
+> Il vector clock associato a $e_8$ è **$[1, 1, 4]$** (e non $[3, 0, 3]$), quindi l'affermazione è **Falsa (F)**.
 ![[Scheda 1-1795015687040.webp]]
 
 ![[Scheda 1-1795015700023.webp]]
