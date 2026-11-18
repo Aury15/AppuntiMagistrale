@@ -11,3 +11,5 @@ We have two type of sync:
 	2) $D_{int}  = D _{ext}+ D_{ext} = 1 m/s + 2 m/s = 3 m/s$ 
 
 ![[Scheda 1-1795014974809.webp]]
+
+a) Is false 
