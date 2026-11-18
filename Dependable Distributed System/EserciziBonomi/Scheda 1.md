@@ -66,6 +66,8 @@ Now let's follow the line of $p_3$ starting from $[0, 0, 0]$ (where $p_3$ always
 > [!failure] Conclusion
 > The vector clock associated with $e_8$ is **$[1, 1, 4]$** (and not $[3, 0, 3]$), so the statement is **False (F)**.
 
-![[Scheda 1-1795015687040.webp]]
+![[Scheda 1-1795015687040.webp|855]]
+
+![[Scheda 1-1795016547604.webp|712]]
 
 ![[Scheda 1-1795015700023.webp]]
