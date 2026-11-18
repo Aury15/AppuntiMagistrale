@@ -25,13 +25,12 @@ Applichiamole agli eventi interessati nel diagramma:
     - $e_1$ è il primo evento su $p_1​$ (un invio verso $p_3$​), quindi incrementa di 1 il proprio orologio: $CK_1(e_1) = 0 + 1$ $= 1$
 - **Valore di CK2$CK_2$CK2​ associato a e6e_6e6​:**
     
-    - Al tempo ttt, CK2=0$CK_2 = 0$CK2​=0.
+    - Al tempo t, $CK_2 = 0$
+    - Osservando la linea temporale di p2$p_2$p2​ dopo l'istante ttt, non ci sono altri eventi prima di $e_6$​ (il messaggio proveniente da p1$p_1$p1​ arriva dopo, in $e_7$​, e quello da $p_3$​ arriva in $e_{10}$).
+
+    - e6$e_6$e6​ è quindi il primo evento su $p_2$​ (un invio verso $p_3$​), perciò incrementa di $1$il proprio orologio:
         
-    - Osservando la linea temporale di p2$p_2$p2​ dopo l'istante ttt, non ci sono altri eventi prima di e6$e_6$e6​ (il messaggio proveniente da p1$p_1$p1​ arriva dopo, in e7$e_7$e7​, e quello da p3p_3p3​ arriva in e10e_{10}e10​).
-        
-    - e6e_6e6​ è quindi il primo evento su p2p_2p2​ (un invio verso p3p_3p3​), perciò incrementa di 111 il proprio orologio:
-        
-        CK2(e6)=0+1=1CK_2(e_6) = 0 + 1 = 1CK2​(e6​)=0+1=1
+        $CK_2(e_6) = 0 + 1 = 1$
         
 
 ### Conclusione
