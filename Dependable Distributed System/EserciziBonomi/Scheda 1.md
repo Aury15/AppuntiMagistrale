@@ -25,11 +25,11 @@ Let's follow the evolution of the Lamport scalar clock $CK_3$ on process $p_3$, 
 $$CK_3(e_3) = 2 + 1 = 3$$
 - The message self-sent from $e_3$ to $e_5$ therefore carries the timestamp $ts = 3$.
 - **Event $e_5$ (receiving the self-message from $e_3$):**
-- Applying the reception rule:
+	- Applying the reception rule:
 $$CK_3(e_5) = \max(CK_3(e_3), ts) + 1 = \max(3, 3) + 1 = 4$$
 - **Event $e_8$ (receiving the message from $e_6$):**
-- We know from the previous point that $e_6$ on $p_2$ has timestamp $ts = 1$.
-- Applying the reception rule on $p_3$:
+	- We know from the previous point that $e_6$ on $p_2$ has timestamp $ts = 1$.
+	- Applying the reception rule on $p_3$:
 $$CK_3(e_8) = \max(CK_3(e_5), ts) + 1 = \max(4, 1) + 1 = 5$$
 
 > [!success] Scalar Clock Result
