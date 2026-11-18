@@ -14,18 +14,17 @@ We have two type of sync:
 ![[Scheda 1-1795015214912.webp|737]]
 a) <font color="#ff0000">FALSE</font>. To have $e_5 \rightarrow e_7$, there should be a direct causal path from $e_5$ (on $p_3$) to $e_7$ (on $p_2$). In the diagram, $e_5$ is the reception event of an automatic message sent by $e_3$ ($e_3 \rightarrow e_5$), and after $e_5$ on process $p_3$ there is only $e_8$ (which is also a reception, not a send). No arrows originate from $e_5$ to other processes. Likewise, there is no reverse path from $e_7$ to $e_5$: the two events are therefore **concurrent** ($e_5 \parallel e_7$).
 b) <font color="#00b050">TRUE</font>. Both events have a common causal ancestor in $e_3$ (both the message received in $e_4$ on $p_1$ and the self-message received in $e_5$ on $p_3$ originate from $e_3$, so $e_3 \rightarrow e_4$ and $e_3 \rightarrow e_5$). However, once $e_3$ has sent those messages, **there is no communication or causal path between $e_4$ and $e_5$**: from $e_5$ no arrows originate to $p_1$, and from $e_4$ (or from subsequent events on $p_1$, such as $e_9$) no path to $e_5$ on $p_3$ originates. Since there is neither $e_4 \rightarrow e_5$ nor $e_5 \rightarrow e_4$, the two events are effectively **concurrent** ($e_4 \parallel e_5$).
-c) <font color="#ff0000">FALSE</font>. Ricordiamo le due regole di aggiornamento dell'orologio logico scalare $CK_i$ (inizializzato a 0 al tempo t per tutti i processi):
-1. **Evento locale o di invio:** $CK_i=CK_i + 1$
-2. **Evento di ricezione** (di un messaggio con timestamp $ts$): $CK_i=max⁡(CK_i,ts)+ 1$ 
+c) <font color="#ff0000">FALSE</font>. Recall the two rules for updating the scalar logical clock $CK_i$ (initialized to 0 at time t for all processes):
+1. **Local or send event:** $CK_i=CK_i + 1$
+2. **Receive event** (of a message with timestamp $ts$): $CK_i=max⁡(CK_i,ts)+ 1$
+Let's apply them to the relevant events in the diagram:
+- **Value of $CK_1$ associated with $e_1$​:**
+	- At time t, $CK_1$ = 0
+	- $e_1$ is the first event on $p_1​$ (a send to $p_3$​), so it increments its clock by 1: $CK_1(e_1) = 0 + 1$ $= 1$
+- **Value of $CK_2$​ associated with $e_6$**
+	- At time t, $CK_2 = 0$
+	- Looking at the timeline of p2$p_2$p2​ after time ttt, there are no further events before $e_6$​ (the message from p1$p_1$p1​ arrives later, at $e_7$​, and the one from $p_3$​ arrives at $e_{10}$).
+	- $e_6$​ is therefore the first event on $p_2$​ (a send to $p_3$​), so it increments its clock by $1$: $CK_2(e_6) = 0 + 1 = 1$
+Since $CK_2(e_6) = 1$ and $CK_1(e_1) = 1$, the value associated with $e_6$​ is not strictly greater ($1 \not> 1$) than that associated with $e_1$, making the statement **False (F)**.
 
-Applichiamole agli eventi interessati nel diagramma:
-
-- **Valore di $CK_1$ associato a $e_1$​:**
-    - Al tempo t, $CK_1$ = 0 
-    - $e_1$ è il primo evento su $p_1​$ (un invio verso $p_3$​), quindi incrementa di 1 il proprio orologio: $CK_1(e_1) = 0 + 1$ $= 1$
-- **Valore di $CK_2$​ associato a $e_6$**
-    - Al tempo t, $CK_2 = 0$
-    - Osservando la linea temporale di p2$p_2$p2​ dopo l'istante ttt, non ci sono altri eventi prima di $e_6$​ (il messaggio proveniente da p1$p_1$p1​ arriva dopo, in $e_7$​, e quello da $p_3$​ arriva in $e_{10}$).
-    - $e_6$​ è quindi il primo evento su $p_2$​ (un invio verso $p_3$​), perciò incrementa di $1$il proprio orologio: $CK_2(e_6) = 0 + 1 = 1$
-
-Poiché $CK_2(e_6) = 1$ e $CK_1(e_1) = 1$, il valore associato a $e_6$​ **non è strettamente maggiore** (1≯ 1$ \not> 1$1>1) di quello associato a e1e_1e1​, rendendo l'affermazione **Falsa (F)**.
+![[Scheda 1-1795015687040.webp]]
