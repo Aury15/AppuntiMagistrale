@@ -26,7 +26,7 @@ Let's apply them to the relevant events in the diagram:
 	- Looking at the timeline of p2$p_2$p2​ after time ttt, there are no further events before $e_6$​ (the message from p1$p_1$p1​ arrives later, at $e_7$​, and the one from $p_3$​ arrives at $e_{10}$).
 	- $e_6$​ is therefore the first event on $p_2$​ (a send to $p_3$​), so it increments its clock by $1$: $CK_2(e_6) = 0 + 1 = 1$
 Since $CK_2(e_6) = 1$ and $CK_1(e_1) = 1$, the value associated with $e_6$​ is not strictly greater ($1 \not> 1$) than that associated with $e_1$, making the statement **False (F)**.
-d) 
+d) <font color="#ff0000">FALSE</font>. 
 ![[Scheda 1-1795015687040.webp]]
 
 ![[Scheda 1-1795015700023.webp]]
