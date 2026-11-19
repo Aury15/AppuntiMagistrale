@@ -89,91 +89,7 @@
   "right": {
     "id": "f6cc322df633c375",
     "type": "split",
-    "children": [
-      {
-        "id": "70a12ab6ad0de82b",
-        "type": "tabs",
-        "children": [
-          {
-            "id": "e3856f88bfe1169a",
-            "type": "leaf",
-            "state": {
-              "type": "backlink",
-              "state": {
-                "file": "Machine Learning 1.md",
-                "collapseAll": false,
-                "extraContext": false,
-                "sortOrder": "alphabetical",
-                "showSearch": false,
-                "searchQuery": "",
-                "backlinkCollapsed": false,
-                "unlinkedCollapsed": true
-              },
-              "icon": "links-coming-in",
-              "title": "Riferimenti"
-            }
-          },
-          {
-            "id": "3d50a0c314dc8d0b",
-            "type": "leaf",
-            "state": {
-              "type": "outgoing-link",
-              "state": {
-                "file": "Machine Learning 1.md",
-                "linksCollapsed": false,
-                "unlinkedCollapsed": true
-              },
-              "icon": "links-going-out",
-              "title": "Collegamenti in uscita"
-            }
-          },
-          {
-            "id": "ee957fa9f3bde287",
-            "type": "leaf",
-            "state": {
-              "type": "tag",
-              "state": {
-                "sortOrder": "frequency",
-                "useHierarchy": true,
-                "showSearch": false,
-                "searchQuery": ""
-              },
-              "icon": "lucide-tags",
-              "title": "Etichette"
-            }
-          },
-          {
-            "id": "6165c946dc95be48",
-            "type": "leaf",
-            "state": {
-              "type": "all-properties",
-              "state": {
-                "sortOrder": "frequency",
-                "showSearch": false,
-                "searchQuery": ""
-              },
-              "icon": "lucide-archive",
-              "title": "Tutte le proprietà"
-            }
-          },
-          {
-            "id": "83cb1a2b9f5d3526",
-            "type": "leaf",
-            "state": {
-              "type": "outline",
-              "state": {
-                "file": "Machine Learning 1.md",
-                "followCursor": false,
-                "showSearch": false,
-                "searchQuery": ""
-              },
-              "icon": "lucide-list",
-              "title": "Struttura"
-            }
-          }
-        ]
-      }
-    ],
+    "children": [],
     "direction": "horizontal",
     "width": 300,
     "collapsed": true
@@ -192,6 +108,7 @@
   },
   "active": "b95a9e32fabd1cec",
   "lastOpenFiles": [
+    "desktop.ini",
     "Senza nome.base",
     "2026-11-19.md",
     "Dependable Distributed System/DDS part 2.md",
@@ -236,7 +153,6 @@
     "Dependable Distributed System/lectures_16_17_distributed_registers.md",
     "Dependable Distributed System/lecture_14_software_replication (1).md",
     "Dependable Distributed System/lecture_14_software_replication.md",
-    "Dependable Distributed System/Dependable distributed system 1 (bella copia).pdf",
     "Dependable Distributed System/Lezione 1.md"
   ]
 }
