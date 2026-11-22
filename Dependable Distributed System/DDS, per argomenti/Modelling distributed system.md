@@ -185,12 +185,6 @@ The second one crashes and recovers infinitely often so it is faulty. The third 
 
 #### Timing assumptions
 
-| Model                 | Assumption                                                                                                                              |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| Synchronous           | known upper bounds on (i) the time to execute a basic step, (ii) message transit time, (iii) the drift of local clocks w.r.t. real time |
-| Asynchronous          | no known bound on processes or links                                                                                                    |
-| Partially synchronous | there exists a time t after which the synchrony bounds hold                                                                             |
-
 **Synchronous systems**: enable timed failure detection, measuring transit delays, time-based coordination, worst-case performance guarantees and synchronized clocks. The major problem is the coverage of the synchrony assumption: <u>it is hard to build a system in which the bounds hold with high probability. </u> 
 **Asynchronous systems**: even without physical clocks, the passage of time can be measured through the transmission and delivery of messages: time is defined with respect to communication. This is *logical time*, and the resulting notion of clock is a logical clock.
 **Partial (eventual) synchrony**: distributed systems are usually synchronous most of the time, with periods of bounded asynchrony. This is captured by eventual synchrony: there is an unknown time t after which the system becomes synchronous. It does not mean that the whole system (hardware, software, network) is synchronous forever after t, nor that the system starts asynchronous and later becomes synchronous. What we need is a period of synchrony long enough for the algorithm to terminate.
