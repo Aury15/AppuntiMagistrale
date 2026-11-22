@@ -53,3 +53,33 @@ In this example we have two component: the job handler and the instance $jh$ and
 Two implementations satisfy this specification. In the *synchronous* one the job is processed before being confirmed; in the *asynchronous* one it is only stored in a buffer, which is why the confirmation says “has been or will be” processed.
 
 ###### Synchronous job handler 
+$$
+\begin{aligned}
+&\textbf{Algorithm: } \text{synchronous job handler} \\
+&\textbf{Upon event } \langle jh, \text{Submit} \mid \text{job} \rangle \textbf{ do} \\
+&\quad \text{process(job);} \\
+&\quad \text{trigger } \langle jh, \text{Confirm} \mid \text{job} \rangle; \\
+\end{aligned}
+$$
+- **Event Trigger (`Submit`):** When a job submission request arrives via $\langle jh, \text{Submit} \mid \text{job} \rangle$, the handler handles it straight away.
+- **Execution Flow:**
+    - It executes the task synchronously: `process(job);`
+    - Once processing is fully completed, it triggers the confirmation event: `trigger` $\langle jh, \text{Confirm} \mid \text{job} \rangle$;
+- **Characteristics:** It is **blocking**. The system processes the request sequentially and remains tied up until the job is completely executed before sending a confirmation back.
+###### Asynchronous job handler 
+$$
+\begin{aligned}
+&\textbf{Algorithm: } \text{asynchronous job handler} \\
+&\textbf{Upon event } \langle jh, \text{Init} \rangle \textbf{ do} \\
+&\quad \text{buffer} := \emptyset; \\
+&\textbf{Upon event } \langle jh, \text{Submit} \mid \text{job} \rangle \textbf{ do} \\
+&\quad \text{buffer} := \text{buffer} \cup \{\text{job}\}; \\
+&\quad \text{trigger } \langle jh, \text{Confirm} \mid \text{job} \rangle; \\
+&\textbf{Upon } \text{buffer} \neq \emptyset \textbf{ do} \\
+&\quad \text{job} := \text{selectjob}(\text{buffer}); \\
+&\quad \text{process(job);} \\
+&\quad \text{buffer} := \text{buffer} \setminus \{\text{job}\};
+\end{aligned}
+$$
+
+
