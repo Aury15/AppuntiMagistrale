@@ -75,3 +75,4 @@ If two irreconcilable transactions happen, only the first one recorded is consid
 
 #### How a transaction gets into a blockchain
 
+![[Lezione 1-1793616647445.webp]]
