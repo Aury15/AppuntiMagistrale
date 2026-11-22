@@ -81,5 +81,11 @@ $$
 &\quad \text{buffer} := \text{buffer} \setminus \{\text{job}\};
 \end{aligned}
 $$
-
+ **Initialization (`Init`):**
+    - Upon initialization, it creates an empty data structure to store incoming tasks: `buffer := ∅;`
+- **Receiving Requests (`Submit`):**
+    - When a job arrives, instead of processing it right away, it appends the job to the buffer (`buffer := buffer ∪ {job}`) and immediately triggers a confirmation ($\langle jh, \text{Confirm} \mid \text{job} \rangle$). This decouples request acceptance from actual execution.
+- **Background Processing (`upon buffer ≠ ∅`):**
+    - A continuous internal guard monitors the buffer. Whenever it is not empty, the system selects a job (`selectjob(buffer)`), processes it, and removes it from the queue (`buffer := buffer \ {job}`).   
+- **Characteristics:** It is **non-blocking**. The system accepts and confirms requests instantly while queuing them up for background processing.
 
