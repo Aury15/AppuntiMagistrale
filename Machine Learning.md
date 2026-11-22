@@ -1143,4 +1143,105 @@ Passando nuovamente alla classificazione binaria ($y \in \{0, 1\}$), invece di p
 > [!intuition] Come funziona la Cross-Entropy?
 > La formula agisce come un "interruttore" che isola il termine rilevante in base alla vera etichetta $y \in \{0, 1\}$[cite: 105]:
 > - **Se $y = 1$**: la loss si riduce a $-\log h_\theta(x)$[cite: 105]. Se il modello predice $h_\theta(x) \approx 1$ la loss è prossima a $0$; se predice $h_\theta(x) \to 0$ (errore sicuro), la penalità esplode a $+\infty$[cite: 105].
-> - **Se $y = 0$**: la loss si riduce a $-\log(1 - h_\theta(x))$[cite: 105]. Se $h_\theta(x) \approx 0$ la loss è quasi $0$; se $h_\theta(x) \to 1$, la penalità esplode a $+\infty$[cite: 105].
+> - **Se $y = 0$**: la loss si riduce a $-\log(1 - h_\theta(x))$[cite: 105]. Se $h_\theta(x) \approx 0$ la loss è quasi $0$; se $h_\theta(x) \to 1$, la penalità esplode a $+\infty$[cite: 105].# Lezione 13: Regressione Logistica, KL-Divergence e Softmax Regression
+
+## 1. Funzione Sigmoide e Classificatore Logistico
+Nella classificazione binaria probabilistica vogliamo mappare uno *score* reale (ottenuto tramite un modello lineare) in una probabilità valida compresa tra $0$ e $1$[cite: 107].
+
+> [!definition] Funzione Sigmoide
+> La funzione **Sigmoide** $\sigma: \mathbb{R} \rightarrow [0, 1]$ è definita come:
+> $$ \sigma(z) = \frac{1}{1 + e^{-z}} $$
+> Le sue proprietà fondamentali sono:
+> - $\lim_{z \to +\infty} \sigma(z) = 1$
+> - $\lim_{z \to -\infty} \sigma(z) = 0$
+> - $\sigma(0) = \frac{1}{2}$[cite: 107]
+
+> [!theorem] Derivata della Sigmoide
+> La funzione sigmoide è ovunque differenziabile e la sua derivata è strettamente positiva (quindi $\sigma$ è strettamente crescente):
+> $$ \frac{d}{dz}\sigma(z) = -\frac{1}{(1 + e^{-z})^2}(-e^{-z}) = \frac{e^{-z}}{(1 + e^{-z})^2} = \frac{1}{1 + e^{-z}} \cdot \frac{e^{-z}}{1 + e^{-z}} = \sigma(z)(1 - \sigma(z)) $$[cite: 107]
+
+> [!definition] [[Logistic Regression|Classificatore Logistico]]
+> Dato un vettore di input $x \in \mathbb{R}^d$ e un vettore di pesi $\theta \in \mathbb{R}^d$, il classificatore logistico calcola lo score lineare $\langle \theta, x \rangle$ e lo trasforma in probabilità tramite la sigmoide:
+> $$ h_\theta(x) = \sigma(\langle \theta, x \rangle) = \frac{1}{1 + e^{-\theta^T x}} $$[cite: 107]
+
+---
+
+## 2. Quale Loss usare? La KL-Divergence
+Per il [[Perceptron]] abbiamo usato la 0-1 loss e per le [[Support Vector Machines|SVM]] la Hinge Loss[cite: 107]. Poiché il classificatore logistico produce una *distribuzione di probabilità*, abbiamo bisogno di una misura che confronti la distribuzione vera con quella predetta[cite: 107].
+
+> [!definition] [[KL-Divergence]] (Divergenza di Kullback-Leibler)
+> Date due distribuzioni di probabilità discrete $p$ e $q$ definite su un insieme $\Omega$, la KL-Divergence misura quanto $q$ diverge da $p$:
+> $$ KL(p, q) = \sum_{\omega \in \Omega} p(\omega) \log \frac{p(\omega)}{q(\omega)} $$
+> **Proprietà fondamentali**:
+> 1. **Non negatività**: $KL(p, q) \ge 0$
+> 2. **Identità degli indiscernibili**: $KL(p, q) = 0 \iff p = q$
+> 3. **Asimmetria**: $KL(p, q) \neq KL(q, p)$ (di conseguenza, *non è una distanza/metrica* in senso matematico)[cite: 107]
+
+> [!intuition] Perché la KL-Divergence genera la Cross-Entropy Loss?
+> Nel caso binario ($\Omega = \{0, 1\}$), possiamo modellare la vera etichetta $y$ e la predizione $h_\theta(x)$ come due distribuzioni di Bernoulli di parametri rispettivamente $p = y$ e $q = h_\theta(x)$:
+> $$ KL(p, q) = p \log \frac{p}{q} + (1-p) \log \frac{1-p}{1-q} $$
+> Sostituendo $p = y$ e $q = h_\theta(x)$ e sfruttando le proprietà dei logaritmi:
+> $$ KL(y, h_\theta(x)) = y \log \frac{y}{h_\theta(x)} + (1-y)\log \frac{1-y}{1 - h_\theta(x)} $$
+> $$ = \underbrace{-y \log h_\theta(x) - (1-y)\log(1 - h_\theta(x))}_{L_{CE}(h_\theta(x), y)} + \underbrace{y \log y + (1-y)\log(1-y)}_{\text{costante rispetto a } \theta} $$
+> Poiché i termini finali non dipendono da $\theta$, minimizzare la KL-Divergence rispetto a $\theta$ è **matematicamente equivalente** a minimizzare la [[Cross-Entropy Loss]][cite: 107].
+
+---
+
+## 3. Ottimizzazione della Regressione Logistica
+Dato un training set $S = \{(x_1, y_1), \dots, (x_n, y_n)\}$ con $x_i \in \mathbb{R}^d$ e $y_i \in \{0, 1\}$, il Rischio Empirico con Cross-Entropy Loss è:
+$$ \hat{R}_S(\theta) = -\frac{1}{n}\sum_{i=1}^n \left[ y_i \log h_\theta(x_i) + (1 - y_i)\log(1 - h_\theta(x_i)) \right] $$
+$$ = -\frac{1}{n}\sum_{i=1}^n \left[ y_i \log\left(\frac{1}{1+e^{-\theta^T x_i}}\right) + (1 - y_i)\log\left(1 - \frac{1}{1+e^{-\theta^T x_i}}\right) \right] $$[cite: 107]
+
+Poiché $\hat{R}_S(\theta)$ è **convessa in $\theta$** e differenziabile, possiamo trovare il minimo globale tramite [[Gradient Descent]][cite: 107].
+
+> [!theorem] Derivazione del Gradiente della Cross-Entropy
+> Sfruttando la regola della catena e la proprietà $\sigma'(z) = \sigma(z)(1-\sigma(z))$, calcoliamo $\nabla_\theta \hat{R}_S(\theta)$:
+> $$ \nabla_\theta \hat{R}_S(\theta) = -\frac{1}{n}\sum_{i=1}^n \left[ y_i \frac{\sigma(\langle x_i, \theta \rangle)(1 - \sigma(\langle x_i, \theta \rangle))}{\sigma(\langle x_i, \theta \rangle)} x_i + (1 - y_i)\frac{-\sigma(\langle x_i, \theta \rangle)(1 - \sigma(\langle x_i, \theta \rangle))}{1 - \sigma(\langle x_i, \theta \rangle)} x_i \right] $$
+> Semplificando i termini al numeratore e denominatore:
+> $$ = -\frac{1}{n}\sum_{i=1}^n \left[ y_i(1 - \sigma(\langle x_i, \theta \rangle)) - (1 - y_i)\sigma(\langle x_i, \theta \rangle) \right] x_i $$
+> Espandendo le parentesi, i termini incrociati $\pm y_i \sigma(\langle x_i, \theta \rangle)$ si elidono:
+> $$ = -\frac{1}{n}\sum_{i=1}^n \left( y_i - \sigma(\langle x_i, \theta \rangle) \right) x_i = \frac{1}{n}\sum_{i=1}^n x_i \left( \sigma(\langle x_i, \theta \rangle) - y_i \right) $$[cite: 107]
+
+**Versione Stocastica ([[SGD (Stochastic Gradient Descent)]])**:
+Per scalare su dataset grandi, peschiamo un indice $i_t$ uniformemente a caso (u.a.r.) e calcoliamo il gradiente stocastico su un singolo campione:
+$$ \hat{g}(\theta) = x_{i_t}\left(\sigma(\langle x_{i_t}, \theta \rangle) - y_{i_t}\right) $$[cite: 107]
+
+---
+
+## 4. Classificazione Multi-classe: Softmax Regression
+Quando lo spazio delle etichette contiene $K$ classi, $\mathcal{Y} = \{1, 2, \dots, K\}$, la sigmoide non basta più: dobbiamo generalizzarla alla funzione **Softmax**[cite: 107].
+
+> [!definition] Funzione Softmax e [[Softmax Regression]]
+> La funzione **Softmax** mappa un vettore di $K$ score reali in una distribuzione di probabilità su $K$ classi, $\text{softmax}: \mathbb{R}^K \rightarrow [0, 1]^K$:
+> $$ (z_1, \dots, z_K) \mapsto \left( \frac{e^{z_1}}{\sum_{j=1}^K e^{z_j}}, \dots, \frac{e^{z_K}}{\sum_{j=1}^K e^{z_j}} \right) $$
+> Nel modello **Softmax Regression**, i parametri sono organizzati in una matrice $\Theta \in \mathbb{R}^{d \times K}$, dove la $j$-esima colonna $\theta_j \in \mathbb{R}^d$ genera lo score per la classe $j$: $s_j(x) = \langle \theta_j, x \rangle$[cite: 107].
+> La probabilità stimata che $x$ appartenga alla classe $j$ è:
+> $$ \hat{P}_j(x, \Theta) = \frac{e^{\langle x, \theta_j \rangle}}{\sum_{l=1}^K e^{\langle x, \theta_l \rangle}} $$[cite: 107]
+
+> [!intuition] Perché usiamo la Softmax?
+> L'esponenziale garantisce che tutti i valori siano positivi e amplifica le differenze tra gli score, mentre la normalizzazione per la somma $D = \sum_l e^{z_l}$ forza le uscite a sommare esattamente a $1$. È il meccanismo standard fondamentale per adattare le reti neurali alla classificazione multi-classe[cite: 107].
+
+> [!example] Esempio Numerico
+> Dato il vettore di score $(-10, 29, 100)$, la Softmax restituisce:
+> $$ \left(\frac{e^{-10}}{D}, \frac{e^{29}}{D}, \frac{e^{100}}{D}\right) \quad \text{con } D = e^{-10} + e^{29} + e^{100} $$
+> (In questo caso $e^{100}$ domina enormemente gli altri termini, concentrando quasi tutta la massa di probabilità sulla terza classe)[cite: 107].
+
+**Rischio Empirico Multi-classe (Cross-Entropy)**:
+Rappresentando la label $y_i$ come vettore *one-hot* $y_i^{(j)} \in \{0, 1\}$ (che vale $1$ solo per la classe corretta $j$), il rischio empirico è:
+$$ \hat{R}_S(\Theta) = -\frac{1}{n}\sum_{i=1}^n \sum_{j=1}^K y_i^{(j)} \log \hat{P}_j(x_i, \Theta) $$[cite: 107]
+
+---
+
+## 5. Equivalenza tra Softmax ($K=2$) e Regressione Logistica
+
+> [!theorem] Domanda d'Esame: Softmax con $K=2$ equivale alla Logistic Regression
+> Nel caso binario ($K=2$), la Softmax Regression utilizza due vettori di pesi $\theta_1, \theta_2 \in \mathbb{R}^d$, ma è ridondante e matematicamente equivalente alla Regressione Logistica con un singolo vettore $\theta \in \mathbb{R}^d$[cite: 108].
+> 
+> **Dimostrazione**:
+> La probabilità della classe $1$ secondo la Softmax è:
+> $$ \hat{P}_1(x, \Theta) = \frac{e^{\langle \theta_1, x \rangle}}{e^{\langle \theta_1, x \rangle} + e^{\langle \theta_2, x \rangle}} $$
+> Dividiamo numeratore e denominatore per $e^{\langle \theta_1, x \rangle}$:
+> $$ \hat{P}_1(x, \Theta) = \frac{1}{1 + e^{\langle \theta_2, x \rangle - \langle \theta_1, x \rangle}} = \frac{1}{1 + e^{-\langle \theta_1 - \theta_2, x \rangle}} $$
+> Definendo il singolo vettore dei pesi $\theta = \theta_1 - \theta_2$, otteniamo esattamente il classificatore logistico:
+> $$ \hat{P}_1(x) = \frac{1}{1 + e^{-\langle \theta, x \rangle}} = \sigma(\langle \theta, x \rangle) $$
+> E, di conseguenza, $\hat{P}_2(x) = 1 - \hat{P}_1(x) = 1 - \sigma(\langle \theta, x \rangle)$[cite: 108].
