@@ -1386,3 +1386,74 @@ dove $\nu_{\max} = \max_i |\nu_i|$ e $\nu_{\min} = \min_i \nu_i$[cite: 110].
 
 > [!intuition] Perché la Ridge Regression migliora l'ottimizzazione?
 > Oltre a prevenire l'[[Overfitting]], aggiungere $\frac{\lambda}{2}\|\theta\|^2$ trasla tutti gli autovalori dell'Hessiana verso l'alto di $+\lambda$. Questo garantisce che $\mu > 0$ (anche se le feature sono collineari e $X^T X$ non è invertibile) e riduce il numero di condizionamento $\frac{L}{\mu}$, accelerando drasticamente la convergenza geometrica del Gradient Descent senza dover mai invertire alcuna matrice.
+
+# Lezione 15: Dimostrazione della Convergenza Geometrica, Limiti di SGD e Comportamento Asintotico della Logistic Loss
+
+## 1. Convergenza Geometrica del Gradient Descent Esatto
+Nella lezione precedente abbiamo enunciato che combinare [[L-Smoothness]] e [[Forte Convessità]] permette al [[Gradient Descent]] esatto di convergere esponenzialmente veloce[cite: 112]. Ora ne vediamo la dimostrazione rigorosa[cite: 112].
+
+> [!theorem] Convergenza Geometrica (Lineare) del Gradient Descent Esatto
+> Sia $f: \mathbb{R}^d \rightarrow \mathbb{R}$ una funzione $L$-smooth e $\mu$-fortemente convessa (con $L \ge \mu > 0$), dotata di un minimizzatore $w^*$[cite: 112]. Eseguendo il Gradient Descent esatto partendo da $w^{(1)} = 0$ con passo costante $\eta = \frac{1}{L}$, vale[cite: 112]:
+> $$ f(w^{(T+1)}) - f(w^*) \le \left(1 - \frac{\mu}{L}\right)^T \left(f(0) - f(w^*)\right) $$
+> *(Nota: se $f$ è anche $\rho$-Lipschitziana e $\|w^*\| \le B$, il termine iniziale si può limitare superiormente come $f(0) - f(w^*) \le \rho B$)[cite: 112].*
+
+### Dimostrazione Analitica Passo-Passo
+La dimostrazione si articola in due fasi: derivare un *lower bound* sulla norma del gradiente (nota come **disuguaglianza di Polyak-Łojasiewicz**) e combinarla con il **Descent Lemma**[cite: 112].
+
+**Passo 1: Lower bound sul gradiente tramite completamento del quadrato**
+Per ogni $u, w \in \mathbb{R}^d$, dalla definizione di $\mu$-forte convessità sappiamo che[cite: 112]:
+$$ f(u) \ge f(w) + \langle \nabla f(w), u - w \rangle + \frac{\mu}{2}\|u - w\|^2 $$
+Aggiungiamo e sottraiamo il termine $\frac{1}{2\mu}\|\nabla f(w)\|^2$ al membro di destra per completare il quadrato[cite: 112]:
+$$ f(u) \ge f(w) - \frac{1}{2\mu}\|\nabla f(w)\|^2 + \frac{\mu}{2}\left\|u - w + \frac{1}{\mu}\nabla f(w)\right\|^2 $$
+Poiché la norma quadratica è sempre non negativa, possiamo eliminarla mantenendo la disuguaglianza[cite: 112]:
+$$ f(u) \ge f(w) - \frac{1}{2\mu}\|\nabla f(w)\|^2 $$
+Poiché questa relazione vale per *ogni* $u \in \mathbb{R}^d$, possiamo scegliere in particolare $u = w^*$[cite: 112]:
+$$ f(w^*) \ge f(w) - \frac{1}{2\mu}\|\nabla f(w)\|^2 \implies \|\nabla f(w)\|^2 \ge 2\mu\left(f(w) - f(w^*)\right) $$
+
+**Passo 2: Combinazione con il Descent Lemma e ricorsione**
+Dal Descent Lemma (valido per funzioni $L$-smooth con $\eta = \frac{1}{L}$), al passo $t$ abbiamo[cite: 112]:
+$$ f(w^{(t+1)}) - f(w^*) \le f(w^{(t)}) - f(w^*) - \frac{1}{2L}\|\nabla f(w^{(t)})\|^2 $$
+Sostituendo il lower bound su $\|\nabla f(w^{(t)})\|^2$ ricavato al Passo 1[cite: 112]:
+$$ f(w^{(t+1)}) - f(w^*) \le f(w^{(t)}) - f(w^*) - \frac{2\mu}{2L}\left(f(w^{(t)}) - f(w^*)\right) = \left(1 - \frac{\mu}{L}\right)\left(f(w^{(t)}) - f(w^*)\right) $$
+Applicando ricorsivamente questa contrazione dal passo $t = T$ a ritroso fino all'inizializzazione $w^{(1)} = 0$, si ottiene la tesi[cite: 112]:
+$$ f(w^{(T+1)}) - f(w^*) \le \left(1 - \frac{\mu}{L}\right)^T \left(f(0) - f(w^*)\right) $$
+
+> [!intuition] Perché ci interessa e cosa chiede l'esame?
+> *Domanda d'esame tipica*: **Sotto quali condizioni otteniamo la convergenza geometrica?**
+> Servono simultaneamente **tre ingredienti**: $L$-smoothness, $\mu$-forte convessità e **gradiente esatto** (non stocastico) con passo $\eta = 1/L$[cite: 112]. La forte convessità garantisce che, finché siamo lontani dal minimo $f(w^*)$, il gradiente non può essere troppo piccolo ($\|\nabla f(w)\|^2 \ge 2\mu(f(w) - f(w^*))$); la $L$-smoothness garantisce che un gradiente grande produca un calo proporzionale della funzione obiettivo.
+
+---
+
+## 2. Applicazione a Ridge/OLS e Limite dello Stochastic Gradient
+
+> [!theorem] Gradient Descent per Ridge Regression e OLS
+> Sia $\lambda \ge 0$ e sia $\theta^*$ il minimizzatore dell'obiettivo della [[Ridge Regression]] (o [[Ordinary Least Squares (OLS)]] se $\lambda = 0$ e $X^T X$ è invertibile) con $\|\theta^*\|_2 \le B$[cite: 112]. Impostando i parametri spettrali di smoothness $L = 2\left(\frac{\nu_{\max}}{n} + \lambda\right)$ e forte convessità $\mu = 2\left(\frac{\nu_{\min}}{n} + \lambda\right)$ (a meno del fattore $1/2$ sulla regolarizzazione), eseguendo il Gradient Descent esatto da $\theta^{(1)} = 0$ con $\eta = \frac{1}{L}$ per $T$ aggiornamenti e restituendo l'**ultimo iterato** $\theta^{(T+1)}$, si ottiene convergenza geometrica[cite: 112].
+
+> [!intuition] Attenzione: La Smoothness non "sopravvive" con SGD!
+> Un'osservazione fondamentale della teoria dell'ottimizzazione è che **"smoothness does not survive with the stochastic gradient"**[cite: 112].
+> Nel [[Gradient Descent]] esatto, vicino al minimo $\nabla f(w^{(t)}) \to 0$, quindi i passi $-\frac{1}{L}\nabla f(w^{(t)})$ si rimpiccioliscono naturalmente fino a fermarsi in $w^*$. Nello **[[SGD (Stochastic Gradient Descent)]]**, invece, il gradiente calcolato su un singolo campione $\hat{g}^{(t)}$ ha varianza non nulla anche quando siamo esattamente in $w^*$: usare un passo fisso $\eta = 1/L$ farebbe oscillare l'algoritmo attorno al minimo senza mai convergere con tasso geometrico. Per questo con SGD siamo costretti a usare learning rate decrescenti (come $\eta_t = \frac{1}{\mu t}$), tornando al tasso $\mathcal{O}\left(\frac{\log T}{T}\right)$.
+
+---
+
+## 3. Esercizio: Comportamento Asintotico della Cross-Entropy nella Logistic Regression
+Analizziamo il comportamento della [[Cross-Entropy Loss]] per la [[Logistic Regression]] su un singolo punto per capire cosa accade ai pesi $\theta$ quando i dati sono classificati correttamente[cite: 112].
+
+> [!example] Esercizio 1: Analisi della Loss su punti correttamente classificati
+> Data la loss su un singolo campione $(x_i, y_i)$ con $h_\theta(x_i) = \sigma(\langle x_i, \theta \rangle) = \frac{1}{1 + e^{-\langle x_i, \theta \rangle}}$[cite: 112]:
+> $$ l_i(\theta) = -y_i \log h_\theta(x_i) - (1 - y_i)\log(1 - h_\theta(x_i)) $$
+> 
+> **Caso 1: Punto positivo $(x, 1)$**
+> Sostituendo $y = 1$, la loss si riduce a[cite: 112]:
+> $$ l_1(\theta) = -\log(h_\theta(x)) = -\log\left(\frac{1}{1 + e^{-\langle x, \theta \rangle}}\right) = \log\left(1 + e^{-\langle x, \theta \rangle}\right) $$
+> Supponiamo che $\theta$ classifichi **correttamente** il punto, ossia $\langle x, \theta \rangle > 0$[cite: 112]. Se consideriamo un vettore parallelo a $\theta$ di norma crescente, $\alpha\theta$ con $\alpha \to +\infty$, il prodotto scalare $\langle x, \alpha\theta \rangle \to +\infty$, quindi $e^{-\langle x, \alpha\theta \rangle} \to 0$ e la loss tende asintoticamente a zero:
+> $$ \lim_{\alpha \to +\infty} l_1(\alpha\theta) = \log(1 + 0) = 0 $$
+> 
+> **Caso 2: Punto negativo $(x, 0)$**
+> Sostituendo $y = 0$, la loss si riduce a[cite: 112]:
+> $$ l_0(\theta) = -\log(1 - h_\theta(x)) = -\log\left(1 - \frac{1}{1 + e^{-\langle x, \theta \rangle}}\right) = -\log\left(\frac{e^{-\langle x, \theta \rangle}}{1 + e^{-\langle x, \theta \rangle}}\right) = \log\left(1 + e^{\langle x, \theta \rangle}\right) $$
+> Se $\theta$ classifica **correttamente** il punto, allora $\langle x, \theta \rangle < 0$[cite: 112]. Scalando i pesi lungo la stessa direzione con $\alpha \to +\infty$, abbiamo $\langle x, \alpha\theta \rangle \to -\infty$, quindi $e^{\langle x, \alpha\theta \rangle} \to 0$ e nuovamente:
+> $$ \lim_{\alpha \to +\infty} l_0(\alpha\theta) = \log(1 + 0) = 0 $$
+
+> [!intuition] Implicazione Teorica Cruciale
+> Se un dataset è linearmente separabile, per qualsiasi vettore separatore $\theta$, possiamo ridurre strettamente la Cross-Entropy Loss semplicemente moltiplicando $\theta$ per uno scalare $\alpha > 1$ sempre più grande. Di conseguenza, la Logistic Regression non regolarizzata su dati separabili **non ammette un minimizzatore finito** ($\|\theta^*\| \to +\infty$): i pesi divergono all'infinito per spingere le probabilità esattamente a $0$ e $1$. Questo rende l'aggiunta di un termine di [[Regolarizzazione]] (come $\frac{\lambda}{2}\|\theta\|^2$) essenziale non solo contro l'[[Overfitting]], ma anche per garantire l'esistenza di un ottimo finito e la forte convessità.
+
