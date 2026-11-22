@@ -35,4 +35,19 @@ Events are of three kinds, and form the programming interface between layers:
 - **Request**: used by a component c1 to request a service from c2 (e.g. disseminate a message in a group); 
 - **Confirmation**: used by a component to confirm the completion of a request; 
 - **Indication**: used by a component c1 to deliver information to c2 (e.g. the notification of a message delivery).
+![[Modelling distributed system-1795363576169.webp|621]]
+##### Example: job handler and layering 
 
+$$
+\begin{aligned}
+&\textbf{Component: } \text{JobHandler, instance } jh. \\
+&\textbf{Request:} \\
+&\quad \langle jh, \text{Submit} \mid \text{job} \rangle : \text{requests a job to be processed.} \\
+&\textbf{Indication:} \\
+&\quad \langle jh, \text{Confirm} \mid \text{job} \rangle : \text{confirms that the job has been (or will be) processed.} \\
+&\textbf{Property JH1 (Guaranteed response):} \\
+&\quad \text{every submitted job is eventually confirmed.}
+\end{aligned}
+$$
+In this example we have two component: the job handler and 
+Two implementations satisfy this specification. In the *synchronous* one the job is processed before being confirmed; in the *asynchronous* one it is only stored in a buffer, which is why the confirmation says “has been or will be” processed.
