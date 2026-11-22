@@ -11,4 +11,14 @@ Abstraction are important because they capture properties common to a large and 
 
 #### Composition model 
 
-Protocol are written in pseudo-code that reflects a reactive computing model: components of the same process communicate by exchanging events and and algorithm is a set of event
+Protocol are written in pseudo-code that reflects a reactive computing model: components of the same process communicate by exchanging events and and algorithm is a set of event handlers that react to incoming events and possibly trigger new ones. 
+$$
+\begin{aligned}
+&\textbf{upon event } \langle c_1, \text{Event}_1 \mid \text{att}_1, \text{att}_2, \dots \rangle \textbf{ do} \\
+&\quad \text{do something;} \quad // \text{send-some-event} \\ 
+&\quad \textbf{trigger } \langle c_2, \text{Event}_2 \mid \text{att}_1, \text{att}_2, \dots \rangle; \\
+&\textbf{upon condition do} \quad // \text{an-internal-event} \\
+&\quad \text{do something;}
+\end{aligned}
+$$
+
