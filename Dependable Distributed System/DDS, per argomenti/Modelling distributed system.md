@@ -143,3 +143,55 @@ This algorithm maintains a buffer to temporarily store incoming jobs and send th
     - **When both conditions are verified:** It retrieves the next job, increments the `bottom` index, sets `handling := TRUE` to prevent simultaneous transmissions, and forwards the job to the lower-level handler via `trigger` $\langle jh, \text{Submit} \mid \text{job} \rangle$.
 - **Handling Confirmation from the Lower Level (`jh, Confirm`)**
     - Upon receiving the completion signal $\langle jh, \text{Confirm} \mid \text{job} \rangle$ from the lower-level handler ($jh$), the `handling` flag is reset to `FALSE`, allowing the system to process the next job from the buffer.
+
+#### Processes, messages and algorithms
+
+$\Pi$ denotes the **set of processes**. <u>Unless stated otherwise it is static and every process knows the identities of all the others.</u> Sometimes a function $rank$ : $\Pi \to \{1, \dots, N\}$ gives each process a unique index; in the code, $\texttt{self}$ is the name of the process executing it.
+**Processes** communicate by *exchanging messages over links*. Messages are uniquely identified (e.g. by a sequence number or local clock together with the process identifier), hence all messages ever exchanged by an algorithm are unique. 
+
+>[!definition] Distributed algorithm
+>A **distributed algorithm** is a distributed collection of automata, one per process. The automaton regulates how the process executes its computation steps, i.e. how it reacts to a message; every process runs the same automaton. An execution is a sequence of steps executed by the processes.
+
+>[!definition] Safety and liveness
+>A **safety** property states that the algorithm does not do anything wrong: it can be violated at some time $t$ and never be satisfied again after $t$ (equivalently, if it is violated in an execution $E$, there is a partial execution $E'$ of $E$ such that it is violated in every extension of $E'$ ). A **liveness** property ensures that eventually something good happens: for any time t there is some hope that it can be satisfied at some $t' \ge t$.
+
+#### Failure models 
+$$
+\begin{array}{l|l}
+\textbf{Failure} & \textbf{Behaviour} \\ \hline
+\text{Crash} & \text{the process stops its execution} \\
+\text{Omission} & \text{the process does not send (or receive) a message that it should,} \\
+& \text{according to its algorithm} \\
+\text{Crash-recovery} & \text{the process crashes and stops sending messages, but might} \\
+& \text{recover later} \\
+\text{Eavesdropping} & \text{the process leaks information obtained in an algorithm to an} \\
+& \text{outside entity} \\
+\text{Arbitrary (Byzantine)} & \text{the process may deviate arbitrarily from its algorithm}
+\end{array}
+$$
+
+**Crash-stop**. The process crashes at time $t$ and never recovers. A process is *faulty* if it crashes at some time during the execution, and *correct* if it never crashes and executes an infinite number of steps.
+
+>[!definition] Fault tolerance, resilience
+>**Fault tolerance** means designing an algorithm that works despite faults, by assuming that at most $f$ of the $N$ processes are faulty. The relation between $f$ and $N$ is called **resilience**; an upper bound $f$ means that any number of processes up to $f$ may fail. *Crash-stop* does not preclude recovery: a recovered process is simply no longer part of the system, and the algorithm must not rely on it to make progress.
+
+**Crash-recovery**. A process is *faulty* if it crashes and never recovers, or if it keeps crashing and recovering infinitely often; otherwise it is correct, even if it crashed and recovered a finite number of times.
+A characteristic of this model is *amnesia*: a crashed process loses its internal state, so after recovering it might send messages that contradict those sent before the crash. To cope with this, every process is assumed to have a stable storage (a log), accessed through $\text{store}()$ and $\text{retrieve}()$, and to be aware upon recovery that it crashed and recovered.
+
+![[Dependable distributed system-1793621296255.webp|637]]
+
+The second one crashes and recovers infinitely often so it is faulty. The third one is correct and the fourth one crashes and recovers finitely so it is correct.
+
+#### Timing assumptions
+
+| Model                 | Assumption                                                                                                                              |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| Synchronous           | known upper bounds on (i) the time to execute a basic step, (ii) message transit time, (iii) the drift of local clocks w.r.t. real time |
+| Asynchronous          | no known bound on processes or links                                                                                                    |
+| Partially synchronous | there exists a time t after which the synchrony bounds hold                                                                             |
+
+**Synchronous systems**: enable timed failure detection, measuring transit delays, time-based coordination, worst-case performance guarantees and synchronised clocks. The major problem is the coverage of the synchrony assumption: it is hard to build a system in which the bounds hold with high probability. 
+**Asynchronous systems**: even without physical clocks, the passage of time can be measured through the transmission and delivery of messages: time is defined with respect to communication. This is *logical time*, and the resulting notion of clock is a logical clock.
+**Partial (eventual) synchrony**: distributed systems are usually synchronous most of the time, with periods of bounded asynchrony. This is captured by eventual synchrony: there is an unknown time t after which the system becomes synchronous. It does not mean that the whole system (hardware, software, network) is synchronous forever after t, nor that the system starts asynchronous and later becomes synchronous. What we need is a period of synchrony long enough for the algorithm to terminate.
+
+![[Dependable distributed system-1793621710737.webp|739]]
