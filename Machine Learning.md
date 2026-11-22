@@ -1457,3 +1457,114 @@ Analizziamo il comportamento della [[Cross-Entropy Loss]] per la [[Logistic Regr
 > [!intuition] Implicazione Teorica Cruciale
 > Se un dataset è linearmente separabile, per qualsiasi vettore separatore $\theta$, possiamo ridurre strettamente la Cross-Entropy Loss semplicemente moltiplicando $\theta$ per uno scalare $\alpha > 1$ sempre più grande. Di conseguenza, la Logistic Regression non regolarizzata su dati separabili **non ammette un minimizzatore finito** ($\|\theta^*\| \to +\infty$): i pesi divergono all'infinito per spingere le probabilità esattamente a $0$ e $1$. Questo rende l'aggiunta di un termine di [[Regolarizzazione]] (come $\frac{\lambda}{2}\|\theta\|^2$) essenziale non solo contro l'[[Overfitting]], ma anche per garantire l'esistenza di un ottimo finito e la forte convessità.
 
+# Lezione 16: Introduzione alle Reti Neurali Feed-Forward (FFNN)
+
+## 1. Sintesi del Framework di Apprendimento Supervisionato
+Prima di introdurre le reti neurali, ricapitoliamo i pilastri teorici e algoritmici costruiti finora nel [[Supervised Learning]][cite: 114]:
+
+- **Setup**: Disponiamo di un dataset di campioni $(x_1, y_1), \dots, (x_n, y_n) \in \mathcal{X} \times \mathcal{Y}$ estratti da una distribuzione incognita $\mathcal{D}$ su $\mathcal{X} \times \mathcal{Y}$, e di una funzione di loss $l: \mathcal{Y}^2 \rightarrow \mathbb{R}_+$[cite: 114].
+- **Rischio e Scomposizione**: Usiamo il [[Rischio Empirico]] $\hat{R}_S(f) = \frac{1}{n}\sum_{i=1}^n l(f(x_i), y_i)$ come proxy del Rischio Atteso $R_{\mathcal{D}}(f) = \mathbb{E}[l(f(x), y)]$, governato dalla scomposizione:
+  $$ R_{\mathcal{D}}(\hat{f}) = R_{\mathcal{D}}^* + \left(\inf_{f \in \mathcal{F}} R_{\mathcal{D}}(f) - R_{\mathcal{D}}^*\right) + \left(R_{\mathcal{D}}(\hat{f}) - \inf_{f \in \mathcal{F}} R_{\mathcal{D}}(f)\right) $$
+- **Quattro principi guida per i nuovi modelli**:
+  1. Separazione rigorosa tra [[Training Set]] e [[Test Set]].
+  2. Più campioni permettono di addestrare modelli più complessi (nelle reti neurali, maggiore profondità $\implies$ maggiore complessità).
+  3. La [[Regolarizzazione]] è fondamentale (sia aggiungendo una penalità esplicita alla loss, sia modificando/tarando l'ottimizzazione).
+  4. Lo [[SGD (Stochastic Gradient Descent)]] è uno strumento estremamente efficace[cite: 114].
+
+### Riepilogo dei Modelli Lineari visti finora
+Tutti i modelli studiati fino a questo punto appartengono a famiglie parametriche $\mathcal{F} = \{f_\theta : \mathcal{X} \to \mathcal{Y}\}$ basate su prodotti scalari:
+
+| Modello | Funzione Predittore $f_\theta(x)$ | Funzione di Loss |
+| :--- | :--- | :--- |
+| **[[Perceptron]]** | $\text{sign}(\langle \theta, x \rangle)$ | 0-1 Loss |
+| **[[Support Vector Machines\|SVM]]** | $\text{sign}(\langle \theta, x \rangle)$ | Hinge Loss |
+| **[[Linear Regression]]** | $\langle \varphi(x), \theta \rangle$ | $L_2$ Loss (Squared) |
+| **[[Logistic Regression]]** | $\sigma(\langle \theta, x \rangle)$ | Cross-Entropy |
+| **[[Softmax Regression]]** | $\text{softmax}(\Theta^T x)$ | Cross-Entropy Multi-classe[cite: 114] |
+
+---
+
+## 2. Reti Neurali Feed-Forward e Ruolo della Non-Linearità
+Per superare i limiti dei modelli lineari senza dover progettare manualmente una [[Feature Map]] $\varphi(x)$, introduciamo le **[[Feed-Forward Neural Networks]]** (ispirate alla struttura biologica di cervello e neuroni)[cite: 114].
+
+> [!definition] Singolo Neurone Artificiale
+> Un singolo neurone riceve un vettore di input $x \in \mathbb{R}^d$, calcola una combinazione affine tramite i propri pesi $w$ e bias $b$, e vi applica una **funzione di attivazione non lineare** $h$:
+> $$ a = h(\langle x, w \rangle + b) $$[cite: 114]
+
+> [!intuition] Perché la non-linearità è indispensabile?
+> Abbiamo bisogno della non-linearità per garantire l'**espressività** della rete[cite: 114]. Se rimuovessimo le funzioni di attivazione non lineari (ponendo $h(z) = z$), la composizione di arbitrari strati lineari collasserebbe algebricamente in un'unica trasformazione lineare ($W^{(2)}(W^{(1)}x) = (W^{(2)}W^{(1)})x$), rendendo la profondità della rete del tutto inutile e incapace di separare dati non linearmente separabili.
+
+### Caso Studio: Risolvere il Problema XOR con ReLU
+Consideriamo la funzione di attivazione **ReLU** (*Rectified Linear Unit*)[cite: 114]:
+$$ \text{ReLU}(z) = z_+ = \begin{cases} z & \text{se } z \ge 0 \\ 0 & \text{altrimenti} \end{cases} $$
+
+> [!example] Separazione dello XOR con una Rete a 2 Neuroni Nascosti
+> Consideriamo 4 punti in $\mathbb{R}^2$ non linearmente separabili[cite: 114, 115]:
+> - $A = (0, 1) \mapsto +1$
+> - $B = (0, 0) \mapsto -1$
+> - $C = (1, 0) \mapsto +1$
+> - $D = (1, 1) \mapsto -1$
+> 
+> Costruiamo una rete con uno strato nascosto di 2 neuroni che calcolano rispettivamente $x_1 - x_2$ e $x_2 - x_1$, applicano la ReLU e sommano le uscite nel neurone finale:
+> $$ f(x_1, x_2) = \text{ReLU}(x_1 - x_2) + \text{ReLU}(x_2 - x_1) $$
+> **Verifica passo-passo sul punto $C = (1, 0)$**:
+> 1. **Neurone superiore**: $x_1 - x_2 = 1 - 0 = 1 \implies \text{ReLU}(1) = 1$ (poiché $1 \ge 0$).
+> 2. **Neurone inferiore**: $x_2 - x_1 = 0 - 1 = -1 \implies \text{ReLU}(-1) = 0$ (poiché $-1 < 0$).
+> 3. **Output**: $1 + 0 = 1$.
+> 
+> *(Osservazione: analiticamente $\text{ReLU}(x_1 - x_2) + \text{ReLU}(x_2 - x_1) = |x_1 - x_2|$, che restituisce $1$ per $A$ e $C$ e $0$ per $B$ e $D$, risolvendo perfettamente la non-separabilità lineare dello XOR)*[cite: 114, 115].
+
+---
+
+## 3. Notazione Generale e Architettura
+Quando progettiamo una rete neurale, abbiamo due grandi gradi di libertà (*degrees of freedom*): la **topologia** (numero di strati e neuroni) e le **funzioni di attivazione**[cite: 115].
+
+> [!definition] Architettura di una Rete Neurale Profonda
+> - **Shallow Neural Network**: rete con 1 solo strato nascosto (*1-layer*).
+> - **Deep Neural Network**: rete con $D > 1$ strati (*n-layer*), dove $D$ indica la **profondità** (*depth*) della rete.
+> - **Larghezza degli strati**: denotiamo con $d_0, d_1, d_2, \dots, d_D$ il numero di nodi (neuroni) in ciascuno strato, dove $d_0$ è la dimensione dell'input e $d_l$ è il numero di nodi nello strato $l$.
+> 
+> Il passaggio dallo strato $l-1$ allo strato $l$ mappa il vettore delle attivazioni $a^{l-1} \in \mathbb{R}^{d_{l-1}}$ in $a^l \in \mathbb{R}^{d_l}$ attraverso due operazioni:
+> 1. **Trasformazione affine (pre-attivazione)**:
+>    $$ z^l = W^l a^{l-1} + b^l $$
+>    dove $W^l \in \mathbb{R}^{d_l \times d_{l-1}}$ è la matrice dei pesi (la cui $i$-esima riga corrisponde ai pesi del neurone $i$-esimo) e $b^l \in \mathbb{R}^{d_l}$ è il vettore dei bias.
+> 2. **Applicazione della non-linearità (attivazione)**:
+>    $$ a^l = \pi^l(z^l) $$
+>    dove $\pi^l: \mathbb{R}^{d_l} \rightarrow \mathbb{R}^{d_l}$ applica la funzione di attivazione componente per componente[cite: 115].
+
+---
+
+## 4. Ottimizzazione delle Reti Neurali: Le Novità ("NEWS")
+Raccogliendo tutte le matrici dei pesi e i bias in un unico vettore di parametri $\theta$, addestriamo la rete $f_\theta$ minimizzando il rischio empirico $\hat{R}_S(f_\theta) = \frac{1}{n}\sum_{i=1}^n l(f_\theta(x_i), y_i)$[cite: 115]. Rispetto ai modelli lineari, emergono tre novità cruciali:
+
+1. **Non-Convessità**: $\hat{R}_S(f_\theta)$ **non è convessa** in $\theta$[cite: 115]. Perdiamo le garanzie teoriche di convergenza al minimo globale tipiche di SVM, Ridge e Logistic Regression.
+2. **Efficacia empirica di SGD**: Nonostante la non-convessità, lo [[SGD (Stochastic Gradient Descent)]] funziona sorprendentemente bene e riesce a trovare minimi locali "abbastanza buoni" (*"okay" min*) che generalizzano efficacemente[cite: 115].
+3. **[[Backpropagation]]**: Per applicare SGD dobbiamo calcolare $\nabla_\theta \hat{R}_S(f_\theta)$ rispetto a milioni di parametri. La *Backpropagation* è l'algoritmo che permette di calcolare il gradiente in modo rapido ed efficiente sfruttando la regola della catena[cite: 115].
+
+---
+
+## 5. Funzioni di Attivazione Principali e loro Derivate
+Poiché la backpropagation richiede di derivare le attivazioni ad ogni strato, analizziamo le tre funzioni fondamentali[cite: 115]:
+
+### 1. ReLU (Rectified Linear Unit)
+$$ \text{ReLU}(z) = \begin{cases} z & \text{se } z \ge 0 \\ 0 & \text{se } z < 0 \end{cases} \implies (\text{ReLU})'(z) = \begin{cases} 1 & \text{se } z > 0 \\ 0 & \text{se } z < 0 \end{cases} $$
+*Osservazione critica*: **Cosa succede in $z = 0$?** La funzione presenta uno spigolo e non è differenziabile; come visto con la Hinge Loss, si ricorre a un [[Subgradiente]] nell'intervallo $[0, 1]$ (in pratica, le librerie implementano convenzionalmente $0$ o $1$)[cite: 115].
+
+### 2. Sigmoide
+$$ \sigma(z) = \frac{1}{1 + e^{-z}} \implies \sigma'(z) = \sigma(z)(1 - \sigma(z)) $$[cite: 115]
+
+### 3. Tangente Iperbolica ($\tanh$)
+> [!definition] Funzione $\tanh$
+> La tangente iperbolica è una funzione continua e differenziabile ovunque che mappa $\mathbb{R}$ in $(-1, 1)$:
+> $$ \tanh(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}} $$
+> **Valori notevoli e limiti**:
+> - $\tanh(0) = 0$
+> - $\lim_{z \to +\infty} \frac{e^z - e^{-z}}{e^z + e^{-z}} = \lim_{z \to +\infty} \frac{e^z(1 - e^{-2z})}{e^z(1 + e^{-2z})} = 1$
+> - $\lim_{z \to -\infty} \tanh(z) = -1$[cite: 115]
+
+> [!theorem] Derivata di $\tanh(z)$
+> Applicando la regola di derivazione del quoziente:
+> $$ (\tanh(z))' = \frac{(e^z - e^{-z})'(e^z + e^{-z}) - (e^z - e^{-z})(e^z + e^{-z})'}{(e^z + e^{-z})^2} $$
+> $$ = \frac{(e^z + e^{-z})(e^z + e^{-z}) - (e^z - e^{-z})(e^z - e^{-z})}{(e^z + e^{-z})^2} = \frac{(e^z + e^{-z})^2 - (e^z - e^{-z})^2}{(e^z + e^{-z})^2} $$
+> $$ = 1 - \frac{(e^z - e^{-z})^2}{(e^z + e^{-z})^2} = 1 - \tanh^2(z) $$[cite: 115]
+
