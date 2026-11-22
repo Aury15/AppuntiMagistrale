@@ -56,4 +56,70 @@ We have two type of synchronization:
 1. **External Synchronization**: processes synchronize their clock $C_i$ with an authoritative external source $S$. Let $D > 0$ be the synchronization bound and $S$ be the source of UTC. Clocks $C_i$ for $i = 1, \dots, N$ are **externally synchronized** with a time source $S$ (UTC) if for each time interval $I$: $|S(t) - C_i(t)| < D$ for $i = 1, 2, \dots, N$ and for real time $t$ in $I$.  We say that clocks $C_i$ are accurate within the bound of $D$.
 2. **Internal Synchronization**: all the processes synchronize their clocks $C_i$ between them. Let $D > 0$ be the synchronization  bound and let $C_i$ and $C_j$ the clocks at processes $p_i$ and $p_j$ respectively. Clocks are **internally synchronized** in a time interval $I$: $|C_i(t) - C_j(t)| < D$ for $i, j = 1, 2, \dots, N$ and for all time $t$ in $I$. We say that clocks $C_i, C_j$ agree within the bound of $D$.
 
-Inter
+>[!Important]
+>Internally synchronized clocks are not necessarily externally synchronized: they may drift collectively from the external source. Conversely, processes externally synchronized within D are internally synchronized within 2D (by the triangle inequality).
+
+#### Correct clock 
+A *hardware clock* $H$ is **correct** if its drift rate is within a limited bound of $\rho > 0$, respecting: $1 - \rho \leq \frac{dC}{dt} \leq 1 + \rho$. 
+In the presence of a correct hardware clock $H$ we can measure a time interval $[t, t']$ ($\forall t' > t$) introducing only a limited error. So we can quantify and limit the error: $(1 - \rho)(t' - t) \leq H(t') - H(t) \leq (1 + \rho)(t' - t)$. On the left of the formula we have the lower limit, which describes the case when the hardware clock is slow: the interval of time measured by the hardware will be shorter than the real time, but the formula guarantees that it cannot be less than $(1 - \rho)(t' - t)$. 
+![[Dependable distributed system-1793740789023.webp|505]]
+
+>[!important] A hardware clock is considered correct if its speed deviation respects this band between $(1 - \rho)$ and $(1 + \rho)$. Thanks to this inequality, we know with mathematical certainty that, measuring an interval with a clock with a certain drift $\rho$, the introduced error will remain confined within very precise and predictable limits.!
+
+Software clocks have to be **monotone**: $t' > t \implies C(t') > C(t)$. The monotonic property can be guaranteed by choosing opportune $\alpha$ and $\beta$. (Note that $\alpha$ and $\beta$ can be functions of time). 
+
+**Clock failure**:
+- *Crash failure*: clock simply stops;
+- *Arbitrary failure*: clock behaves arbitrarily (e.g. Y2K bug: the day after the 31/1/1999
+becomes 1/1/1900 rather than 1/1/2000)
+
+#### Synchronization algorithm based on time server
+
+##### Christian's algorithm (external synchronization)
+
+- **Operation**: A process $p$ sends a time request (ask the current time) through a message $m_r$  to a time server $S$ (connected to a UTC source) and receives the timestamp $t$ via $m_t$. 
+![[Dependable distributed system-1793782188573.webp|616]]
+- **Timing**: The process sets its clock to $t + \frac{\text{RTT}}{2}$, where $\text{RTT}$ (Round Trip Time) is the total round-trip time for the message. 
+- **Accuracy**: The maximum estimated error is $\pm\left(\frac{\text{RTT}}{2} - \min\right)$, where $\min$ is the minimum estimated transmission time on the network.
+- **Limitations**: Represents a single point of failure; requires the use of redundant server clusters and authentication mechanisms. A time server can crash and can be attacked. There could exist periods in which the synchronization is not possible $\rightarrow$ ask to multiple servers at the same time. 
+![[Dependable distributed system-1793740918279.webp]]
+##### Berkeley Algorithm (Internal Synchronization) 
+- **Structure**: Master-slave architecture. 
+- **Algorithm steps**: 
+	1. The master $p_m$ periodically polls the slaves, sending its own timestamp $t_1$ and receiving the nodes' local timestamps $t_2$ in return. 
+	2. The master calculates the differences $\Delta$ ($\Delta = \frac{t_1 + t_3}{2} - t_2$ where $t_3$ is the local clock when the master receive the timestamps $t_2$ in return) between its own clock and that of each process. 
+	3. The master discards the values of faulty processes (whose difference exceeds a threshold $\gamma$). 
+	4. It calculates the average of the valid values $\Delta p_i$  and sends each process the algebraic correction to apply using $\text{Adj}_{p_i} = \text{avg} - \Delta p_i$. 
+- **Slowdown management**: To avoid jumping back in time (violating causality and monotonicity), excess clocks are not set to a past value, but are slowed down by temporarily hiding hardware clock interrupts.
+![[Dependable distributed system-1793782696302.webp]]
+![[Dependable distributed system-1793782931443.webp]]
+- **Accuracy**: the protocol accuracy depends on the maximum round-trip time. The master does not consider clock values associated to RTT grater than the maximum one. 
+- **Fault** **tolerance**:
+	- If the master crashes, another master is elected (in an unknown time);
+	- It is tolerant to arbitrary behavior (eg. slaves that send wrong values);
+	- Master process consider a certain number of clock values and these values do not differ between them over a certain threshold;
+>[!note] What does slowing down a clock mean? 
+>Imagine that the average calculated by the master determines that the correct clock is 12:00, but a slave (having a faulty or fast clock) reads 12:05. It's not possible to directly set a passed value to the slave clocks. If we told the slave to suddenly "jump" from 12:05 to 12:00, a logical disaster would ensue: 
+>	- The *monotonicity* of time would be violated (time must always advance, never go backward: $t' > t \implies C(t') > C(t)$). 
+>	- The *cause-effect order* (causality) would be violated: events that logically happened earlier could end up with a later timestamp than events that happened later, creating massive conflicts in logs and databases.
+>**Solution**: slow down the clock! Since we can't make the clock "jump" back in time, the only legitimate solution is to slow down the slave's clock speed until the rest of the system "*reach it*". Computers update their software clocks using periodic hardware interrupts (electronic signals repeated at regular intervals, e.g., every millisecond, that tell the operating system to add a "tick" to the time counter). To slow down the clock, the operating system hides (ignores) a certain number of these interrupts. The system calculates how many specific interrupts to skip based on the amount of accumulated delay and the original tick rate. <u>Practical example:</u> If the counter normally ticks 1000 times per second, we decide to ignore some of these signals. This way, for a certain period, time on that machine will run slower than normal, allowing the average time calculated by the master to "catch up" with it without leaping into the past.
+
+#### Network time protocol (NTP)
+NTP is a standard de facto for **external clock synchronization** of distributed system on
+Internet. It synchronizes clients with UTC. NTP employs several security mechanisms (e.g. mechanisms for authentication of time references) usually they are not required in a local area network. Based on a remote reading procedure like Christian’s Algorithm, NTP specification adds to the basic algorithm mechanisms for clustering, filtering and evaluating data quality in order to minimize the synchronization. 
+<mark style="background:#fff88f">Stratum Hierarchy:</mark> 
+1. **Stratum 1** (Primary servers): Connected directly to the primary UTC time sources.
+2. **Stratum 2** (Secondary servers): Synchronized hierarchically with the primary servers.
+3. **Stratum 3** *and above*: Synchronization subnets for end-user computers.
+![[Dependable distributed system-1793783886141.webp]]
+
+The NTP hierarchy is reconfigurable in the presence of faults: 
+- Primary server that loses its connection with UTC-signal can become a secondary server;
+- Secondary server that loses its connection with a primary server (e.g. a crash of the primary server) can contact and connect itself to another primary.
+###### NTP Synchronizations models
+- **Multicast**: server periodically send its actual time to its leaves in the LAN. Leaves set their time using the received time assuming a certain delay. *It is used in quick LANs but it shows a low accuracy.*
+- **Procedure call**: server replies to request with its actual timestamp (like Christian's algorithm). *High accuracy and it is useful when it is not available hw multicast.*
+- **Symmetrical**: used to synchronize between pairs of time servers using messages containing timing information. *Only used in high level of hierarchy*.
+
+#### Time in asynchronous system 
+In an asynchronous distributed system, global **physical time is not directly observable** in a deterministic way due to the unpredictability of network communication delays. Clocks can only be synchronized with a certain degree of probability, and an accuracy bound can only be calculated by knowing rigorously the upper and lower limits of the transmission delays.
