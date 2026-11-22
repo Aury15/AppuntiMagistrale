@@ -49,5 +49,7 @@ $$
 &\quad \text{every submitted job is eventually confirmed.}
 \end{aligned}
 $$
-In this example we have two component: the job handler and 
+In this example we have two component: the job handler and the instance $jh$ and we can do trhee action. 
 Two implementations satisfy this specification. In the *synchronous* one the job is processed before being confirmed; in the *asynchronous* one it is only stored in a buffer, which is why the confirmation says “has been or will be” processed.
+
+###### Synchronous job handler 
