@@ -1031,3 +1031,116 @@ Verifichiamo analiticamente se il nostro algoritmo empirico "scopre" il vero vet
 > Poiché $\epsilon$ ha media zero indipendente da $X$, l'ultimo termine si annulla ($\mathbb{E}[\epsilon|X]=0$). Ne consegue che $\mathbb{E}[\hat{\theta} | X] = \theta^*$.
 > Infine, applicando la Total Expectation Law, estraiamo l'aspettativa totale rispetto a $X$, ottenendo $\mathbb{E}[\hat{\theta}] = \theta^*$, dimostrando che OLS non ha bias sistematici.
 
+# Lezione 12: Feature Maps, Regolarizzazione (Ridge & Lasso) e Introduzione alla Regressione Logistica
+
+## 1. Caso Studio: Regressione Affine a Mano vs. Forma Matriciale (OLS)
+Prima di generalizzare la regressione lineare, verifichiamo l'equivalenza tra la soluzione analitica 1D e lo stimatore matriciale [[Ordinary Least Squares (OLS)]] su un dataset concreto[cite: 104].
+
+> [!example] Esercizio 1.1: Fitting di una retta
+> Consideriamo 4 osservazioni: $(-1, 0), (0, 1), (1, 3), (2, 4)$[cite: 104]. Vogliamo fittare il predittore affine $f(x) = mx + q$ minimizzando l'MSE empirico $\hat{R}_S(m, q) = \frac{1}{4}\sum_{i=1}^4 (mx_i + q - y_i)^2$[cite: 104].
+> 
+> **Metodo 1: Formule 1D (Covarianza e Varianza)**
+> Calcoliamo le medie campionarie[cite: 104]:
+> $$ \bar{x} = \frac{-1 + 0 + 1 + 2}{4} = \frac{1}{2}, \quad \bar{y} = \frac{0 + 1 + 3 + 4}{4} = 2 $$
+> Calcoliamo numeratore e denominatore della pendenza $m = \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sum (x_i - \bar{x})^2}$[cite: 104]:
+> - Numeratore: $\left(-\frac{3}{2}\right)(-2) + \left(-\frac{1}{2}\right)(-1) + \left(\frac{1}{2}\right)(1) + \left(\frac{3}{2}\right)(2) = 3 + \frac{1}{2} + \frac{1}{2} + 3 = 7$[cite: 104].
+> - Denominatore: $\left(-\frac{3}{2}\right)^2 + \left(-\frac{1}{2}\right)^2 + \left(\frac{1}{2}\right)^2 + \left(\frac{3}{2}\right)^2 = \frac{9}{2} + \frac{1}{2} = 5$[cite: 104].
+> 
+> Otteniamo quindi $m = \frac{7}{5}$ e $q = \bar{y} - m\bar{x} = 2 - \frac{7}{5}\cdot\frac{1}{2} = \frac{13}{10}$[cite: 104].
+> 
+> **Metodo 2: Forma Matriciale (OLS)**
+> Mappiamo ogni punto $x_i$ nel vettore aumentato $\tilde{x}_i = (x_i, 1)^T$, costruendo la [[Design Matrix]] $X$ e il vettore target $y$[cite: 104]:
+> $$ X = \begin{pmatrix} -1 & 1 \\ 0 & 1 \\ 1 & 1 \\ 2 & 1 \end{pmatrix}, \quad y = \begin{pmatrix} 0 \\ 1 \\ 3 \\ 4 \end{pmatrix} $$
+> Calcoliamo la matrice normale e la sua inversa[cite: 104]:
+> $$ X^T X = \begin{pmatrix} 6 & 2 \\ 2 & 4 \end{pmatrix} \implies (X^T X)^{-1} = \frac{1}{10}\begin{pmatrix} 2 & -1 \\ -1 & 3 \end{pmatrix} $$
+> Applicando la formula OLS $\hat{\theta} = (X^T X)^{-1} X^T y$[cite: 104]:
+> $$ \hat{\theta} = \frac{1}{10}\begin{pmatrix} -3 & -1 & 1 & 3 \\ 4 & 3 & 2 & 1 \end{pmatrix} \begin{pmatrix} 0 \\ 1 \\ 3 \\ 4 \end{pmatrix} = \frac{1}{10}\begin{pmatrix} 14 \\ 13 \end{pmatrix} = \begin{pmatrix} 7/5 \\ 13/10 \end{pmatrix} $$
+
+**Take-home messages dell'esercizio**[cite: 104]:
+1. I due metodi producono lo stesso identico risultato[cite: 104].
+2. Per usare il metodo matriciale su funzioni affini, dobbiamo prima mappare i dati in una famiglia lineare[cite: 104].
+3. **Invertire matrici è computazionalmente pessimo** ("Inverting matrix SUCKS!!"): in alte dimensioni il calcolo di $(X^T X)^{-1}$ è costoso e numericamente instabile[cite: 104].
+
+---
+
+## 2. "Linear" Regression e Feature Maps ($\varphi$)
+Un fraintendimento comune è pensare che la regressione lineare possa modellare solo rette o iperpiani rispetto ai dati grezzi $x$.
+
+> [!definition] [[Feature Map]] e Modelli Lineari nei Parametri
+> Nella regressione "lineare", la funzione non deve essere lineare nell'input $x$, ma **lineare nei parametri $\theta$**[cite: 104].
+> Definiamo una **Feature Map** $\varphi: \mathbb{R}^d \rightarrow \mathbb{R}^D$ che proietta i dati grezzi $x \in \mathbb{R}^d$ in uno spazio di dimensione superiore $\mathbb{R}^D$[cite: 104]. La famiglia di predittori diventa[cite: 104]:
+> $$ \mathcal{F} = \{ f_\theta(x) = \langle \theta, \varphi(x) \rangle \mid \theta \in \mathbb{R}^D \} $$
+
+> [!example] Esempi di Feature Maps[cite: 104]
+> 1. **Mappa Affine**: $D = d + 1$, con $\varphi(x) = (x, 1)^T$[cite: 104].
+> 2. **Espansione Polinomiale di grado $s$**: Ad esempio, per $d=2$ e $s=2$, mappiamo $(x_1, x_2) \in \mathbb{R}^2$ in $\varphi(x) = (1, x_1, x_2, x_1^2, x_2^2, x_1 x_2)^T \in \mathbb{R}^6$[cite: 104].
+> 3. **Espansione di Fourier**: Utilizzo di seni e coseni come funzioni di base[cite: 104].
+
+---
+
+## 3. Il Dilemma della Complessità: Quale $\varphi$ scegliere?
+Aumentando la dimensione $D$ dello spazio delle feature (ad esempio il grado del polinomio), la classe di funzioni diventa sempre più espressiva[cite: 105]. Cosa succede al Rischio Empirico $\hat{R}_S$ e al Rischio Atteso $R_{\mathcal{D}}$?
+
+- **Comportamento di $\hat{R}_S$**: Decresce monotonicamente all'aumentare di $D$ e **crolla a zero** quando il numero di parametri indipendenti $D$ raggiunge o supera il numero di esempi $n$ ($D \ge n$, es. $n+1$ per un polinomio interpolante)[cite: 105]. In questo regime, il modello ha abbastanza gradi di libertà per memorizzare i dati di training (incluso il rumore) invece di generalizzare[cite: 105].
+- **Comportamento di $R_{\mathcal{D}}$**: Inizialmente decresce, ma quando $D$ diventa troppo grande rispetto a $n$, la discrepanza tra $R_{\mathcal{D}}$ e $\hat{R}_S$ esplode a causa dell'**[[Overfitting]]**[cite: 105].
+
+> [!intuition] Come risolvere l'Overfitting?
+> Per migliorare la curva di generalizzazione esistono due strade principali[cite: 105]:
+> 1. **Più dati**: Aumentare $n$ permette di apprendere bene anche classi complesse[cite: 105].
+> 2. **[[Regolarizzazione]]**: Aggiungere un termine di penalità $\psi(\theta)$ al rischio empirico per controllare la complessità effettiva del modello[cite: 105]:
+>    $$ \hat{R}_S^{Reg}(f_\theta) = \hat{R}_S(f_\theta) + \psi(\theta) $$
+
+---
+
+## 4. Regolarizzazione: Ridge vs. Lasso
+Le due tecniche di regolarizzazione più importanti penalizzano la norma del vettore dei parametri $\theta$ tramite un iperparametro $\lambda > 0$[cite: 105].
+
+### A. Ridge Regression (Regolarizzazione $L_2$)
+> [!definition] Obiettivo [[Ridge Regression]]
+> Aggiungiamo una penalità quadratica $\psi(\theta) = \frac{\lambda}{2}||\theta||_2^2 = \frac{\lambda}{2}\sum_{j=1}^d \theta_j^2$[cite: 105]:
+> $$ \hat{L}^{Ridge}(\theta) = \frac{1}{n}||y - X\theta||_2^2 + \frac{\lambda}{2}||\theta||_2^2 $$
+
+- **Proprietà analitiche**: La funzione obiettivo è **fortemente convessa** (e strettamente convessa) e **differenziabile** ovunque[cite: 105].
+- **Soluzione in forma chiusa**: Calcolando il gradiente e ponendolo uguale a zero[cite: 105]:
+  $$ \nabla \hat{L}^{Ridge}(\theta) = \frac{2}{n}\left(X^T X \theta - X^T y\right) + \lambda \theta = 0 $$
+  $$ \left(\frac{2}{n} X^T X + \lambda I\right)\theta = \frac{2}{n} X^T y $$
+  Moltiplicando ambo i membri per $n$ (e ponendo $\tilde{\lambda} = n\lambda$)[cite: 105]:
+  $$ (2 X^T X + \tilde{\lambda} I)\theta = 2 X^T y \implies \hat{\theta}_{Ridge} = (2 X^T X + \tilde{\lambda} I)^{-1} 2 X^T y $$
+- **Ottimizzazione Stocastica (SGD)**: Per evitare l'inversione di matrice, possiamo usare lo [[SGD (Stochastic Gradient Descent)]] campionando un indice $i_t$[cite: 105]:
+  $$ \hat{g}_{Ridge} = x_{i_t}(\langle x_{i_t}, \theta \rangle - y_{i_t}) + \lambda \theta $$
+  (a meno del fattore costante $2$ se si scala l'MSE con $\frac{1}{2n}$), garantendo $\mathbb{E}[\hat{g}_{Ridge}] = \nabla \hat{L}^{Ridge}(\theta)$[cite: 105].
+
+### B. Lasso Regression (Regolarizzazione $L_1$)
+> [!definition] Obiettivo [[Lasso Regression]]
+> Aggiungiamo una penalità basata sulla norma $L_1$, $\psi(\theta) = \lambda ||\theta||_1 = \lambda \sum_{j=1}^d |\theta_j|$[cite: 105]:
+> $$ \hat{L}^{Lasso}(\theta) = \frac{1}{n}||y - X\theta||_2^2 + \lambda ||\theta||_1 $$
+
+- **Proprietà analitiche**: È convessa ma **non differenziabile** nei punti in cui qualche coordinata $\theta_j = 0$[cite: 105]. Non esiste una soluzione in forma chiusa elementare; si ricorre allo **Stochastic Sub-gradient Descent**[cite: 105].
+- **Subgradiente e Passo Stocastico**[cite: 105]:
+  $$ \partial \hat{L}^{Lasso}(\theta) = \frac{1}{n}(X^T X \theta - X^T y) + \lambda \, \text{sign}(\theta) $$
+  $$ \hat{g}_{Lasso} = x_{i_t}(\langle x_{i_t}, \theta \rangle - y_{i_t}) + \lambda \, \text{sign}(\theta) $$
+
+---
+
+## 5. Introduzione ai Classificatori Logistici
+Passando nuovamente alla classificazione binaria ($y \in \{0, 1\}$), invece di predire direttamente una classe discreta, vogliamo stimare una **probabilità** compresa in $(0, 1)$ usando un modello lineare filtrato da una funzione non lineare[cite: 105].
+
+> [!definition] Funzione Sigmoide e [[Logistic Regression|Classificatore Logistico]]
+> La funzione **Sigmoide** $\sigma: \mathbb{R} \rightarrow (0, 1)$ è definita come[cite: 105]:
+> $$ \sigma(z) = \frac{1}{1 + e^{-z}} $$
+> Le sue proprietà asintotiche fondamentali sono[cite: 105]:
+> - $\lim_{z \to +\infty} \sigma(z) = 1$
+> - $\lim_{z \to -\infty} \sigma(z) = 0$
+> - $\sigma(0) = \frac{1}{2}$
+> 
+> Il classificatore logistico mappa un input $x \in \mathbb{R}^d$ tramite i pesi $\theta \in \mathbb{R}^d$ in[cite: 105]:
+> $$ h_\theta(x) = \sigma(\langle \theta, x \rangle) $$
+
+> [!definition] [[Cross-Entropy Loss]]
+> Per addestrare un classificatore logistico utilizziamo la **Cross-Entropy Loss** (perdita di entropia incrociata)[cite: 105]:
+> $$ l(h_\theta(x), y) = -y \log h_\theta(x) - (1-y) \log(1 - h_\theta(x)) $$
+
+> [!intuition] Come funziona la Cross-Entropy?
+> La formula agisce come un "interruttore" che isola il termine rilevante in base alla vera etichetta $y \in \{0, 1\}$[cite: 105]:
+> - **Se $y = 1$**: la loss si riduce a $-\log h_\theta(x)$[cite: 105]. Se il modello predice $h_\theta(x) \approx 1$ la loss è prossima a $0$; se predice $h_\theta(x) \to 0$ (errore sicuro), la penalità esplode a $+\infty$[cite: 105].
+> - **Se $y = 0$**: la loss si riduce a $-\log(1 - h_\theta(x))$[cite: 105]. Se $h_\theta(x) \approx 0$ la loss è quasi $0$; se $h_\theta(x) \to 1$, la penalità esplode a $+\infty$[cite: 105].
