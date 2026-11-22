@@ -38,7 +38,22 @@ The first (and bigger) circle is the local history of $p_1$, the second circle i
 
 The naive solution to build a global history is *time-stamping*: every process labels each event with the value of its own physical clock. Events of the same process are always ordered this way, **but for processes on different machines the network and processing delays make it impossible to realise a common clock shared by all of them**. What can be done is to synchronize the physical clocks, through suitable algorithms, up to a certain accuracy (synchronization error), and to timestamp events with the synchronized local clock. 
 A **physical clock** is a counting register incremented at every tick of an oscillator (hardware clock $H_i(t)$). The operating system reads the hardware $H_i(t)$ and produces a software clock $C_i(t) = \alpha H_i(t) + \beta$ which approximates the real time $t$ at  process $p_i$.
+
 >[!Example] *Example*:
 > $C_i(t)$ may be implemented by a 64-bit word, representing nanoseconds that have elapsed at time t.
+
 Generally this clock is not completely accurate: it can be different from the real time $t$, it can be different at any process due to the precision of the approximation. 
 $C_i$ can be used such as timestamp for event produced by $p_i$. To distinguish two events, its resolution (the time between two consecutive increments) must satisfy $T_{\text{resolution}} < T$  between the two events.
+
+##### Parameters affecting the Clock Synchronization accuracy
+We have two different parameter that affect the clock synchronization accuracy:
+- **Skew**: the difference in time between two clocks $\to |C_i(t) - C_j(t)|$;
+- **Drift rate**: the gradual misalignment of once synchronized clocks caused by the slight inaccuracies of the time keeping-mechanism. Difference for time unit with respect to an ideal clock. 
+The standard of time is the **UTC** $\rightarrow$ *U*niversal *T*ime *C*oordinated) is the base of any international measure. 
+
+
+We have two type of synchronization:
+1. **External Synchronization**: processes synchronize their clock $C_i$ with an authoritative external source $S$. Let $D > 0$ be the synchronization bound and $S$ be the source of UTC. Clocks $C_i$ for $i = 1, \dots, N$ are **externally synchronized** with a time source $S$ (UTC) if for each time interval $I$: $|S(t) - C_i(t)| < D$ for $i = 1, 2, \dots, N$ and for real time $t$ in $I$.  We say that clocks $C_i$ are accurate within the bound of $D$.
+2. **Internal Synchronization**: all the processes synchronize their clocks $C_i$ between them. Let $D > 0$ be the synchronization  bound and let $C_i$ and $C_j$ the clocks at processes $p_i$ and $p_j$ respectively. Clocks are **internally synchronized** in a time interval $I$: $|C_i(t) - C_j(t)| < D$ for $i, j = 1, 2, \dots, N$ and for all time $t$ in $I$. We say that clocks $C_i, C_j$ agree within the bound of $D$.
+
+Inter
