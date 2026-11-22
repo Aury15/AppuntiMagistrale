@@ -49,7 +49,7 @@ $$
 &\quad \text{every submitted job is eventually confirmed.}
 \end{aligned}
 $$
-In this example we have two component: the job handler and the instance $jh$ and we can do trhee action. 
+In this example we have one component the JobHandler $jh$.
 Two implementations satisfy this specification. In the *synchronous* one the job is processed before being confirmed; in the *asynchronous* one it is only stored in a buffer, which is why the confirmation says “has been or will be” processed.
 
 ###### Synchronous job handler 
@@ -129,7 +129,7 @@ $$
 &\quad \text{handling} := \text{FALSE};
 \end{aligned}
 $$
-This algorithm maintains a buffer of size $M$ to temporarily store incoming jobs and send them one at a time to the underlying JobHandler ($jh$):
+This algorithm maintains a buffer to temporarily store incoming jobs and send them one at a time to the underlying JobHandler ($jh$):
 - **Initialization (`Init`)**
     - The `top` and `bottom` indices are set to $1$, pointing to the insertion and extraction positions, respectively.
     - `handling := FALSE` indicates that the system is currently not processing any jobs.
