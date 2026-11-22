@@ -1246,3 +1246,143 @@ $$ \hat{R}_S(\Theta) = -\frac{1}{n}\sum_{i=1}^n \sum_{j=1}^K y_i^{(j)} \log \hat
 > $$ \hat{P}_1(x) = \frac{1}{1 + e^{-\langle \theta, x \rangle}} = \sigma(\langle \theta, x \rangle) $$
 > E, di conseguenza, $\hat{P}_2(x) = 1 - \hat{P}_1(x) = 1 - \sigma(\langle \theta, x \rangle)$[cite: 108].
 
+# Lezione 14: Ottimizzazione della Softmax, L-Smoothness e Convergenza Geometrica
+
+## 1. Ottimizzazione della Softmax Regression
+Abbiamo visto come [[Perceptron]] e [[Support Vector Machines|SVM]] risolvano problemi di classificazione binaria, mentre la [[Logistic Regression]] introduce un approccio probabilistico tramite la sigmoide[cite: 109]. La **[[Softmax Regression]]** è fondamentale in quanto estende la sigmoide al caso multi-classe ($K$ classi)[cite: 109].
+
+Poiché la [[Cross-Entropy Loss]] multi-classe è una funzione **convessa** rispetto ai parametri $\Theta \in \mathbb{R}^{d \times K}$, non possiede minimi locali stretti: ogni punto stazionario è un minimo globale[cite: 109]. Possiamo quindi minimizzare il rischio empirico tramite [[Gradient Descent]]:
+$$ \min_{\Theta} \hat{R}_S(\Theta) = -\frac{1}{n}\sum_{i=1}^n \sum_{j=1}^K y_i^{(j)} \log \hat{p}_j(x_i, \Theta) $$
+con regola di aggiornamento $\Theta^{(t+1)} = \Theta^{(t)} - \eta \nabla_\Theta \hat{R}_S(\Theta^{(t)})$[cite: 109].
+
+### Derivazione del Gradiente (Esatto e Stocastico)
+Consideriamo la loss sul singolo campione $i$-esimo:
+$$ l_i(\Theta) = -\sum_{j=1}^K y_i^{(j)} \log \left( \frac{e^{\langle x_i, \theta_j \rangle}}{\sum_{l=1}^K e^{\langle x_i, \theta_l \rangle}} \right) $$
+Per rendere la derivazione molto più semplice, applichiamo la proprietà dei logaritmi $\log\left(\frac{a}{b}\right) = \log a - \log b$ e sfruttiamo il fatto che $y_i$ è un vettore *one-hot*, quindi $\sum_{j=1}^K y_i^{(j)} = 1$:
+$$ l_i(\Theta) = -\sum_{j=1}^K y_i^{(j)} \langle x_i, \theta_j \rangle + \left(\sum_{j=1}^K y_i^{(j)}\right) \log \left(\sum_{l=1}^K e^{\langle x_i, \theta_l \rangle}\right) = -\sum_{j=1}^K y_i^{(j)} \langle x_i, \theta_j \rangle + \log \left(\sum_{l=1}^K e^{\langle x_i, \theta_l \rangle}\right) $$
+
+> [!theorem] Gradiente della Softmax Cross-Entropy
+> Derivando $l_i(\Theta)$ rispetto al vettore dei pesi $\theta_h \in \mathbb{R}^d$ associato alla classe $h$-esima, otteniamo:
+> $$ \nabla_{\theta_h} l_i(\Theta) = \frac{e^{\langle x_i, \theta_h \rangle}}{\sum_{l=1}^K e^{\langle x_i, \theta_l \rangle}} x_i - y_i^{(h)} x_i = \left(\hat{p}_h(x_i, \Theta) - y_i^{(h)}\right) x_i $$
+> Mediando su tutti gli $n$ campioni del dataset, il **gradiente totale** rispetto a $\theta_h$ assume una forma estremamente compatta:
+> $$ \nabla_{\theta_h} \hat{R}_S(\Theta) = \frac{1}{n}\sum_{i=1}^n \left(\hat{p}_h(x_i, \Theta) - y_i^{(h)}\right) x_i $$
+> Per lo **[[SGD (Stochastic Gradient Descent)]]**, campioniamo un indice $i_t$ uniformemente a caso (u.a.r.) e calcoliamo il gradiente stocastico:
+> $$ \hat{g}_h = \left(\hat{p}_h(x_{i_t}, \Theta) - y_{i_t}^{(h)}\right) x_{i_t} $$[cite: 109]
+
+> [!intuition] Perché la formula è così pulita?
+> Esattamente come nella regressione lineare e logistica, il gradiente rispetto ai pesi della classe $h$ è semplicemente l'input $x_i$ pesato per l'errore di predizione $(\hat{p}_h - y_i^{(h)})$: se il modello sovrastima la probabilità della classe $h$ (quando $y_i^{(h)}=0$), il gradiente spinge $\theta_h$ in direzione opposta a $x_i$; se la sottostima (quando $y_i^{(h)}=1$), la spinge verso $x_i$.
+
+---
+
+## 2. Geometria delle Regioni Decisionali della Softmax
+
+> [!example] Domanda d'Esame: Forma delle Regioni Decisionali $V_j$
+> Fissata una matrice di parametri $\Theta \in \mathbb{R}^{d \times K}$ e il corrispondente classificatore Softmax $\hat{p}_h(\cdot, \Theta)$, definiamo per ogni classe $j \in \{1, \dots, K\}$ la regione decisionale:
+> $$ V_j = \left\{ x \in \mathbb{R}^d \mid \hat{p}_j(x, \Theta) \ge \hat{p}_h(x, \Theta) \quad \forall h \right\} $$
+> **Qual è la struttura geometrica di $V_j$?**
+> 
+> **Dimostrazione**:
+> Esplicitiamo la disuguaglianza $\hat{p}_j(x, \Theta) \ge \hat{p}_h(x, \Theta)$ per un generico $h$:
+> $$ \frac{e^{\langle x, \theta_j \rangle}}{\sum_{l=1}^K e^{\langle x, \theta_l \rangle}} \ge \frac{e^{\langle x, \theta_h \rangle}}{\sum_{l=1}^K e^{\langle x, \theta_l \rangle}} $$
+> Poiché il denominatore è strettamente positivo, possiamo semplificarlo. Inoltre, essendo la funzione esponenziale strettamente crescente, applicando il logaritmo otteniamo:
+> $$ e^{\langle x, \theta_j \rangle} \ge e^{\langle x, \theta_h \rangle} \iff \langle x, \theta_j \rangle \ge \langle x, \theta_h \rangle \iff \langle x, \theta_j - \theta_h \rangle \ge 0 \quad \forall h $$
+> **Conclusione geometrica**: Ogni vincolo $\langle x, \theta_j - \theta_h \rangle \ge 0$ definisce un semispazio lineare chiuso. La regione decisionale $V_j$ è quindi l'intersezione di $K-1$ semispazi: è un **insieme convesso** (un cono poliedrale con confini decisionali lineari)[cite: 109].
+
+---
+
+## 3. L-Smoothness e Upper Bound Quadratico
+Nelle lezioni precedenti abbiamo visto come la [[Forte Convessità]] acceleri la convergenza imponendo un *lower bound* quadratico alla funzione obiettivo. Ora introduciamo la proprietà duale, che impone un *upper bound* quadratico controllando la velocità massima con cui può variare il gradiente: la **$L$-smoothness**.
+
+> [!definition] [[L-Smoothness]]
+> Una funzione differenziabile $f: \mathbb{R}^d \rightarrow \mathbb{R}$ si dice **$L$-smooth** (con $L > 0$) se il suo gradiente è $L$-Lipschitziano, ossia:
+> $$ \|\nabla f(u) - \nabla f(w)\| \le L \|u - w\| \quad \forall u, w \in \mathbb{R}^d $$[cite: 109]
+
+> [!intuition] Perché ci serve la L-Smoothness?
+> Nel Subgradient Descent senza smoothness, il gradiente può cambiare bruscamente (es. negli spigoli della Hinge Loss), costringendoci a usare learning rate minuscoli o decrescenti. La $L$-smoothness garantisce che il gradiente non vari troppo in fretta: la curvatura massima della funzione è limitata da $L$, permettendoci di fare passi di discesa di ampiezza fissa $\eta = \frac{1}{L}$ con la certezza matematica che la funzione diminuisca ad ogni iterazione.
+
+> [!theorem] Quadratic Upper Bound (Lemma Fondamentale della Smoothness)
+> Se $f: \mathbb{R}^d \rightarrow \mathbb{R}$ è $L$-smooth, allora per ogni $u, w \in \mathbb{R}^d$:
+> $$ f(u) \le f(w) + \langle \nabla f(w), u - w \rangle + \frac{L}{2}\|u - w\|^2 $$
+> 
+> **Dimostrazione**:
+> Fissiamo $u, w \in \mathbb{R}^d$ e definiamo la funzione ausiliaria monodimensionale $h: [0, 1] \rightarrow \mathbb{R}$ lungo il segmento che unisce $w$ a $u$:
+> $$ h(\alpha) = f(w + \alpha(u - w)) $$
+> Notiamo che $h(0) = f(w)$, $h(1) = f(u)$ e, per la regola della catena, $h'(\alpha) = \langle \nabla f(w + \alpha(u - w)), u - w \rangle$. Per il Teorema Fondamentale del Calcolo Integrale:
+> $$ f(u) - f(w) = h(1) - h(0) = \int_0^1 \langle \nabla f(w + \alpha(u - w)), u - w \rangle \, d\alpha $$
+> Sottraendo $\langle \nabla f(w), u - w \rangle = \int_0^1 \langle \nabla f(w), u - w \rangle \, d\alpha$ ad ambo i membri:
+> $$ f(u) - f(w) - \langle \nabla f(w), u - w \rangle = \int_0^1 \langle \nabla f(w + \alpha(u - w)) - \nabla f(w), u - w \rangle \, d\alpha $$
+> Applichiamo la disuguaglianza di Cauchy-Schwarz e poi la definizione di $L$-smoothness:
+> $$ \le \int_0^1 \|\nabla f(w + \alpha(u - w)) - \nabla f(w)\| \cdot \|u - w\| \, d\alpha \le \int_0^1 L \|\alpha(u - w)\| \cdot \|u - w\| \, d\alpha $$
+> $$ = L \|u - w\|^2 \int_0^1 \alpha \, d\alpha = \frac{L}{2}\|u - w\|^2 $$[cite: 109]
+
+---
+
+## 4. Garanzie di Convergenza del Gradient Descent con L-Smoothness
+
+> [!theorem] Descent Lemma (Decrescita garantita ad ogni passo esatto)
+> Se $f$ è $L$-smooth, un passo di Gradient Descent con learning rate $\eta = \frac{1}{L}$ garantisce una riduzione stretta della funzione proporzionale al quadrato della norma del gradiente:
+> $$ f\left(w - \frac{1}{L}\nabla f(w)\right) \le f(w) - \frac{1}{2L}\|\nabla f(w)\|^2 $$
+> 
+> **Dimostrazione**:
+> Applichiamo il Quadratic Upper Bound scegliendo $u = w - \frac{1}{L}\nabla f(w)$ (da cui $u - w = -\frac{1}{L}\nabla f(w)$):
+> $$ f\left(w - \frac{1}{L}\nabla f(w)\right) \le f(w) + \left\langle \nabla f(w), -\frac{1}{L}\nabla f(w) \right\rangle + \frac{L}{2}\left\|-\frac{1}{L}\nabla f(w)\right\|^2 $$
+> $$ = f(w) - \frac{1}{L}\|\nabla f(w)\|^2 + \frac{1}{2L}\|\nabla f(w)\|^2 = f(w) - \frac{1}{2L}\|\nabla f(w)\|^2 $$[cite: 110]
+
+### A. Caso Convesso + L-Smooth (Rate $\mathcal{O}(1/T)$)
+
+> [!theorem] Convergenza del Gradient Descent per Funzioni Convesse e L-Smooth
+> Sia $f: \mathbb{R}^d \rightarrow \mathbb{R}$ convessa e $L$-smooth, con minimizzatore $w^*$ tale che $\|w^*\| \le B$. Eseguendo il Gradient Descent partendo da $w^{(1)} = 0$ con passo costante $\eta = \frac{1}{L}$, vale:
+> $$ f(w^{(T+1)}) - f(w^*) \le \frac{L B^2}{2T} $$
+> 
+> **Dimostrazione**:
+> 1. Per convessità di $f$ e usando l'identità algebrica del passo di discesa (con $\eta = \frac{1}{L}$):
+>    $$ f(w^{(t)}) - f(w^*) \le \langle \nabla f(w^{(t)}), w^{(t)} - w^* \rangle = \frac{L}{2}\left(\|w^{(t)} - w^*\|^2 - \|w^{(t+1)} - w^*\|^2\right) + \frac{1}{2L}\|\nabla f(w^{(t)})\|^2 $$
+> 2. Dal **Descent Lemma**, sappiamo che $\frac{1}{2L}\|\nabla f(w^{(t)})\|^2 \le f(w^{(t)}) - f(w^{(t+1)})$. Sostituendo nella disuguaglianza precedente:
+>    $$ f(w^{(t)}) - f(w^*) \le \frac{L}{2}\left(\|w^{(t)} - w^*\|^2 - \|w^{(t+1)} - w^*\|^2\right) + f(w^{(t)}) - f(w^{(t+1)}) $$
+> 3. Elidendo $f(w^{(t)})$ da entrambi i lati e riordinando:
+>    $$ f(w^{(t+1)}) - f(w^*) \le \frac{L}{2}\left(\|w^{(t)} - w^*\|^2 - \|w^{(t+1)} - w^*\|^2\right) $$
+> 4. Sommando per $t = 1, \dots, T$ e dividendo per $T$ (somma telescopica):
+>    $$ \frac{1}{T}\sum_{t=1}^T \left(f(w^{(t+1)}) - f(w^*)\right) \le \frac{L}{2T}\left(\|w^{(1)} - w^*\|^2 - \|w^{(T+1)} - w^*\|^2\right) \le \frac{L\|w^*\|^2}{2T} \le \frac{L B^2}{2T} $$
+> 5. Poiché il Descent Lemma garantisce che $f(w^{(t+1)})$ è decrescente ad ogni passo, l'ultimo iterato è migliore della media di tutti gli iterati:
+>    $$ f(w^{(T+1)}) - f(w^*) \le \frac{1}{T}\sum_{t=1}^T \left(f(w^{(t+1)}) - f(w^*)\right) \le \frac{L B^2}{2T} $$[cite: 110]
+
+### B. Caso Fortemente Convesso + L-Smooth (Convergenza Geometrica)
+Cosa succede quando la funzione possiede *entrambe* le proprietà di regolarità (parabola inferiore $\mu$ e parabola superiore $L$)?
+
+> [!theorem] Convergenza Geometrica (Lineare) del Gradient Descent Esatto
+> Sia $f: \mathbb{R}^d \rightarrow \mathbb{R}$ una funzione $L$-smooth e $\mu$-fortemente convessa (con $L \ge \mu > 0$) con minimizzatore $w^*$. Il Gradient Descent esatto da $w^{(1)} = 0$ con $\eta = \frac{1}{L}$ soddisfa:
+> $$ f(w^{(T+1)}) - f(w^*) \le \left(1 - \frac{\mu}{L}\right)^T \left(f(0) - f(w^*)\right) $$
+> *(Nota: se $f$ è anche $\rho$-Lipschitziana e $\|w^*\| \le B$, il termine iniziale si limita facilmente come $f(0) - f(w^*) \le \rho B$).*[cite: 110]
+
+> [!intuition] Impatto del Rapporto $\frac{L}{\mu}$ (Numero di Condizionamento)
+> L'errore decade **esponenzialmente** con $T$: per raggiungere precisione $\epsilon$ bastano $\mathcal{O}\left(\frac{L}{\mu}\log\frac{1}{\epsilon}\right)$ iterazioni, un salto enorme rispetto a $\mathcal{O}(1/\epsilon)$ o $\mathcal{O}(1/\epsilon^2)$. La velocità è governata dal rapporto $\kappa = \frac{L}{\mu}$ (numero di condizionamento): più $L$ e $\mu$ sono vicini, più le curve di livello sono "sferiche" e la convergenza è quasi istantanea.
+
+---
+
+## 5. Caso Studio: Ridge Regression (Smoothness e Strong Convexity)
+Applichiamo questa teoria alla [[Ridge Regression]]:
+$$ \hat{R}_S(\theta) = \frac{1}{n}\|y - X\theta\|^2 + \frac{\lambda}{2}\|\theta\|^2 $$
+Calcoliamo gradiente ed Hessiana:
+$$ \nabla \hat{R}_S(\theta) = \frac{2}{n}X^T(X\theta - y) + \lambda \theta = \left(\frac{2}{n}X^T X + \lambda I\right)\theta - \frac{2}{n}X^T y $$
+$$ \nabla^2 \hat{R}_S(\theta) = \frac{2}{n}X^T X + \lambda I $$[cite: 110]
+
+### Analisi Spettrale di $X^T X$
+Osserviamo che la matrice $A = X^T X$ è **simmetrica**, poiché $(X^T X)^T = X^T (X^T)^T = X^T X$[cite: 110]. 
+Per il **Teorema Spettrale**, esiste una base ortonormale di autovettori $v_1, \dots, v_d$ con autovalori reali $\nu_1, \dots, \nu_d$ (tutti non negativi poiché $x^T X^T X x = \|Xx\|^2 \ge 0$). Scomponendo un qualsiasi vettore $x = \sum_{i=1}^d \gamma_i v_i$, la forma quadratica diventa:
+$$ x^T A x = \left\langle \sum_{i=1}^d \gamma_i v_i, \sum_{j=1}^d \gamma_j \nu_j v_j \right\rangle = \sum_{i=1}^d \nu_i \gamma_i^2 $$
+Da cui seguono immediatamente i limiti spettrali:
+$$ \nu_{\min}\|x\|^2 \le x^T A x \le \nu_{\max}\|x\|^2 \quad \text{e} \quad \|Ax\| \le \nu_{\max}\|x\| $$
+dove $\nu_{\max} = \max_i |\nu_i|$ e $\nu_{\min} = \min_i \nu_i$[cite: 110].
+
+> [!theorem] Parametri $L$ e $\mu$ per la Ridge Regression
+> 1. **$L$-Smoothness**: Per ogni $\theta_1, \theta_2 \in \mathbb{R}^d$:
+>    $$ \|\nabla \hat{R}_S(\theta_1) - \nabla \hat{R}_S(\theta_2)\| = \left\|\left(\frac{2}{n}X^T X + \lambda I\right)(\theta_1 - \theta_2)\right\| \le \left(\frac{2}{n}\nu_{\max} + \lambda\right)\|\theta_1 - \theta_2\| $$
+>    Pertanto la loss della Ridge Regression è **$L$-smooth** con $L = \frac{2}{n}\nu_{\max} + \lambda$[cite: 110].
+> 2. **$\mu$-Strong Convexity**: Calcolando la differenza rispetto all'approssimazione del primo ordine:
+>    $$ \hat{R}_S(\theta_1) - \hat{R}_S(\theta_2) - \langle \nabla \hat{R}_S(\theta_2), \theta_1 - \theta_2 \rangle = \frac{1}{n}(\theta_1 - \theta_2)^T X^T X (\theta_1 - \theta_2) + \frac{\lambda}{2}\|\theta_1 - \theta_2\|^2 $$
+>    Applicando il bound spettrale inferiore $(\theta_1 - \theta_2)^T X^T X (\theta_1 - \theta_2) \ge \nu_{\min}\|\theta_1 - \theta_2\|^2$:
+>    $$ \ge \frac{1}{2}\left(\frac{2}{n}\nu_{\min} + \lambda\right)\|\theta_1 - \theta_2\|^2 $$
+>    La funzione è quindi **$\mu$-fortemente convessa** con $\mu = \frac{2}{n}\nu_{\min} + \lambda$ (se $X^T X$ è invertibile, $\nu_{\min} > 0$; anche nel caso degenere in cui non lo fosse, la regolarizzazione Ridge garantisce comunque $\mu \ge \lambda > 0$)[cite: 110].
+
+> [!intuition] Perché la Ridge Regression migliora l'ottimizzazione?
+> Oltre a prevenire l'[[Overfitting]], aggiungere $\frac{\lambda}{2}\|\theta\|^2$ trasla tutti gli autovalori dell'Hessiana verso l'alto di $+\lambda$. Questo garantisce che $\mu > 0$ (anche se le feature sono collineari e $X^T X$ non è invertibile) e riduce il numero di condizionamento $\frac{L}{\mu}$, accelerando drasticamente la convergenza geometrica del Gradient Descent senza dover mai invertire alcuna matrice.
