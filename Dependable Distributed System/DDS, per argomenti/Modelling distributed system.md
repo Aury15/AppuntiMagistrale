@@ -153,7 +153,7 @@ $\Pi$ denotes the **set of processes**. <u>Unless stated otherwise it is static 
 >A **distributed algorithm** is a distributed collection of automata, one per process. The automaton regulates how the process executes its computation steps, i.e. how it reacts to a message; every process runs the same automaton. An execution is a sequence of steps executed by the processes.
 
 >[!definition] Safety and liveness
->A **safety** property states that the algorithm does not do anything wrong: it can be violated at some time $t$ and never be satisfied again after $t$ (equivalently, if it is violated in an execution $E$, there is a partial execution $E'$ of $E$ such that it is violated in every extension of $E'$ ). A **liveness** property ensures that eventually something good happens: for any time t there is some hope that it can be satisfied at some $t' \ge t$.
+>A **safety** property states that the algorithm **does not do anything wrong**: it can be violated at some time $t$ and never be satisfied again after $t$ (equivalently, if it is violated in an execution $E$, there is a partial execution $E'$ of $E$ such that it is violated in every extension of $E'$ ). A **liveness** property ensures that eventually **something good happens**: for any time t there is some hope that it can be satisfied at some $t' \ge t$.
 
 #### Failure models 
 $$
@@ -170,7 +170,7 @@ $$
 \end{array}
 $$
 
-**Crash-stop**. The process crashes at time $t$ and never recovers. A process is *faulty* if it crashes at some time during the execution, and *correct* if it never crashes and executes an infinite number of steps.
+**Crash-stop**. The process crashes at time $t$ and never recovers. A process is *<mark style="background:#ff4d4f">faulty</mark>* if it crashes at some time during the execution, and *<mark style="background:#affad1">correct</mark>* if it never crashes and executes an infinite number of steps.
 
 >[!definition] Fault tolerance, resilience
 >**Fault tolerance** means designing an algorithm that works despite faults, by assuming that at most $f$ of the $N$ processes are faulty. The relation between $f$ and $N$ is called **resilience**; an upper bound $f$ means that any number of processes up to $f$ may fail. *Crash-stop* does not preclude recovery: a recovered process is simply no longer part of the system, and the algorithm must not rely on it to make progress.
