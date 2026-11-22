@@ -170,13 +170,14 @@ $$
 \end{array}
 $$
 
-**Crash-stop**. The process crashes at time $t$ and never recovers. A process is *<mark style="background:rgba(222, 1, 38, 0.55)">faulty</mark>* if it crashes at some time during the execution, and *<mark style="background:#affad1">correct</mark>* if it never crashes and executes an infinite number of steps.
+**Crash-stop**. The process crashes at time $t$ and never recovers. A process is *<mark style="background:rgba(222, 1, 38, 0.55)">faulty</mark>* if it crashes at some time during the execution, and *<mark style="background:#d3f8b6">correct</mark>* if it never crashes and executes an infinite number of steps.
 
 >[!definition] Fault tolerance, resilience
 >**Fault tolerance** means designing an algorithm that works despite faults, by assuming that at most $f$ of the $N$ processes are faulty. The relation between $f$ and $N$ is called **resilience**; an upper bound $f$ means that any number of processes up to $f$ may fail. *Crash-stop* <u>does not preclude recovery: a recovered process is simply no longer part of the system, and the algorithm must not rely on it to make progress.</u>
 
 **Crash-recovery**. A process is *<mark style="background:rgba(222, 1, 38, 0.55)">faulty</mark>* if it crashes and never recovers, or if it keeps crashing and recovering infinitely often; otherwise it is <mark style="background:#d3f8b6">correct</mark>, even if it crashed and recovered a finite number of times.
-A characteristic of this model is *amnesia*: a crashed process loses its internal state, so after recovering it might send messages that contradict those sent before the crash. To cope with this, every process is assumed to have a stable storage (a log), accessed through $\text{store}()$ and $\text{retrieve}()$, and to be aware upon recovery that it crashed and recovered.
+>[!Remember] Amnesia
+>A characteristic of this model is *amnesia*: a crashed process loses its internal state, so after recovering it might send messages that contradict those sent before the crash. To cope with this, every process is assumed to have a stable storage (a log), accessed through $\text{store}()$ and $\text{retrieve}()$, and to be aware upon recovery that it crashed and recovered.
 
 ![[Dependable distributed system-1793621296255.webp|637]]
 
