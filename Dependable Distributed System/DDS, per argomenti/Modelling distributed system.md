@@ -89,3 +89,18 @@ $$
     - A continuous internal guard monitors the buffer. Whenever it is not empty, the system selects a job (`selectjob(buffer)`), processes it, and removes it from the queue (`buffer := buffer \ {job}`).   
 - **Characteristics:** It is **non-blocking**. The system accepts and confirms requests instantly while queuing them up for background processing.
 
+###### Layering
+$$
+\begin{aligned}
+&\textbf{Module: } \\
+&\quad \textbf{Name: } \text{TransformationHandler, \textbf{instance} } th. \\
+&\textbf{Events:} \\
+&\quad \textbf{Request:} \langle th, \text{Submit} \mid \text{job} \rangle : \text{Submits a job for transformation and for processing.} \\
+&\quad \textbf{Indication:} \langle th, \text{Confirm} \mid \text{job} \rangle : \text{Confirms that the given job has been (or will be) transformed and processed.} \\
+&\quad \textbf{Indication:} \langle th, \text{Error} \mid \text{job} \rangle : \text{Indicates that the transformation of the given job failed.} \\
+&\textbf{Properties:} \\
+&\quad \textbf{TH1: } \text{Guaranteed response: Every submitted job is eventually confirmed or its transformation fails.} \\
+&\quad \textbf{TH2: } \text{Soundness: A submitted job whose transformation fails is not processed.}
+\end{aligned}
+$$
+Layering has two properties: TH1 and TH2, and these properties has to be respe
