@@ -1568,3 +1568,121 @@ $$ \sigma(z) = \frac{1}{1 + e^{-z}} \implies \sigma'(z) = \sigma(z)(1 - \sigma(z
 > $$ = \frac{(e^z + e^{-z})(e^z + e^{-z}) - (e^z - e^{-z})(e^z - e^{-z})}{(e^z + e^{-z})^2} = \frac{(e^z + e^{-z})^2 - (e^z - e^{-z})^2}{(e^z + e^{-z})^2} $$
 > $$ = 1 - \frac{(e^z - e^{-z})^2}{(e^z + e^{-z})^2} = 1 - \tanh^2(z) $$[cite: 115]
 
+# Lezione 17: Architettura delle Reti Neurali e Algoritmo di Backpropagation
+
+## 1. Architettura, Parametri e Ottimizzazione a Due Livelli
+Riprendiamo la notazione generale per una [[Feed-Forward Neural Networks|rete neurale feed-forward]] che mappa un input $x \in \mathbb{R}^d$ in un output $y \in \mathcal{Y}$, dove ogni singolo neurone calcola una trasformazione affine seguita da una non-linearità $h(\langle x, \theta \rangle + d)$[cite: 117].
+
+> [!definition] Notazione Generale e Distinzione Parametri / Iperparametri
+> Consideriamo una rete composta da un *input layer* (layer $0$), eventuali strati nascosti e un *output layer* (layer $D$):
+> - **Profondità ($D$)**: numero totale di strati (1-layer = *shallow neural network*; $n$-layer con $n > 1$ = *deep neural network*).
+> - **Larghezza ($d_0, d_1, \dots, d_D$)**: numero di nodi in ciascuno strato, dove $d_0 = d$ è la dimensione dell'input e $d_D$ è la dimensione dell'output.
+> - **Iperparametri (discreti)**: la topologia della rete ($D$ e i vari $d_l$) e le funzioni di attivazione $\pi^l: \mathbb{R}^{d_l} \rightarrow \mathbb{R}^{d_l}$ per $l = 1, \dots, D$ (es. ReLU).
+> - **Parametri (continui)**: le matrici dei pesi $W^l \in \mathbb{R}^{d_l \times d_{l-1}}$ e i vettori dei bias $b^l \in \mathbb{R}^{d_l}$ per ogni strato $l = 1, \dots, D$.
+> 
+> **Forward Pass**: ponendo $a^0 = x$, per ogni strato $l = 1, \dots, D$ la rete calcola:
+> $$ z^l = W^l a^{l-1} + b^l \quad (\text{vettore di pre-attivazione}) $$
+> $$ a^l = \pi^l(z^l) \quad (\text{vettore di attivazione}) $$[cite: 117]
+
+Il nostro obiettivo teorico è minimizzare il rischio atteso $\min_\theta R_{\mathcal{D}}(f_\theta)$, utilizzando come proxy la minimizzazione del [[Rischio Empirico]]:
+$$ \min_\theta \hat{R}_S(f_\theta) = \min_\theta \frac{1}{n}\sum_{i=1}^n l(f_\theta(x_i), y_i) $$[cite: 117]
+
+> [!intuition] Separazione dell'Ottimizzazione in Due Livelli
+> Non possiamo ottimizzare parametri e iperparametri allo stesso modo. Il processo di minimizzazione viene quindi separato in due livelli distinti:
+> 1. **Iperparametri discreti** (topologia e attivazioni): ottimizzati tramite **[[Validation Set]]** utilizzando strategie di ricerca come la **Grid Search**.
+> 2. **Parametri continui** ($W^l, b^l$): ottimizzati sul **[[Training Set]]** tramite **[[Gradient Descent]]** (o [[SGD (Stochastic Gradient Descent)]]).[cite: 117]
+
+---
+
+## 2. Impostazione della Backpropagation e il Segnale di Errore $\delta^l$
+Per eseguire il Gradient Descent dobbiamo calcolare i gradienti $\nabla_{W^l} \hat{R}_S(f_\theta)$ e $\nabla_{b^l} \hat{R}_S(f_\theta)$[cite: 117]. Per la linearità dell'operatore gradiente, il gradiente sull'intero dataset è semplicemente la media dei gradienti sui singoli campioni:
+$$ \nabla_{W^l} \hat{R}_S(f_\theta) = \frac{1}{n}\sum_{i=1}^n \nabla_{W^l} l(f_\theta(x_i), y_i), \qquad \nabla_{b^l} \hat{R}_S(f_\theta) = \frac{1}{n}\sum_{i=1}^n \nabla_{b^l} l(f_\theta(x_i), y_i) $$[cite: 117]
+
+Possiamo quindi fissare una generica coppia $(x, y)$ (omettendone la dipendenza per snellire la notazione) e concentrarci sul calcolo di $\nabla_{W^l} l$ e $\nabla_{b^l} l$ al variare dei pesi[cite: 117].
+
+> [!definition] Vettore di Errore / Sensibilità ($\delta^l$)
+> Per ogni strato $l = 1, \dots, D$, definiamo il vettore $\delta^l \in \mathbb{R}^{d_l}$ come il gradiente della loss rispetto al vettore di pre-attivazione $z^l$:
+> $$ \delta^l = \nabla_{z^l} l(f_\theta(x), y) $$[cite: 117]
+
+> [!intuition] Cosa rappresenta $\delta^l$?
+> Il vettore $\delta^l$ misura **quanto e in quale direzione** varia la funzione di loss $l$ rispetto a una piccola perturbazione della pre-attivazione $z^l$[cite: 117]. Calcolando i $\delta^l$ a ritroso dall'ultimo strato fino al primo, evitiamo di ricalcolare ripetutamente le stesse derivate parziali della regola della catena.
+
+---
+
+## 3. Il Caso Base: Calcolo di $\delta^D$ nell'Output Layer
+Nell'ultimo strato ($l = D$), la formula di $\delta^D$ dipende direttamente dalla funzione di loss scelta per il task[cite: 117]. Analizziamo i tre casi canonici:
+
+1. **Regressione 1D con Squared Loss ($d_D = 1$)**:
+   La loss è $l(z^D, y) = (z^D - y)^2$, dove $z^D$ è l'output della rete e $y$ è la vera etichetta. Derivando direttamente:
+   $$ \delta^D = \frac{\partial l}{\partial z^D} = 2(z^D - y) $$[cite: 117]
+
+2. **Classificazione Binaria con Binary Cross-Entropy ($d_D = 1$)**:
+   L'output passa attraverso la sigmoide $\sigma(z^D)$ e la loss è $l(\sigma(z^D), y) = -y\log\sigma(z^D) - (1-y)\log(1 - \sigma(z^D))$. Sfruttando $\sigma'(z) = \sigma(z)(1-\sigma(z))$:
+   $$ \delta^D = \frac{\partial l}{\partial z^D} = -\frac{y}{\sigma(z^D)}\sigma(z^D)(1-\sigma(z^D)) + \frac{1-y}{1-\sigma(z^D)}\sigma(z^D)(1-\sigma(z^D)) $$
+   $$ = -y + y\sigma(z^D) + \sigma(z^D) - y\sigma(z^D) = \sigma(z^D) - y $$[cite: 117]
+
+3. **Classificazione Multi-classe con Cross-Entropy ($d_D = K$)**:
+   L'output passa attraverso la [[Softmax Regression|Softmax]] $p_j(z^D) = \frac{e^{z_j^D}}{\sum_{k=1}^K e^{z_k^D}}$ e la loss è $l(z^D, y) = -\sum_{j=1}^K y^{(j)} \log p_j(z^D)$. Analogamente a quanto derivato nella Lezione 14, ogni componente $j$-esima di $\delta^D$ è:
+   $$ \delta_j^D = \frac{\partial l}{\partial z_j^D} = p_j(z^D) - y^{(j)} $$[cite: 118]
+
+---
+
+## 4. Il Teorema di Backpropagation
+
+> [!theorem] [[Backpropagation]] per una Rete Fully Connected
+> In una rete neurale completamente connessa di profondità $D$:
+> 1. **Propagazione dell'errore negli strati nascosti**: per $l = D-1, D-2, \dots, 1$, i vettori $\delta^l$ soddisfano la relazione ricorsiva:
+>    $$ \delta^l = \left((W^{l+1})^T \delta^{l+1}\right) \odot (\pi^l)'(z^l) $$
+>    dove $\odot$ indica il prodotto componente per componente (prodotto di Hadamard).
+> 2. **Gradienti rispetto ai parametri**: per ogni strato $l = 1, \dots, D$ (incluso l'output layer), i gradienti rispetto a pesi e bias sono dati da:
+>    $$ \nabla_{W^l} l = \delta^l (a^{l-1})^T \in \mathbb{R}^{d_l \times d_{l-1}}, \qquad \nabla_{b^l} l = \delta^l \in \mathbb{R}^{d_l} $$[cite: 118]
+
+### Dimostrazione Analitica Passo-Passo
+Dimostriamo le tre identità applicando rigorosamente la regola della catena multivariata[cite: 118].
+
+**1. Derivata rispetto alle attivazioni $a_j^l$**:
+La $k$-esima pre-attivazione dello strato successivo $l+1$ è data da:
+$$ z_k^{l+1} = (W^{l+1} a^l)_k + b_k^{l+1} = \sum_{j=1}^{d_l} W_{kj}^{l+1} a_j^l + b_k^{l+1} $$
+Poiché l'attivazione $a_j^l$ influenza la loss attraverso *tutte* le pre-attivazioni $z_k^{l+1}$ dello strato successivo, per la regola della catena sommiamo su $k = 1, \dots, d_{l+1}$:
+$$ \frac{\partial l}{\partial a_j^l} = \sum_{k=1}^{d_{l+1}} \frac{\partial l}{\partial z_k^{l+1}} \frac{\partial z_k^{l+1}}{\partial a_j^l} = \sum_{k=1}^{d_{l+1}} \delta_k^{l+1} W_{kj}^{l+1} = \left((W^{l+1})^T \delta^{l+1}\right)_j $$[cite: 118]
+
+**2. Ricorsione per $\delta_j^l$**:
+Poiché $a_j^l = \pi^l(z_j^l)$ dipende unicamente dalla $j$-esima pre-attivazione $z_j^l$, otteniamo:
+$$ \delta_j^l = \frac{\partial l}{\partial z_j^l} = \frac{\partial l}{\partial a_j^l} \cdot \frac{\partial a_j^l}{\partial z_j^l} = \left((W^{l+1})^T \delta^{l+1}\right)_j \cdot (\pi^l)'(z_j^l) $$
+Riscrivendo l'espressione in forma vettoriale tramite il prodotto di Hadamard $\odot$, si ottiene $\delta^l = \left((W^{l+1})^T \delta^{l+1}\right) \odot (\pi^l)'(z^l)$[cite: 118].
+
+**3. Gradienti rispetto a $W^l$ e $b^l$**:
+Dalla relazione $z_j^l = \sum_{k=1}^{d_{l-1}} W_{jk}^l a_k^{l-1} + b_j^l$, notiamo che il peso $W_{jk}^l$ e il bias $b_j^l$ entrano *solo* nella $j$-esima pre-attivazione $z_j^l$:
+- Per i pesi:
+  $$ \frac{\partial l}{\partial W_{jk}^l} = \frac{\partial l}{\partial z_j^l} \frac{\partial z_j^l}{\partial W_{jk}^l} = \delta_j^l \cdot a_k^{l-1} \implies \nabla_{W^l} l = \delta^l (a^{l-1})^T \in \mathbb{R}^{d_l \times d_{l-1}} $$
+- Per i bias:
+  $$ \frac{\partial l}{\partial b_j^l} = \frac{\partial l}{\partial z_j^l} \frac{\partial z_j^l}{\partial b_j^l} = \delta_j^l \cdot 1 = \delta_j^l \implies \nabla_{b^l} l = \delta^l \in \mathbb{R}^{d_l} $$[cite: 118]
+
+---
+
+## 5. Caso Studio Numerico: Regressione con ReLU
+
+> [!example] Esercizio Svolto: Forward Pass e Backward Pass a mano
+> Consideriamo una rete per regressione (con squared loss) di profondità $D = 2$ con dimensioni $d_0 = 2$, $d_1 = 2$, $d_2 = 1$ e attivazione ReLU nello strato nascosto ($\pi^1 = \text{ReLU}$). I parametri sono:
+> $$ W^1 = \begin{pmatrix} 1 & -1 \\ 1 & 1 \end{pmatrix}, \quad b^1 = \begin{pmatrix} 0 \\ -1 \end{pmatrix}, \quad W^2 = \begin{pmatrix} 1 & -1 \end{pmatrix}, \quad b^2 = 0 $$
+> Calcoliamo l'output, la loss e tutti i gradienti per l'input $x = \begin{pmatrix} 2 \\ 1 \end{pmatrix}$ con target $y = 1$.
+> 
+> **1. Forward Pass**
+> - **Layer 1**:
+>   $$ z^1 = W^1 x + b^1 = \begin{pmatrix} 1 & -1 \\ 1 & 1 \end{pmatrix}\begin{pmatrix} 2 \\ 1 \end{pmatrix} + \begin{pmatrix} 0 \\ -1 \end{pmatrix} = \begin{pmatrix} 1 \\ 3 \end{pmatrix} + \begin{pmatrix} 0 \\ -1 \end{pmatrix} = \begin{pmatrix} 1 \\ 2 \end{pmatrix} $$
+>   $$ a^1 = \text{ReLU}(z^1) = \begin{pmatrix} 1 \\ 2 \end{pmatrix} $$
+> - **Layer 2 (Output)**:
+>   $$ z^2 = W^2 a^1 + b^2 = \begin{pmatrix} 1 & -1 \end{pmatrix}\begin{pmatrix} 1 \\ 2 \end{pmatrix} + 0 = 1 - 2 = -1 $$
+> - **Calcolo della Loss** (con $y = 1$):
+>   $$ l(z^2, y) = (z^2 - y)^2 = (-1 - 1)^2 = 4 $$
+> 
+> **2. Backward Pass (Backpropagation)**
+> - **Layer 2**:
+>   $$ \delta^2 = 2(z^2 - y) = 2(-1 - 1) = -4 $$
+>   $$ \nabla_{b^2} l = \delta^2 = -4 $$
+>   $$ \nabla_{W^2} l = \delta^2 (a^1)^T = -4 \begin{pmatrix} 1 & 2 \end{pmatrix} = \begin{pmatrix} -4 & -8 \end{pmatrix} $$
+> - **Layer 1**:
+>   Poiché entrambe le componenti di $z^1 = \begin{pmatrix} 1 \\ 2 \end{pmatrix}$ sono strettamente positive, la derivata della ReLU vale $(\pi^1)'(z^1) = \begin{pmatrix} 1 \\ 1 \end{pmatrix}$.
+>   $$ \delta^1 = \left((W^2)^T \delta^2\right) \odot (\pi^1)'(z^1) = \left[\begin{pmatrix} 1 \\ -1 \end{pmatrix}(-4)\right] \odot \begin{pmatrix} 1 \\ 1 \end{pmatrix} = \begin{pmatrix} -4 \\ 4 \end{pmatrix} $$
+>   $$ \nabla_{W^1} l = \delta^1 x^T = \begin{pmatrix} -4 \\ 4 \end{pmatrix}\begin{pmatrix} 2 & 1 \end{pmatrix} = \begin{pmatrix} -8 & -4 \\ 8 & 4 \end{pmatrix} $$
+>   $$ \nabla_{b^1} l = \delta^1 = \begin{pmatrix} -4 \\ 4 \end{pmatrix} $$[cite: 118]
