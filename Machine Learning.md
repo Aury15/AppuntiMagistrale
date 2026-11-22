@@ -1245,3 +1245,4 @@ $$ \hat{R}_S(\Theta) = -\frac{1}{n}\sum_{i=1}^n \sum_{j=1}^K y_i^{(j)} \log \hat
 > Definendo il singolo vettore dei pesi $\theta = \theta_1 - \theta_2$, otteniamo esattamente il classificatore logistico:
 > $$ \hat{P}_1(x) = \frac{1}{1 + e^{-\langle \theta, x \rangle}} = \sigma(\langle \theta, x \rangle) $$
 > E, di conseguenza, $\hat{P}_2(x) = 1 - \hat{P}_1(x) = 1 - \sigma(\langle \theta, x \rangle)$[cite: 108].
+
