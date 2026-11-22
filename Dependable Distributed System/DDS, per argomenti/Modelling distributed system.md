@@ -133,7 +133,7 @@ This algorithm maintains a buffer to temporarily store incoming jobs and send th
 - **Initialization (`Init`)**
     - The `top` and `bottom` indices are set to $1$, pointing to the insertion and extraction positions, respectively.
     - `handling := FALSE` indicates that the system is currently not processing any jobs.
-    - `buffer := [\bot]^M` initializes an empty circular buffer of size $M$ filled with null elements ($\bot$).
+    - `buffer :=` $[\bot]^M$ initializes an empty circular buffer of size $M$ ($\bot$).
 - **Receiving the Request (`Submit`)**
     - When a new job arrives via the event $\langle th, \text{Submit} \mid \text{job} \rangle$, the algorithm checks whether the buffer is full by evaluating the overflow condition $\text{bottom} + M = \text{top}$.
 	    - **If the buffer is full:** It rejects the request by triggering the error event $\langle th, \text{Error} \mid \text{job} \rangle$.
