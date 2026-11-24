@@ -181,3 +181,5 @@ read the nakamoto paper?
 we dont have to know how to implement the coin but the binary algorithm yes(?)
 proof on stake 
 
+
+
