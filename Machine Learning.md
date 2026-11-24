@@ -500,8 +500,8 @@ Ciclo per t = 1, 2, ...
 > - $B = \min_w ||w||_2$ soggetto a $y_i \langle w, x_i \rangle \ge 1, \forall i$ (la norma del miglior classificatore a margine unitario, che decodifica la separabilità lineare del problema). Allora, l'algoritmo termina in un numero finito di passi limitato da: $$ T \le B^2 R^2 $$
 >     
 
-> [!intuition] Dimostrazione in 3 Passi **1. Crescita del Prodotto Scalare (Lower Bound)**: Denotiamo $w^*$ come l'arg min di $B$ (il classificatore ottimale). Calcoliamo il prodotto scalare tra $w^*$ e lo stato finale dei pesi del perceptron $w^{(T+1)}$ srotolando la sommatoria di tutti i $T$ aggiornamenti effettuati sui punti "problematici" $x_{i_t}$: $$ \langle w^_, w^{(T+1)} \rangle = \sum_{t=1}^T \langle w^_, w^{(t+1)} - w^{(t)} \rangle = \sum_{t=1}^T y_{i_t} \langle w^_, x_{i_t} \rangle $$ Poiché sappiamo che $w^_$ soddisfa il margine $y_i \langle w^*, x_i \rangle \ge 1$ per ogni punto, la somma è garantita essere: $$ \langle w^*, w^{(T+1)} \rangle \ge T \cdot 1 = T $$
-> 
+> [!intuition] Dimostrazione in 3 Passi **1. Crescita del Prodotto Scalare (Lower Bound)**: Denotiamo $w^*$ come l'arg min di $B$ (il classificatore ottimale). Calcoliamo il prodotto scalare tra $w^*$ e lo stato finale dei pesi del perceptron $w^{(T+1)}$ srotolando la sommatoria di tutti i $T$ aggiornamenti effettuati sui punti "problematici" $x_{i_t}$: $$ \langle w^*, w^{(T+1)} \rangle = \sum_{t=1}^T \langle w^*, w^{(t+1)} - w^{(t)} \rangle = \sum_{t=1}^T y_{i_t} \langle w^*, x_{i_t} \rangle $$ Poiché sappiamo che $w^*$ soddisfa il margine $y_i \langle w^*, x_i \rangle \ge 1$ per ogni punto, la somma è garantita essere: $$ \langle w^*, w^{(T+1)} \rangle \ge T \cdot 1 = T $$
+>  
 > **2. Crescita della Norma (Upper Bound)**: Valutiamo come cresce al massimo la norma quadratica dei pesi a ogni errore: $$ ||w^{(t+1)}||^2 = ||w^{(t)} + y_{i_t} x_{i_t}||^2 = ||w^{(t)}||^2 + 2y_{i_t} \langle w^{(t)}, x_{i_t} \rangle + (y_{i_t})^2 ||x_{i_t}||^2 $$ Poiché l'aggiornamento avviene _solo_ in caso di errore, sappiamo che $y_{i_t} \langle w^{(t)}, x_{i_t} \rangle \le 0$. Inoltre, $||x_{i_t}||^2 \le R^2$. Sostituendo si ottiene: $$ ||w^{(t+1)}||^2 \le ||w^{(t)}||^2 + R^2 $$ Ripetendo per $T$ step partendo da $||w^{(1)}|| = 0$, otteniamo $||w^{(T+1)}||^2 \le T R^2$, estraendo la radice: $$ ||w^{(T+1)}|| \le \sqrt{T} R $$
 > 
 > **3. Sintesi tramite Cauchy-Schwarz**: Per la disuguaglianza di Cauchy-Schwarz, $\langle w^*, w^{(T+1)} \rangle \le ||w^*|| \cdot ||w^{(T+1)}||$. Inserendo i bounds trovati nei passi 1 e 2: $$ T \le \langle w^_, w^{(T+1)} \rangle \le ||w^_|| \cdot ||w^{(T+1)}|| \le B \cdot \sqrt{T} R $$ Dividendo per $\sqrt{T}$ otteniamo: $\sqrt{T} \le BR \implies T \le B^2 R^2$.
@@ -1031,3 +1031,658 @@ Verifichiamo analiticamente se il nostro algoritmo empirico "scopre" il vero vet
 > Poiché $\epsilon$ ha media zero indipendente da $X$, l'ultimo termine si annulla ($\mathbb{E}[\epsilon|X]=0$). Ne consegue che $\mathbb{E}[\hat{\theta} | X] = \theta^*$.
 > Infine, applicando la Total Expectation Law, estraiamo l'aspettativa totale rispetto a $X$, ottenendo $\mathbb{E}[\hat{\theta}] = \theta^*$, dimostrando che OLS non ha bias sistematici.
 
+# Lezione 12: Feature Maps, Regolarizzazione (Ridge & Lasso) e Introduzione alla Regressione Logistica
+
+## 1. Caso Studio: Regressione Affine a Mano vs. Forma Matriciale (OLS)
+Prima di generalizzare la regressione lineare, verifichiamo l'equivalenza tra la soluzione analitica 1D e lo stimatore matriciale [[Ordinary Least Squares (OLS)]] su un dataset concreto[cite: 104].
+
+> [!example] Esercizio 1.1: Fitting di una retta
+> Consideriamo 4 osservazioni: $(-1, 0), (0, 1), (1, 3), (2, 4)$[cite: 104]. Vogliamo fittare il predittore affine $f(x) = mx + q$ minimizzando l'MSE empirico $\hat{R}_S(m, q) = \frac{1}{4}\sum_{i=1}^4 (mx_i + q - y_i)^2$[cite: 104].
+> 
+> **Metodo 1: Formule 1D (Covarianza e Varianza)**
+> Calcoliamo le medie campionarie[cite: 104]:
+> $$ \bar{x} = \frac{-1 + 0 + 1 + 2}{4} = \frac{1}{2}, \quad \bar{y} = \frac{0 + 1 + 3 + 4}{4} = 2 $$
+> Calcoliamo numeratore e denominatore della pendenza $m = \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sum (x_i - \bar{x})^2}$[cite: 104]:
+> - Numeratore: $\left(-\frac{3}{2}\right)(-2) + \left(-\frac{1}{2}\right)(-1) + \left(\frac{1}{2}\right)(1) + \left(\frac{3}{2}\right)(2) = 3 + \frac{1}{2} + \frac{1}{2} + 3 = 7$[cite: 104].
+> - Denominatore: $\left(-\frac{3}{2}\right)^2 + \left(-\frac{1}{2}\right)^2 + \left(\frac{1}{2}\right)^2 + \left(\frac{3}{2}\right)^2 = \frac{9}{2} + \frac{1}{2} = 5$[cite: 104].
+> 
+> Otteniamo quindi $m = \frac{7}{5}$ e $q = \bar{y} - m\bar{x} = 2 - \frac{7}{5}\cdot\frac{1}{2} = \frac{13}{10}$[cite: 104].
+> 
+> **Metodo 2: Forma Matriciale (OLS)**
+> Mappiamo ogni punto $x_i$ nel vettore aumentato $\tilde{x}_i = (x_i, 1)^T$, costruendo la [[Design Matrix]] $X$ e il vettore target $y$[cite: 104]:
+> $$ X = \begin{pmatrix} -1 & 1 \\ 0 & 1 \\ 1 & 1 \\ 2 & 1 \end{pmatrix}, \quad y = \begin{pmatrix} 0 \\ 1 \\ 3 \\ 4 \end{pmatrix} $$
+> Calcoliamo la matrice normale e la sua inversa[cite: 104]:
+> $$ X^T X = \begin{pmatrix} 6 & 2 \\ 2 & 4 \end{pmatrix} \implies (X^T X)^{-1} = \frac{1}{10}\begin{pmatrix} 2 & -1 \\ -1 & 3 \end{pmatrix} $$
+> Applicando la formula OLS $\hat{\theta} = (X^T X)^{-1} X^T y$[cite: 104]:
+> $$ \hat{\theta} = \frac{1}{10}\begin{pmatrix} -3 & -1 & 1 & 3 \\ 4 & 3 & 2 & 1 \end{pmatrix} \begin{pmatrix} 0 \\ 1 \\ 3 \\ 4 \end{pmatrix} = \frac{1}{10}\begin{pmatrix} 14 \\ 13 \end{pmatrix} = \begin{pmatrix} 7/5 \\ 13/10 \end{pmatrix} $$
+
+**Take-home messages dell'esercizio**[cite: 104]:
+1. I due metodi producono lo stesso identico risultato[cite: 104].
+2. Per usare il metodo matriciale su funzioni affini, dobbiamo prima mappare i dati in una famiglia lineare[cite: 104].
+3. **Invertire matrici è computazionalmente pessimo** ("Inverting matrix SUCKS!!"): in alte dimensioni il calcolo di $(X^T X)^{-1}$ è costoso e numericamente instabile[cite: 104].
+
+---
+
+## 2. "Linear" Regression e Feature Maps ($\varphi$)
+Un fraintendimento comune è pensare che la regressione lineare possa modellare solo rette o iperpiani rispetto ai dati grezzi $x$.
+
+> [!definition] [[Feature Map]] e Modelli Lineari nei Parametri
+> Nella regressione "lineare", la funzione non deve essere lineare nell'input $x$, ma **lineare nei parametri $\theta$**[cite: 104].
+> Definiamo una **Feature Map** $\varphi: \mathbb{R}^d \rightarrow \mathbb{R}^D$ che proietta i dati grezzi $x \in \mathbb{R}^d$ in uno spazio di dimensione superiore $\mathbb{R}^D$[cite: 104]. La famiglia di predittori diventa[cite: 104]:
+> $$ \mathcal{F} = \{ f_\theta(x) = \langle \theta, \varphi(x) \rangle \mid \theta \in \mathbb{R}^D \} $$
+
+> [!example] Esempi di Feature Maps[cite: 104]
+> 1. **Mappa Affine**: $D = d + 1$, con $\varphi(x) = (x, 1)^T$[cite: 104].
+> 2. **Espansione Polinomiale di grado $s$**: Ad esempio, per $d=2$ e $s=2$, mappiamo $(x_1, x_2) \in \mathbb{R}^2$ in $\varphi(x) = (1, x_1, x_2, x_1^2, x_2^2, x_1 x_2)^T \in \mathbb{R}^6$[cite: 104].
+> 3. **Espansione di Fourier**: Utilizzo di seni e coseni come funzioni di base[cite: 104].
+
+---
+
+## 3. Il Dilemma della Complessità: Quale $\varphi$ scegliere?
+Aumentando la dimensione $D$ dello spazio delle feature (ad esempio il grado del polinomio), la classe di funzioni diventa sempre più espressiva[cite: 105]. Cosa succede al Rischio Empirico $\hat{R}_S$ e al Rischio Atteso $R_{\mathcal{D}}$?
+
+- **Comportamento di $\hat{R}_S$**: Decresce monotonicamente all'aumentare di $D$ e **crolla a zero** quando il numero di parametri indipendenti $D$ raggiunge o supera il numero di esempi $n$ ($D \ge n$, es. $n+1$ per un polinomio interpolante)[cite: 105]. In questo regime, il modello ha abbastanza gradi di libertà per memorizzare i dati di training (incluso il rumore) invece di generalizzare[cite: 105].
+- **Comportamento di $R_{\mathcal{D}}$**: Inizialmente decresce, ma quando $D$ diventa troppo grande rispetto a $n$, la discrepanza tra $R_{\mathcal{D}}$ e $\hat{R}_S$ esplode a causa dell'**[[Overfitting]]**[cite: 105].
+
+> [!intuition] Come risolvere l'Overfitting?
+> Per migliorare la curva di generalizzazione esistono due strade principali[cite: 105]:
+> 1. **Più dati**: Aumentare $n$ permette di apprendere bene anche classi complesse[cite: 105].
+> 2. **[[Regolarizzazione]]**: Aggiungere un termine di penalità $\psi(\theta)$ al rischio empirico per controllare la complessità effettiva del modello[cite: 105]:
+>    $$ \hat{R}_S^{Reg}(f_\theta) = \hat{R}_S(f_\theta) + \psi(\theta) $$
+
+---
+
+## 4. Regolarizzazione: Ridge vs. Lasso
+Le due tecniche di regolarizzazione più importanti penalizzano la norma del vettore dei parametri $\theta$ tramite un iperparametro $\lambda > 0$[cite: 105].
+
+### A. Ridge Regression (Regolarizzazione $L_2$)
+> [!definition] Obiettivo [[Ridge Regression]]
+> Aggiungiamo una penalità quadratica $\psi(\theta) = \frac{\lambda}{2}||\theta||_2^2 = \frac{\lambda}{2}\sum_{j=1}^d \theta_j^2$[cite: 105]:
+> $$ \hat{L}^{Ridge}(\theta) = \frac{1}{n}||y - X\theta||_2^2 + \frac{\lambda}{2}||\theta||_2^2 $$
+
+- **Proprietà analitiche**: La funzione obiettivo è **fortemente convessa** (e strettamente convessa) e **differenziabile** ovunque[cite: 105].
+- **Soluzione in forma chiusa**: Calcolando il gradiente e ponendolo uguale a zero[cite: 105]:
+  $$ \nabla \hat{L}^{Ridge}(\theta) = \frac{2}{n}\left(X^T X \theta - X^T y\right) + \lambda \theta = 0 $$
+  $$ \left(\frac{2}{n} X^T X + \lambda I\right)\theta = \frac{2}{n} X^T y $$
+  Moltiplicando ambo i membri per $n$ (e ponendo $\tilde{\lambda} = n\lambda$)[cite: 105]:
+  $$ (2 X^T X + \tilde{\lambda} I)\theta = 2 X^T y \implies \hat{\theta}_{Ridge} = (2 X^T X + \tilde{\lambda} I)^{-1} 2 X^T y $$
+- **Ottimizzazione Stocastica (SGD)**: Per evitare l'inversione di matrice, possiamo usare lo [[SGD (Stochastic Gradient Descent)]] campionando un indice $i_t$[cite: 105]:
+  $$ \hat{g}_{Ridge} = x_{i_t}(\langle x_{i_t}, \theta \rangle - y_{i_t}) + \lambda \theta $$
+  (a meno del fattore costante $2$ se si scala l'MSE con $\frac{1}{2n}$), garantendo $\mathbb{E}[\hat{g}_{Ridge}] = \nabla \hat{L}^{Ridge}(\theta)$[cite: 105].
+
+### B. Lasso Regression (Regolarizzazione $L_1$)
+> [!definition] Obiettivo [[Lasso Regression]]
+> Aggiungiamo una penalità basata sulla norma $L_1$, $\psi(\theta) = \lambda ||\theta||_1 = \lambda \sum_{j=1}^d |\theta_j|$[cite: 105]:
+> $$ \hat{L}^{Lasso}(\theta) = \frac{1}{n}||y - X\theta||_2^2 + \lambda ||\theta||_1 $$
+
+- **Proprietà analitiche**: È convessa ma **non differenziabile** nei punti in cui qualche coordinata $\theta_j = 0$[cite: 105]. Non esiste una soluzione in forma chiusa elementare; si ricorre allo **Stochastic Sub-gradient Descent**[cite: 105].
+- **Subgradiente e Passo Stocastico**[cite: 105]:
+  $$ \partial \hat{L}^{Lasso}(\theta) = \frac{1}{n}(X^T X \theta - X^T y) + \lambda \, \text{sign}(\theta) $$
+  $$ \hat{g}_{Lasso} = x_{i_t}(\langle x_{i_t}, \theta \rangle - y_{i_t}) + \lambda \, \text{sign}(\theta) $$
+
+---
+
+## 5. Introduzione ai Classificatori Logistici
+Passando nuovamente alla classificazione binaria ($y \in \{0, 1\}$), invece di predire direttamente una classe discreta, vogliamo stimare una **probabilità** compresa in $(0, 1)$ usando un modello lineare filtrato da una funzione non lineare[cite: 105].
+
+> [!definition] Funzione Sigmoide e [[Logistic Regression|Classificatore Logistico]]
+> La funzione **Sigmoide** $\sigma: \mathbb{R} \rightarrow (0, 1)$ è definita come[cite: 105]:
+> $$ \sigma(z) = \frac{1}{1 + e^{-z}} $$
+> Le sue proprietà asintotiche fondamentali sono[cite: 105]:
+> - $\lim_{z \to +\infty} \sigma(z) = 1$
+> - $\lim_{z \to -\infty} \sigma(z) = 0$
+> - $\sigma(0) = \frac{1}{2}$
+> 
+> Il classificatore logistico mappa un input $x \in \mathbb{R}^d$ tramite i pesi $\theta \in \mathbb{R}^d$ in[cite: 105]:
+> $$ h_\theta(x) = \sigma(\langle \theta, x \rangle) $$
+
+> [!definition] [[Cross-Entropy Loss]]
+> Per addestrare un classificatore logistico utilizziamo la **Cross-Entropy Loss** (perdita di entropia incrociata)[cite: 105]:
+> $$ l(h_\theta(x), y) = -y \log h_\theta(x) - (1-y) \log(1 - h_\theta(x)) $$
+
+> [!intuition] Come funziona la Cross-Entropy?
+> La formula agisce come un "interruttore" che isola il termine rilevante in base alla vera etichetta $y \in \{0, 1\}$[cite: 105]:
+> - **Se $y = 1$**: la loss si riduce a $-\log h_\theta(x)$[cite: 105]. Se il modello predice $h_\theta(x) \approx 1$ la loss è prossima a $0$; se predice $h_\theta(x) \to 0$ (errore sicuro), la penalità esplode a $+\infty$[cite: 105].
+> - **Se $y = 0$**: la loss si riduce a $-\log(1 - h_\theta(x))$[cite: 105]. Se $h_\theta(x) \approx 0$ la loss è quasi $0$; se $h_\theta(x) \to 1$, la penalità esplode a $+\infty$[cite: 105].# Lezione 13: Regressione Logistica, KL-Divergence e Softmax Regression
+
+## 1. Funzione Sigmoide e Classificatore Logistico
+Nella classificazione binaria probabilistica vogliamo mappare uno *score* reale (ottenuto tramite un modello lineare) in una probabilità valida compresa tra $0$ e $1$[cite: 107].
+
+> [!definition] Funzione Sigmoide
+> La funzione **Sigmoide** $\sigma: \mathbb{R} \rightarrow [0, 1]$ è definita come:
+> $$ \sigma(z) = \frac{1}{1 + e^{-z}} $$
+> Le sue proprietà fondamentali sono:
+> - $\lim_{z \to +\infty} \sigma(z) = 1$
+> - $\lim_{z \to -\infty} \sigma(z) = 0$
+> - $\sigma(0) = \frac{1}{2}$[cite: 107]
+
+> [!theorem] Derivata della Sigmoide
+> La funzione sigmoide è ovunque differenziabile e la sua derivata è strettamente positiva (quindi $\sigma$ è strettamente crescente):
+> $$ \frac{d}{dz}\sigma(z) = -\frac{1}{(1 + e^{-z})^2}(-e^{-z}) = \frac{e^{-z}}{(1 + e^{-z})^2} = \frac{1}{1 + e^{-z}} \cdot \frac{e^{-z}}{1 + e^{-z}} = \sigma(z)(1 - \sigma(z)) $$[cite: 107]
+
+> [!definition] [[Logistic Regression|Classificatore Logistico]]
+> Dato un vettore di input $x \in \mathbb{R}^d$ e un vettore di pesi $\theta \in \mathbb{R}^d$, il classificatore logistico calcola lo score lineare $\langle \theta, x \rangle$ e lo trasforma in probabilità tramite la sigmoide:
+> $$ h_\theta(x) = \sigma(\langle \theta, x \rangle) = \frac{1}{1 + e^{-\theta^T x}} $$[cite: 107]
+
+---
+
+## 2. Quale Loss usare? La KL-Divergence
+Per il [[Perceptron]] abbiamo usato la 0-1 loss e per le [[Support Vector Machines|SVM]] la Hinge Loss[cite: 107]. Poiché il classificatore logistico produce una *distribuzione di probabilità*, abbiamo bisogno di una misura che confronti la distribuzione vera con quella predetta[cite: 107].
+
+> [!definition] [[KL-Divergence]] (Divergenza di Kullback-Leibler)
+> Date due distribuzioni di probabilità discrete $p$ e $q$ definite su un insieme $\Omega$, la KL-Divergence misura quanto $q$ diverge da $p$:
+> $$ KL(p, q) = \sum_{\omega \in \Omega} p(\omega) \log \frac{p(\omega)}{q(\omega)} $$
+> **Proprietà fondamentali**:
+> 1. **Non negatività**: $KL(p, q) \ge 0$
+> 2. **Identità degli indiscernibili**: $KL(p, q) = 0 \iff p = q$
+> 3. **Asimmetria**: $KL(p, q) \neq KL(q, p)$ (di conseguenza, *non è una distanza/metrica* in senso matematico)[cite: 107]
+
+> [!intuition] Perché la KL-Divergence genera la Cross-Entropy Loss?
+> Nel caso binario ($\Omega = \{0, 1\}$), possiamo modellare la vera etichetta $y$ e la predizione $h_\theta(x)$ come due distribuzioni di Bernoulli di parametri rispettivamente $p = y$ e $q = h_\theta(x)$:
+> $$ KL(p, q) = p \log \frac{p}{q} + (1-p) \log \frac{1-p}{1-q} $$
+> Sostituendo $p = y$ e $q = h_\theta(x)$ e sfruttando le proprietà dei logaritmi:
+> $$ KL(y, h_\theta(x)) = y \log \frac{y}{h_\theta(x)} + (1-y)\log \frac{1-y}{1 - h_\theta(x)} $$
+> $$ = \underbrace{-y \log h_\theta(x) - (1-y)\log(1 - h_\theta(x))}_{L_{CE}(h_\theta(x), y)} + \underbrace{y \log y + (1-y)\log(1-y)}_{\text{costante rispetto a } \theta} $$
+> Poiché i termini finali non dipendono da $\theta$, minimizzare la KL-Divergence rispetto a $\theta$ è **matematicamente equivalente** a minimizzare la [[Cross-Entropy Loss]][cite: 107].
+
+---
+
+## 3. Ottimizzazione della Regressione Logistica
+Dato un training set $S = \{(x_1, y_1), \dots, (x_n, y_n)\}$ con $x_i \in \mathbb{R}^d$ e $y_i \in \{0, 1\}$, il Rischio Empirico con Cross-Entropy Loss è:
+$$ \hat{R}_S(\theta) = -\frac{1}{n}\sum_{i=1}^n \left[ y_i \log h_\theta(x_i) + (1 - y_i)\log(1 - h_\theta(x_i)) \right] $$
+$$ = -\frac{1}{n}\sum_{i=1}^n \left[ y_i \log\left(\frac{1}{1+e^{-\theta^T x_i}}\right) + (1 - y_i)\log\left(1 - \frac{1}{1+e^{-\theta^T x_i}}\right) \right] $$[cite: 107]
+
+Poiché $\hat{R}_S(\theta)$ è **convessa in $\theta$** e differenziabile, possiamo trovare il minimo globale tramite [[Gradient Descent]][cite: 107].
+
+> [!theorem] Derivazione del Gradiente della Cross-Entropy
+> Sfruttando la regola della catena e la proprietà $\sigma'(z) = \sigma(z)(1-\sigma(z))$, calcoliamo $\nabla_\theta \hat{R}_S(\theta)$:
+> $$ \nabla_\theta \hat{R}_S(\theta) = -\frac{1}{n}\sum_{i=1}^n \left[ y_i \frac{\sigma(\langle x_i, \theta \rangle)(1 - \sigma(\langle x_i, \theta \rangle))}{\sigma(\langle x_i, \theta \rangle)} x_i + (1 - y_i)\frac{-\sigma(\langle x_i, \theta \rangle)(1 - \sigma(\langle x_i, \theta \rangle))}{1 - \sigma(\langle x_i, \theta \rangle)} x_i \right] $$
+> Semplificando i termini al numeratore e denominatore:
+> $$ = -\frac{1}{n}\sum_{i=1}^n \left[ y_i(1 - \sigma(\langle x_i, \theta \rangle)) - (1 - y_i)\sigma(\langle x_i, \theta \rangle) \right] x_i $$
+> Espandendo le parentesi, i termini incrociati $\pm y_i \sigma(\langle x_i, \theta \rangle)$ si elidono:
+> $$ = -\frac{1}{n}\sum_{i=1}^n \left( y_i - \sigma(\langle x_i, \theta \rangle) \right) x_i = \frac{1}{n}\sum_{i=1}^n x_i \left( \sigma(\langle x_i, \theta \rangle) - y_i \right) $$[cite: 107]
+
+**Versione Stocastica ([[SGD (Stochastic Gradient Descent)]])**:
+Per scalare su dataset grandi, peschiamo un indice $i_t$ uniformemente a caso (u.a.r.) e calcoliamo il gradiente stocastico su un singolo campione:
+$$ \hat{g}(\theta) = x_{i_t}\left(\sigma(\langle x_{i_t}, \theta \rangle) - y_{i_t}\right) $$[cite: 107]
+
+---
+
+## 4. Classificazione Multi-classe: Softmax Regression
+Quando lo spazio delle etichette contiene $K$ classi, $\mathcal{Y} = \{1, 2, \dots, K\}$, la sigmoide non basta più: dobbiamo generalizzarla alla funzione **Softmax**[cite: 107].
+
+> [!definition] Funzione Softmax e [[Softmax Regression]]
+> La funzione **Softmax** mappa un vettore di $K$ score reali in una distribuzione di probabilità su $K$ classi, $\text{softmax}: \mathbb{R}^K \rightarrow [0, 1]^K$:
+> $$ (z_1, \dots, z_K) \mapsto \left( \frac{e^{z_1}}{\sum_{j=1}^K e^{z_j}}, \dots, \frac{e^{z_K}}{\sum_{j=1}^K e^{z_j}} \right) $$
+> Nel modello **Softmax Regression**, i parametri sono organizzati in una matrice $\Theta \in \mathbb{R}^{d \times K}$, dove la $j$-esima colonna $\theta_j \in \mathbb{R}^d$ genera lo score per la classe $j$: $s_j(x) = \langle \theta_j, x \rangle$[cite: 107].
+> La probabilità stimata che $x$ appartenga alla classe $j$ è:
+> $$ \hat{P}_j(x, \Theta) = \frac{e^{\langle x, \theta_j \rangle}}{\sum_{l=1}^K e^{\langle x, \theta_l \rangle}} $$[cite: 107]
+
+> [!intuition] Perché usiamo la Softmax?
+> L'esponenziale garantisce che tutti i valori siano positivi e amplifica le differenze tra gli score, mentre la normalizzazione per la somma $D = \sum_l e^{z_l}$ forza le uscite a sommare esattamente a $1$. È il meccanismo standard fondamentale per adattare le reti neurali alla classificazione multi-classe[cite: 107].
+
+> [!example] Esempio Numerico
+> Dato il vettore di score $(-10, 29, 100)$, la Softmax restituisce:
+> $$ \left(\frac{e^{-10}}{D}, \frac{e^{29}}{D}, \frac{e^{100}}{D}\right) \quad \text{con } D = e^{-10} + e^{29} + e^{100} $$
+> (In questo caso $e^{100}$ domina enormemente gli altri termini, concentrando quasi tutta la massa di probabilità sulla terza classe)[cite: 107].
+
+**Rischio Empirico Multi-classe (Cross-Entropy)**:
+Rappresentando la label $y_i$ come vettore *one-hot* $y_i^{(j)} \in \{0, 1\}$ (che vale $1$ solo per la classe corretta $j$), il rischio empirico è:
+$$ \hat{R}_S(\Theta) = -\frac{1}{n}\sum_{i=1}^n \sum_{j=1}^K y_i^{(j)} \log \hat{P}_j(x_i, \Theta) $$[cite: 107]
+
+---
+
+## 5. Equivalenza tra Softmax ($K=2$) e Regressione Logistica
+
+> [!theorem] Domanda d'Esame: Softmax con $K=2$ equivale alla Logistic Regression
+> Nel caso binario ($K=2$), la Softmax Regression utilizza due vettori di pesi $\theta_1, \theta_2 \in \mathbb{R}^d$, ma è ridondante e matematicamente equivalente alla Regressione Logistica con un singolo vettore $\theta \in \mathbb{R}^d$[cite: 108].
+> 
+> **Dimostrazione**:
+> La probabilità della classe $1$ secondo la Softmax è:
+> $$ \hat{P}_1(x, \Theta) = \frac{e^{\langle \theta_1, x \rangle}}{e^{\langle \theta_1, x \rangle} + e^{\langle \theta_2, x \rangle}} $$
+> Dividiamo numeratore e denominatore per $e^{\langle \theta_1, x \rangle}$:
+> $$ \hat{P}_1(x, \Theta) = \frac{1}{1 + e^{\langle \theta_2, x \rangle - \langle \theta_1, x \rangle}} = \frac{1}{1 + e^{-\langle \theta_1 - \theta_2, x \rangle}} $$
+> Definendo il singolo vettore dei pesi $\theta = \theta_1 - \theta_2$, otteniamo esattamente il classificatore logistico:
+> $$ \hat{P}_1(x) = \frac{1}{1 + e^{-\langle \theta, x \rangle}} = \sigma(\langle \theta, x \rangle) $$
+> E, di conseguenza, $\hat{P}_2(x) = 1 - \hat{P}_1(x) = 1 - \sigma(\langle \theta, x \rangle)$[cite: 108].
+
+# Lezione 14: Ottimizzazione della Softmax, L-Smoothness e Convergenza Geometrica
+
+## 1. Ottimizzazione della Softmax Regression
+Abbiamo visto come [[Perceptron]] e [[Support Vector Machines|SVM]] risolvano problemi di classificazione binaria, mentre la [[Logistic Regression]] introduce un approccio probabilistico tramite la sigmoide[cite: 109]. La **[[Softmax Regression]]** è fondamentale in quanto estende la sigmoide al caso multi-classe ($K$ classi)[cite: 109].
+
+Poiché la [[Cross-Entropy Loss]] multi-classe è una funzione **convessa** rispetto ai parametri $\Theta \in \mathbb{R}^{d \times K}$, non possiede minimi locali stretti: ogni punto stazionario è un minimo globale[cite: 109]. Possiamo quindi minimizzare il rischio empirico tramite [[Gradient Descent]]:
+$$ \min_{\Theta} \hat{R}_S(\Theta) = -\frac{1}{n}\sum_{i=1}^n \sum_{j=1}^K y_i^{(j)} \log \hat{p}_j(x_i, \Theta) $$
+con regola di aggiornamento $\Theta^{(t+1)} = \Theta^{(t)} - \eta \nabla_\Theta \hat{R}_S(\Theta^{(t)})$[cite: 109].
+
+### Derivazione del Gradiente (Esatto e Stocastico)
+Consideriamo la loss sul singolo campione $i$-esimo:
+$$ l_i(\Theta) = -\sum_{j=1}^K y_i^{(j)} \log \left( \frac{e^{\langle x_i, \theta_j \rangle}}{\sum_{l=1}^K e^{\langle x_i, \theta_l \rangle}} \right) $$
+Per rendere la derivazione molto più semplice, applichiamo la proprietà dei logaritmi $\log\left(\frac{a}{b}\right) = \log a - \log b$ e sfruttiamo il fatto che $y_i$ è un vettore *one-hot*, quindi $\sum_{j=1}^K y_i^{(j)} = 1$:
+$$ l_i(\Theta) = -\sum_{j=1}^K y_i^{(j)} \langle x_i, \theta_j \rangle + \left(\sum_{j=1}^K y_i^{(j)}\right) \log \left(\sum_{l=1}^K e^{\langle x_i, \theta_l \rangle}\right) = -\sum_{j=1}^K y_i^{(j)} \langle x_i, \theta_j \rangle + \log \left(\sum_{l=1}^K e^{\langle x_i, \theta_l \rangle}\right) $$
+
+> [!theorem] Gradiente della Softmax Cross-Entropy
+> Derivando $l_i(\Theta)$ rispetto al vettore dei pesi $\theta_h \in \mathbb{R}^d$ associato alla classe $h$-esima, otteniamo:
+> $$ \nabla_{\theta_h} l_i(\Theta) = \frac{e^{\langle x_i, \theta_h \rangle}}{\sum_{l=1}^K e^{\langle x_i, \theta_l \rangle}} x_i - y_i^{(h)} x_i = \left(\hat{p}_h(x_i, \Theta) - y_i^{(h)}\right) x_i $$
+> Mediando su tutti gli $n$ campioni del dataset, il **gradiente totale** rispetto a $\theta_h$ assume una forma estremamente compatta:
+> $$ \nabla_{\theta_h} \hat{R}_S(\Theta) = \frac{1}{n}\sum_{i=1}^n \left(\hat{p}_h(x_i, \Theta) - y_i^{(h)}\right) x_i $$
+> Per lo **[[SGD (Stochastic Gradient Descent)]]**, campioniamo un indice $i_t$ uniformemente a caso (u.a.r.) e calcoliamo il gradiente stocastico:
+> $$ \hat{g}_h = \left(\hat{p}_h(x_{i_t}, \Theta) - y_{i_t}^{(h)}\right) x_{i_t} $$[cite: 109]
+
+> [!intuition] Perché la formula è così pulita?
+> Esattamente come nella regressione lineare e logistica, il gradiente rispetto ai pesi della classe $h$ è semplicemente l'input $x_i$ pesato per l'errore di predizione $(\hat{p}_h - y_i^{(h)})$: se il modello sovrastima la probabilità della classe $h$ (quando $y_i^{(h)}=0$), il gradiente spinge $\theta_h$ in direzione opposta a $x_i$; se la sottostima (quando $y_i^{(h)}=1$), la spinge verso $x_i$.
+
+---
+
+## 2. Geometria delle Regioni Decisionali della Softmax
+
+> [!example] Domanda d'Esame: Forma delle Regioni Decisionali $V_j$
+> Fissata una matrice di parametri $\Theta \in \mathbb{R}^{d \times K}$ e il corrispondente classificatore Softmax $\hat{p}_h(\cdot, \Theta)$, definiamo per ogni classe $j \in \{1, \dots, K\}$ la regione decisionale:
+> $$ V_j = \left\{ x \in \mathbb{R}^d \mid \hat{p}_j(x, \Theta) \ge \hat{p}_h(x, \Theta) \quad \forall h \right\} $$
+> **Qual è la struttura geometrica di $V_j$?**
+> 
+> **Dimostrazione**:
+> Esplicitiamo la disuguaglianza $\hat{p}_j(x, \Theta) \ge \hat{p}_h(x, \Theta)$ per un generico $h$:
+> $$ \frac{e^{\langle x, \theta_j \rangle}}{\sum_{l=1}^K e^{\langle x, \theta_l \rangle}} \ge \frac{e^{\langle x, \theta_h \rangle}}{\sum_{l=1}^K e^{\langle x, \theta_l \rangle}} $$
+> Poiché il denominatore è strettamente positivo, possiamo semplificarlo. Inoltre, essendo la funzione esponenziale strettamente crescente, applicando il logaritmo otteniamo:
+> $$ e^{\langle x, \theta_j \rangle} \ge e^{\langle x, \theta_h \rangle} \iff \langle x, \theta_j \rangle \ge \langle x, \theta_h \rangle \iff \langle x, \theta_j - \theta_h \rangle \ge 0 \quad \forall h $$
+> **Conclusione geometrica**: Ogni vincolo $\langle x, \theta_j - \theta_h \rangle \ge 0$ definisce un semispazio lineare chiuso. La regione decisionale $V_j$ è quindi l'intersezione di $K-1$ semispazi: è un **insieme convesso** (un cono poliedrale con confini decisionali lineari)[cite: 109].
+
+---
+
+## 3. L-Smoothness e Upper Bound Quadratico
+Nelle lezioni precedenti abbiamo visto come la [[Forte Convessità]] acceleri la convergenza imponendo un *lower bound* quadratico alla funzione obiettivo. Ora introduciamo la proprietà duale, che impone un *upper bound* quadratico controllando la velocità massima con cui può variare il gradiente: la **$L$-smoothness**.
+
+> [!definition] [[L-Smoothness]]
+> Una funzione differenziabile $f: \mathbb{R}^d \rightarrow \mathbb{R}$ si dice **$L$-smooth** (con $L > 0$) se il suo gradiente è $L$-Lipschitziano, ossia:
+> $$ \|\nabla f(u) - \nabla f(w)\| \le L \|u - w\| \quad \forall u, w \in \mathbb{R}^d $$[cite: 109]
+
+> [!intuition] Perché ci serve la L-Smoothness?
+> Nel Subgradient Descent senza smoothness, il gradiente può cambiare bruscamente (es. negli spigoli della Hinge Loss), costringendoci a usare learning rate minuscoli o decrescenti. La $L$-smoothness garantisce che il gradiente non vari troppo in fretta: la curvatura massima della funzione è limitata da $L$, permettendoci di fare passi di discesa di ampiezza fissa $\eta = \frac{1}{L}$ con la certezza matematica che la funzione diminuisca ad ogni iterazione.
+
+> [!theorem] Quadratic Upper Bound (Lemma Fondamentale della Smoothness)
+> Se $f: \mathbb{R}^d \rightarrow \mathbb{R}$ è $L$-smooth, allora per ogni $u, w \in \mathbb{R}^d$:
+> $$ f(u) \le f(w) + \langle \nabla f(w), u - w \rangle + \frac{L}{2}\|u - w\|^2 $$
+> 
+> **Dimostrazione**:
+> Fissiamo $u, w \in \mathbb{R}^d$ e definiamo la funzione ausiliaria monodimensionale $h: [0, 1] \rightarrow \mathbb{R}$ lungo il segmento che unisce $w$ a $u$:
+> $$ h(\alpha) = f(w + \alpha(u - w)) $$
+> Notiamo che $h(0) = f(w)$, $h(1) = f(u)$ e, per la regola della catena, $h'(\alpha) = \langle \nabla f(w + \alpha(u - w)), u - w \rangle$. Per il Teorema Fondamentale del Calcolo Integrale:
+> $$ f(u) - f(w) = h(1) - h(0) = \int_0^1 \langle \nabla f(w + \alpha(u - w)), u - w \rangle \, d\alpha $$
+> Sottraendo $\langle \nabla f(w), u - w \rangle = \int_0^1 \langle \nabla f(w), u - w \rangle \, d\alpha$ ad ambo i membri:
+> $$ f(u) - f(w) - \langle \nabla f(w), u - w \rangle = \int_0^1 \langle \nabla f(w + \alpha(u - w)) - \nabla f(w), u - w \rangle \, d\alpha $$
+> Applichiamo la disuguaglianza di Cauchy-Schwarz e poi la definizione di $L$-smoothness:
+> $$ \le \int_0^1 \|\nabla f(w + \alpha(u - w)) - \nabla f(w)\| \cdot \|u - w\| \, d\alpha \le \int_0^1 L \|\alpha(u - w)\| \cdot \|u - w\| \, d\alpha $$
+> $$ = L \|u - w\|^2 \int_0^1 \alpha \, d\alpha = \frac{L}{2}\|u - w\|^2 $$[cite: 109]
+
+---
+
+## 4. Garanzie di Convergenza del Gradient Descent con L-Smoothness
+
+> [!theorem] Descent Lemma (Decrescita garantita ad ogni passo esatto)
+> Se $f$ è $L$-smooth, un passo di Gradient Descent con learning rate $\eta = \frac{1}{L}$ garantisce una riduzione stretta della funzione proporzionale al quadrato della norma del gradiente:
+> $$ f\left(w - \frac{1}{L}\nabla f(w)\right) \le f(w) - \frac{1}{2L}\|\nabla f(w)\|^2 $$
+> 
+> **Dimostrazione**:
+> Applichiamo il Quadratic Upper Bound scegliendo $u = w - \frac{1}{L}\nabla f(w)$ (da cui $u - w = -\frac{1}{L}\nabla f(w)$):
+> $$ f\left(w - \frac{1}{L}\nabla f(w)\right) \le f(w) + \left\langle \nabla f(w), -\frac{1}{L}\nabla f(w) \right\rangle + \frac{L}{2}\left\|-\frac{1}{L}\nabla f(w)\right\|^2 $$
+> $$ = f(w) - \frac{1}{L}\|\nabla f(w)\|^2 + \frac{1}{2L}\|\nabla f(w)\|^2 = f(w) - \frac{1}{2L}\|\nabla f(w)\|^2 $$[cite: 110]
+
+### A. Caso Convesso + L-Smooth (Rate $\mathcal{O}(1/T)$)
+
+> [!theorem] Convergenza del Gradient Descent per Funzioni Convesse e L-Smooth
+> Sia $f: \mathbb{R}^d \rightarrow \mathbb{R}$ convessa e $L$-smooth, con minimizzatore $w^*$ tale che $\|w^*\| \le B$. Eseguendo il Gradient Descent partendo da $w^{(1)} = 0$ con passo costante $\eta = \frac{1}{L}$, vale:
+> $$ f(w^{(T+1)}) - f(w^*) \le \frac{L B^2}{2T} $$
+> 
+> **Dimostrazione**:
+> 1. Per convessità di $f$ e usando l'identità algebrica del passo di discesa (con $\eta = \frac{1}{L}$):
+>    $$ f(w^{(t)}) - f(w^*) \le \langle \nabla f(w^{(t)}), w^{(t)} - w^* \rangle = \frac{L}{2}\left(\|w^{(t)} - w^*\|^2 - \|w^{(t+1)} - w^*\|^2\right) + \frac{1}{2L}\|\nabla f(w^{(t)})\|^2 $$
+> 2. Dal **Descent Lemma**, sappiamo che $\frac{1}{2L}\|\nabla f(w^{(t)})\|^2 \le f(w^{(t)}) - f(w^{(t+1)})$. Sostituendo nella disuguaglianza precedente:
+>    $$ f(w^{(t)}) - f(w^*) \le \frac{L}{2}\left(\|w^{(t)} - w^*\|^2 - \|w^{(t+1)} - w^*\|^2\right) + f(w^{(t)}) - f(w^{(t+1)}) $$
+> 3. Elidendo $f(w^{(t)})$ da entrambi i lati e riordinando:
+>    $$ f(w^{(t+1)}) - f(w^*) \le \frac{L}{2}\left(\|w^{(t)} - w^*\|^2 - \|w^{(t+1)} - w^*\|^2\right) $$
+> 4. Sommando per $t = 1, \dots, T$ e dividendo per $T$ (somma telescopica):
+>    $$ \frac{1}{T}\sum_{t=1}^T \left(f(w^{(t+1)}) - f(w^*)\right) \le \frac{L}{2T}\left(\|w^{(1)} - w^*\|^2 - \|w^{(T+1)} - w^*\|^2\right) \le \frac{L\|w^*\|^2}{2T} \le \frac{L B^2}{2T} $$
+> 5. Poiché il Descent Lemma garantisce che $f(w^{(t+1)})$ è decrescente ad ogni passo, l'ultimo iterato è migliore della media di tutti gli iterati:
+>    $$ f(w^{(T+1)}) - f(w^*) \le \frac{1}{T}\sum_{t=1}^T \left(f(w^{(t+1)}) - f(w^*)\right) \le \frac{L B^2}{2T} $$[cite: 110]
+
+### B. Caso Fortemente Convesso + L-Smooth (Convergenza Geometrica)
+Cosa succede quando la funzione possiede *entrambe* le proprietà di regolarità (parabola inferiore $\mu$ e parabola superiore $L$)?
+
+> [!theorem] Convergenza Geometrica (Lineare) del Gradient Descent Esatto
+> Sia $f: \mathbb{R}^d \rightarrow \mathbb{R}$ una funzione $L$-smooth e $\mu$-fortemente convessa (con $L \ge \mu > 0$) con minimizzatore $w^*$. Il Gradient Descent esatto da $w^{(1)} = 0$ con $\eta = \frac{1}{L}$ soddisfa:
+> $$ f(w^{(T+1)}) - f(w^*) \le \left(1 - \frac{\mu}{L}\right)^T \left(f(0) - f(w^*)\right) $$
+> *(Nota: se $f$ è anche $\rho$-Lipschitziana e $\|w^*\| \le B$, il termine iniziale si limita facilmente come $f(0) - f(w^*) \le \rho B$).*[cite: 110]
+
+> [!intuition] Impatto del Rapporto $\frac{L}{\mu}$ (Numero di Condizionamento)
+> L'errore decade **esponenzialmente** con $T$: per raggiungere precisione $\epsilon$ bastano $\mathcal{O}\left(\frac{L}{\mu}\log\frac{1}{\epsilon}\right)$ iterazioni, un salto enorme rispetto a $\mathcal{O}(1/\epsilon)$ o $\mathcal{O}(1/\epsilon^2)$. La velocità è governata dal rapporto $\kappa = \frac{L}{\mu}$ (numero di condizionamento): più $L$ e $\mu$ sono vicini, più le curve di livello sono "sferiche" e la convergenza è quasi istantanea.
+
+---
+
+## 5. Caso Studio: Ridge Regression (Smoothness e Strong Convexity)
+Applichiamo questa teoria alla [[Ridge Regression]]:
+$$ \hat{R}_S(\theta) = \frac{1}{n}\|y - X\theta\|^2 + \frac{\lambda}{2}\|\theta\|^2 $$
+Calcoliamo gradiente ed Hessiana:
+$$ \nabla \hat{R}_S(\theta) = \frac{2}{n}X^T(X\theta - y) + \lambda \theta = \left(\frac{2}{n}X^T X + \lambda I\right)\theta - \frac{2}{n}X^T y $$
+$$ \nabla^2 \hat{R}_S(\theta) = \frac{2}{n}X^T X + \lambda I $$[cite: 110]
+
+### Analisi Spettrale di $X^T X$
+Osserviamo che la matrice $A = X^T X$ è **simmetrica**, poiché $(X^T X)^T = X^T (X^T)^T = X^T X$[cite: 110]. 
+Per il **Teorema Spettrale**, esiste una base ortonormale di autovettori $v_1, \dots, v_d$ con autovalori reali $\nu_1, \dots, \nu_d$ (tutti non negativi poiché $x^T X^T X x = \|Xx\|^2 \ge 0$). Scomponendo un qualsiasi vettore $x = \sum_{i=1}^d \gamma_i v_i$, la forma quadratica diventa:
+$$ x^T A x = \left\langle \sum_{i=1}^d \gamma_i v_i, \sum_{j=1}^d \gamma_j \nu_j v_j \right\rangle = \sum_{i=1}^d \nu_i \gamma_i^2 $$
+Da cui seguono immediatamente i limiti spettrali:
+$$ \nu_{\min}\|x\|^2 \le x^T A x \le \nu_{\max}\|x\|^2 \quad \text{e} \quad \|Ax\| \le \nu_{\max}\|x\| $$
+dove $\nu_{\max} = \max_i |\nu_i|$ e $\nu_{\min} = \min_i \nu_i$[cite: 110].
+
+> [!theorem] Parametri $L$ e $\mu$ per la Ridge Regression
+> 1. **$L$-Smoothness**: Per ogni $\theta_1, \theta_2 \in \mathbb{R}^d$:
+>    $$ \|\nabla \hat{R}_S(\theta_1) - \nabla \hat{R}_S(\theta_2)\| = \left\|\left(\frac{2}{n}X^T X + \lambda I\right)(\theta_1 - \theta_2)\right\| \le \left(\frac{2}{n}\nu_{\max} + \lambda\right)\|\theta_1 - \theta_2\| $$
+>    Pertanto la loss della Ridge Regression è **$L$-smooth** con $L = \frac{2}{n}\nu_{\max} + \lambda$[cite: 110].
+> 2. **$\mu$-Strong Convexity**: Calcolando la differenza rispetto all'approssimazione del primo ordine:
+>    $$ \hat{R}_S(\theta_1) - \hat{R}_S(\theta_2) - \langle \nabla \hat{R}_S(\theta_2), \theta_1 - \theta_2 \rangle = \frac{1}{n}(\theta_1 - \theta_2)^T X^T X (\theta_1 - \theta_2) + \frac{\lambda}{2}\|\theta_1 - \theta_2\|^2 $$
+>    Applicando il bound spettrale inferiore $(\theta_1 - \theta_2)^T X^T X (\theta_1 - \theta_2) \ge \nu_{\min}\|\theta_1 - \theta_2\|^2$:
+>    $$ \ge \frac{1}{2}\left(\frac{2}{n}\nu_{\min} + \lambda\right)\|\theta_1 - \theta_2\|^2 $$
+>    La funzione è quindi **$\mu$-fortemente convessa** con $\mu = \frac{2}{n}\nu_{\min} + \lambda$ (se $X^T X$ è invertibile, $\nu_{\min} > 0$; anche nel caso degenere in cui non lo fosse, la regolarizzazione Ridge garantisce comunque $\mu \ge \lambda > 0$)[cite: 110].
+
+> [!intuition] Perché la Ridge Regression migliora l'ottimizzazione?
+> Oltre a prevenire l'[[Overfitting]], aggiungere $\frac{\lambda}{2}\|\theta\|^2$ trasla tutti gli autovalori dell'Hessiana verso l'alto di $+\lambda$. Questo garantisce che $\mu > 0$ (anche se le feature sono collineari e $X^T X$ non è invertibile) e riduce il numero di condizionamento $\frac{L}{\mu}$, accelerando drasticamente la convergenza geometrica del Gradient Descent senza dover mai invertire alcuna matrice.
+
+# Lezione 15: Dimostrazione della Convergenza Geometrica, Limiti di SGD e Comportamento Asintotico della Logistic Loss
+
+## 1. Convergenza Geometrica del Gradient Descent Esatto
+Nella lezione precedente abbiamo enunciato che combinare [[L-Smoothness]] e [[Forte Convessità]] permette al [[Gradient Descent]] esatto di convergere esponenzialmente veloce[cite: 112]. Ora ne vediamo la dimostrazione rigorosa[cite: 112].
+
+> [!theorem] Convergenza Geometrica (Lineare) del Gradient Descent Esatto
+> Sia $f: \mathbb{R}^d \rightarrow \mathbb{R}$ una funzione $L$-smooth e $\mu$-fortemente convessa (con $L \ge \mu > 0$), dotata di un minimizzatore $w^*$[cite: 112]. Eseguendo il Gradient Descent esatto partendo da $w^{(1)} = 0$ con passo costante $\eta = \frac{1}{L}$, vale[cite: 112]:
+> $$ f(w^{(T+1)}) - f(w^*) \le \left(1 - \frac{\mu}{L}\right)^T \left(f(0) - f(w^*)\right) $$
+> *(Nota: se $f$ è anche $\rho$-Lipschitziana e $\|w^*\| \le B$, il termine iniziale si può limitare superiormente come $f(0) - f(w^*) \le \rho B$)[cite: 112].*
+
+### Dimostrazione Analitica Passo-Passo
+La dimostrazione si articola in due fasi: derivare un *lower bound* sulla norma del gradiente (nota come **disuguaglianza di Polyak-Łojasiewicz**) e combinarla con il **Descent Lemma**[cite: 112].
+
+**Passo 1: Lower bound sul gradiente tramite completamento del quadrato**
+Per ogni $u, w \in \mathbb{R}^d$, dalla definizione di $\mu$-forte convessità sappiamo che[cite: 112]:
+$$ f(u) \ge f(w) + \langle \nabla f(w), u - w \rangle + \frac{\mu}{2}\|u - w\|^2 $$
+Aggiungiamo e sottraiamo il termine $\frac{1}{2\mu}\|\nabla f(w)\|^2$ al membro di destra per completare il quadrato[cite: 112]:
+$$ f(u) \ge f(w) - \frac{1}{2\mu}\|\nabla f(w)\|^2 + \frac{\mu}{2}\left\|u - w + \frac{1}{\mu}\nabla f(w)\right\|^2 $$
+Poiché la norma quadratica è sempre non negativa, possiamo eliminarla mantenendo la disuguaglianza[cite: 112]:
+$$ f(u) \ge f(w) - \frac{1}{2\mu}\|\nabla f(w)\|^2 $$
+Poiché questa relazione vale per *ogni* $u \in \mathbb{R}^d$, possiamo scegliere in particolare $u = w^*$[cite: 112]:
+$$ f(w^*) \ge f(w) - \frac{1}{2\mu}\|\nabla f(w)\|^2 \implies \|\nabla f(w)\|^2 \ge 2\mu\left(f(w) - f(w^*)\right) $$
+
+**Passo 2: Combinazione con il Descent Lemma e ricorsione**
+Dal Descent Lemma (valido per funzioni $L$-smooth con $\eta = \frac{1}{L}$), al passo $t$ abbiamo[cite: 112]:
+$$ f(w^{(t+1)}) - f(w^*) \le f(w^{(t)}) - f(w^*) - \frac{1}{2L}\|\nabla f(w^{(t)})\|^2 $$
+Sostituendo il lower bound su $\|\nabla f(w^{(t)})\|^2$ ricavato al Passo 1[cite: 112]:
+$$ f(w^{(t+1)}) - f(w^*) \le f(w^{(t)}) - f(w^*) - \frac{2\mu}{2L}\left(f(w^{(t)}) - f(w^*)\right) = \left(1 - \frac{\mu}{L}\right)\left(f(w^{(t)}) - f(w^*)\right) $$
+Applicando ricorsivamente questa contrazione dal passo $t = T$ a ritroso fino all'inizializzazione $w^{(1)} = 0$, si ottiene la tesi[cite: 112]:
+$$ f(w^{(T+1)}) - f(w^*) \le \left(1 - \frac{\mu}{L}\right)^T \left(f(0) - f(w^*)\right) $$
+
+> [!intuition] Perché ci interessa e cosa chiede l'esame?
+> *Domanda d'esame tipica*: **Sotto quali condizioni otteniamo la convergenza geometrica?**
+> Servono simultaneamente **tre ingredienti**: $L$-smoothness, $\mu$-forte convessità e **gradiente esatto** (non stocastico) con passo $\eta = 1/L$[cite: 112]. La forte convessità garantisce che, finché siamo lontani dal minimo $f(w^*)$, il gradiente non può essere troppo piccolo ($\|\nabla f(w)\|^2 \ge 2\mu(f(w) - f(w^*))$); la $L$-smoothness garantisce che un gradiente grande produca un calo proporzionale della funzione obiettivo.
+
+---
+
+## 2. Applicazione a Ridge/OLS e Limite dello Stochastic Gradient
+
+> [!theorem] Gradient Descent per Ridge Regression e OLS
+> Sia $\lambda \ge 0$ e sia $\theta^*$ il minimizzatore dell'obiettivo della [[Ridge Regression]] (o [[Ordinary Least Squares (OLS)]] se $\lambda = 0$ e $X^T X$ è invertibile) con $\|\theta^*\|_2 \le B$[cite: 112]. Impostando i parametri spettrali di smoothness $L = 2\left(\frac{\nu_{\max}}{n} + \lambda\right)$ e forte convessità $\mu = 2\left(\frac{\nu_{\min}}{n} + \lambda\right)$ (a meno del fattore $1/2$ sulla regolarizzazione), eseguendo il Gradient Descent esatto da $\theta^{(1)} = 0$ con $\eta = \frac{1}{L}$ per $T$ aggiornamenti e restituendo l'**ultimo iterato** $\theta^{(T+1)}$, si ottiene convergenza geometrica[cite: 112].
+
+> [!intuition] Attenzione: La Smoothness non "sopravvive" con SGD!
+> Un'osservazione fondamentale della teoria dell'ottimizzazione è che **"smoothness does not survive with the stochastic gradient"**[cite: 112].
+> Nel [[Gradient Descent]] esatto, vicino al minimo $\nabla f(w^{(t)}) \to 0$, quindi i passi $-\frac{1}{L}\nabla f(w^{(t)})$ si rimpiccioliscono naturalmente fino a fermarsi in $w^*$. Nello **[[SGD (Stochastic Gradient Descent)]]**, invece, il gradiente calcolato su un singolo campione $\hat{g}^{(t)}$ ha varianza non nulla anche quando siamo esattamente in $w^*$: usare un passo fisso $\eta = 1/L$ farebbe oscillare l'algoritmo attorno al minimo senza mai convergere con tasso geometrico. Per questo con SGD siamo costretti a usare learning rate decrescenti (come $\eta_t = \frac{1}{\mu t}$), tornando al tasso $\mathcal{O}\left(\frac{\log T}{T}\right)$.
+
+---
+
+## 3. Esercizio: Comportamento Asintotico della Cross-Entropy nella Logistic Regression
+Analizziamo il comportamento della [[Cross-Entropy Loss]] per la [[Logistic Regression]] su un singolo punto per capire cosa accade ai pesi $\theta$ quando i dati sono classificati correttamente[cite: 112].
+
+> [!example] Esercizio 1: Analisi della Loss su punti correttamente classificati
+> Data la loss su un singolo campione $(x_i, y_i)$ con $h_\theta(x_i) = \sigma(\langle x_i, \theta \rangle) = \frac{1}{1 + e^{-\langle x_i, \theta \rangle}}$[cite: 112]:
+> $$ l_i(\theta) = -y_i \log h_\theta(x_i) - (1 - y_i)\log(1 - h_\theta(x_i)) $$
+> 
+> **Caso 1: Punto positivo $(x, 1)$**
+> Sostituendo $y = 1$, la loss si riduce a[cite: 112]:
+> $$ l_1(\theta) = -\log(h_\theta(x)) = -\log\left(\frac{1}{1 + e^{-\langle x, \theta \rangle}}\right) = \log\left(1 + e^{-\langle x, \theta \rangle}\right) $$
+> Supponiamo che $\theta$ classifichi **correttamente** il punto, ossia $\langle x, \theta \rangle > 0$[cite: 112]. Se consideriamo un vettore parallelo a $\theta$ di norma crescente, $\alpha\theta$ con $\alpha \to +\infty$, il prodotto scalare $\langle x, \alpha\theta \rangle \to +\infty$, quindi $e^{-\langle x, \alpha\theta \rangle} \to 0$ e la loss tende asintoticamente a zero:
+> $$ \lim_{\alpha \to +\infty} l_1(\alpha\theta) = \log(1 + 0) = 0 $$
+> 
+> **Caso 2: Punto negativo $(x, 0)$**
+> Sostituendo $y = 0$, la loss si riduce a[cite: 112]:
+> $$ l_0(\theta) = -\log(1 - h_\theta(x)) = -\log\left(1 - \frac{1}{1 + e^{-\langle x, \theta \rangle}}\right) = -\log\left(\frac{e^{-\langle x, \theta \rangle}}{1 + e^{-\langle x, \theta \rangle}}\right) = \log\left(1 + e^{\langle x, \theta \rangle}\right) $$
+> Se $\theta$ classifica **correttamente** il punto, allora $\langle x, \theta \rangle < 0$[cite: 112]. Scalando i pesi lungo la stessa direzione con $\alpha \to +\infty$, abbiamo $\langle x, \alpha\theta \rangle \to -\infty$, quindi $e^{\langle x, \alpha\theta \rangle} \to 0$ e nuovamente:
+> $$ \lim_{\alpha \to +\infty} l_0(\alpha\theta) = \log(1 + 0) = 0 $$
+
+> [!intuition] Implicazione Teorica Cruciale
+> Se un dataset è linearmente separabile, per qualsiasi vettore separatore $\theta$, possiamo ridurre strettamente la Cross-Entropy Loss semplicemente moltiplicando $\theta$ per uno scalare $\alpha > 1$ sempre più grande. Di conseguenza, la Logistic Regression non regolarizzata su dati separabili **non ammette un minimizzatore finito** ($\|\theta^*\| \to +\infty$): i pesi divergono all'infinito per spingere le probabilità esattamente a $0$ e $1$. Questo rende l'aggiunta di un termine di [[Regolarizzazione]] (come $\frac{\lambda}{2}\|\theta\|^2$) essenziale non solo contro l'[[Overfitting]], ma anche per garantire l'esistenza di un ottimo finito e la forte convessità.
+
+# Lezione 16: Introduzione alle Reti Neurali Feed-Forward (FFNN)
+
+## 1. Sintesi del Framework di Apprendimento Supervisionato
+Prima di introdurre le reti neurali, ricapitoliamo i pilastri teorici e algoritmici costruiti finora nel [[Supervised Learning]][cite: 114]:
+
+- **Setup**: Disponiamo di un dataset di campioni $(x_1, y_1), \dots, (x_n, y_n) \in \mathcal{X} \times \mathcal{Y}$ estratti da una distribuzione incognita $\mathcal{D}$ su $\mathcal{X} \times \mathcal{Y}$, e di una funzione di loss $l: \mathcal{Y}^2 \rightarrow \mathbb{R}_+$[cite: 114].
+- **Rischio e Scomposizione**: Usiamo il [[Rischio Empirico]] $\hat{R}_S(f) = \frac{1}{n}\sum_{i=1}^n l(f(x_i), y_i)$ come proxy del Rischio Atteso $R_{\mathcal{D}}(f) = \mathbb{E}[l(f(x), y)]$, governato dalla scomposizione:
+  $$ R_{\mathcal{D}}(\hat{f}) = R_{\mathcal{D}}^* + \left(\inf_{f \in \mathcal{F}} R_{\mathcal{D}}(f) - R_{\mathcal{D}}^*\right) + \left(R_{\mathcal{D}}(\hat{f}) - \inf_{f \in \mathcal{F}} R_{\mathcal{D}}(f)\right) $$
+- **Quattro principi guida per i nuovi modelli**:
+  1. Separazione rigorosa tra [[Training Set]] e [[Test Set]].
+  2. Più campioni permettono di addestrare modelli più complessi (nelle reti neurali, maggiore profondità $\implies$ maggiore complessità).
+  3. La [[Regolarizzazione]] è fondamentale (sia aggiungendo una penalità esplicita alla loss, sia modificando/tarando l'ottimizzazione).
+  4. Lo [[SGD (Stochastic Gradient Descent)]] è uno strumento estremamente efficace[cite: 114].
+
+### Riepilogo dei Modelli Lineari visti finora
+Tutti i modelli studiati fino a questo punto appartengono a famiglie parametriche $\mathcal{F} = \{f_\theta : \mathcal{X} \to \mathcal{Y}\}$ basate su prodotti scalari:
+
+| Modello | Funzione Predittore $f_\theta(x)$ | Funzione di Loss |
+| :--- | :--- | :--- |
+| **[[Perceptron]]** | $\text{sign}(\langle \theta, x \rangle)$ | 0-1 Loss |
+| **[[Support Vector Machines\|SVM]]** | $\text{sign}(\langle \theta, x \rangle)$ | Hinge Loss |
+| **[[Linear Regression]]** | $\langle \varphi(x), \theta \rangle$ | $L_2$ Loss (Squared) |
+| **[[Logistic Regression]]** | $\sigma(\langle \theta, x \rangle)$ | Cross-Entropy |
+| **[[Softmax Regression]]** | $\text{softmax}(\Theta^T x)$ | Cross-Entropy Multi-classe[cite: 114] |
+
+---
+
+## 2. Reti Neurali Feed-Forward e Ruolo della Non-Linearità
+Per superare i limiti dei modelli lineari senza dover progettare manualmente una [[Feature Map]] $\varphi(x)$, introduciamo le **[[Feed-Forward Neural Networks]]** (ispirate alla struttura biologica di cervello e neuroni)[cite: 114].
+
+> [!definition] Singolo Neurone Artificiale
+> Un singolo neurone riceve un vettore di input $x \in \mathbb{R}^d$, calcola una combinazione affine tramite i propri pesi $w$ e bias $b$, e vi applica una **funzione di attivazione non lineare** $h$:
+> $$ a = h(\langle x, w \rangle + b) $$[cite: 114]
+
+> [!intuition] Perché la non-linearità è indispensabile?
+> Abbiamo bisogno della non-linearità per garantire l'**espressività** della rete[cite: 114]. Se rimuovessimo le funzioni di attivazione non lineari (ponendo $h(z) = z$), la composizione di arbitrari strati lineari collasserebbe algebricamente in un'unica trasformazione lineare ($W^{(2)}(W^{(1)}x) = (W^{(2)}W^{(1)})x$), rendendo la profondità della rete del tutto inutile e incapace di separare dati non linearmente separabili.
+
+### Caso Studio: Risolvere il Problema XOR con ReLU
+Consideriamo la funzione di attivazione **ReLU** (*Rectified Linear Unit*)[cite: 114]:
+$$ \text{ReLU}(z) = z_+ = \begin{cases} z & \text{se } z \ge 0 \\ 0 & \text{altrimenti} \end{cases} $$
+
+> [!example] Separazione dello XOR con una Rete a 2 Neuroni Nascosti
+> Consideriamo 4 punti in $\mathbb{R}^2$ non linearmente separabili[cite: 114, 115]:
+> - $A = (0, 1) \mapsto +1$
+> - $B = (0, 0) \mapsto -1$
+> - $C = (1, 0) \mapsto +1$
+> - $D = (1, 1) \mapsto -1$
+> 
+> Costruiamo una rete con uno strato nascosto di 2 neuroni che calcolano rispettivamente $x_1 - x_2$ e $x_2 - x_1$, applicano la ReLU e sommano le uscite nel neurone finale:
+> $$ f(x_1, x_2) = \text{ReLU}(x_1 - x_2) + \text{ReLU}(x_2 - x_1) $$
+> **Verifica passo-passo sul punto $C = (1, 0)$**:
+> 1. **Neurone superiore**: $x_1 - x_2 = 1 - 0 = 1 \implies \text{ReLU}(1) = 1$ (poiché $1 \ge 0$).
+> 2. **Neurone inferiore**: $x_2 - x_1 = 0 - 1 = -1 \implies \text{ReLU}(-1) = 0$ (poiché $-1 < 0$).
+> 3. **Output**: $1 + 0 = 1$.
+> 
+> *(Osservazione: analiticamente $\text{ReLU}(x_1 - x_2) + \text{ReLU}(x_2 - x_1) = |x_1 - x_2|$, che restituisce $1$ per $A$ e $C$ e $0$ per $B$ e $D$, risolvendo perfettamente la non-separabilità lineare dello XOR)*[cite: 114, 115].
+
+---
+
+## 3. Notazione Generale e Architettura
+Quando progettiamo una rete neurale, abbiamo due grandi gradi di libertà (*degrees of freedom*): la **topologia** (numero di strati e neuroni) e le **funzioni di attivazione**[cite: 115].
+
+> [!definition] Architettura di una Rete Neurale Profonda
+> - **Shallow Neural Network**: rete con 1 solo strato nascosto (*1-layer*).
+> - **Deep Neural Network**: rete con $D > 1$ strati (*n-layer*), dove $D$ indica la **profondità** (*depth*) della rete.
+> - **Larghezza degli strati**: denotiamo con $d_0, d_1, d_2, \dots, d_D$ il numero di nodi (neuroni) in ciascuno strato, dove $d_0$ è la dimensione dell'input e $d_l$ è il numero di nodi nello strato $l$.
+> 
+> Il passaggio dallo strato $l-1$ allo strato $l$ mappa il vettore delle attivazioni $a^{l-1} \in \mathbb{R}^{d_{l-1}}$ in $a^l \in \mathbb{R}^{d_l}$ attraverso due operazioni:
+> 1. **Trasformazione affine (pre-attivazione)**:
+>    $$ z^l = W^l a^{l-1} + b^l $$
+>    dove $W^l \in \mathbb{R}^{d_l \times d_{l-1}}$ è la matrice dei pesi (la cui $i$-esima riga corrisponde ai pesi del neurone $i$-esimo) e $b^l \in \mathbb{R}^{d_l}$ è il vettore dei bias.
+> 2. **Applicazione della non-linearità (attivazione)**:
+>    $$ a^l = \pi^l(z^l) $$
+>    dove $\pi^l: \mathbb{R}^{d_l} \rightarrow \mathbb{R}^{d_l}$ applica la funzione di attivazione componente per componente[cite: 115].
+
+---
+
+## 4. Ottimizzazione delle Reti Neurali: Le Novità ("NEWS")
+Raccogliendo tutte le matrici dei pesi e i bias in un unico vettore di parametri $\theta$, addestriamo la rete $f_\theta$ minimizzando il rischio empirico $\hat{R}_S(f_\theta) = \frac{1}{n}\sum_{i=1}^n l(f_\theta(x_i), y_i)$[cite: 115]. Rispetto ai modelli lineari, emergono tre novità cruciali:
+
+1. **Non-Convessità**: $\hat{R}_S(f_\theta)$ **non è convessa** in $\theta$[cite: 115]. Perdiamo le garanzie teoriche di convergenza al minimo globale tipiche di SVM, Ridge e Logistic Regression.
+2. **Efficacia empirica di SGD**: Nonostante la non-convessità, lo [[SGD (Stochastic Gradient Descent)]] funziona sorprendentemente bene e riesce a trovare minimi locali "abbastanza buoni" (*"okay" min*) che generalizzano efficacemente[cite: 115].
+3. **[[Backpropagation]]**: Per applicare SGD dobbiamo calcolare $\nabla_\theta \hat{R}_S(f_\theta)$ rispetto a milioni di parametri. La *Backpropagation* è l'algoritmo che permette di calcolare il gradiente in modo rapido ed efficiente sfruttando la regola della catena[cite: 115].
+
+---
+
+## 5. Funzioni di Attivazione Principali e loro Derivate
+Poiché la backpropagation richiede di derivare le attivazioni ad ogni strato, analizziamo le tre funzioni fondamentali[cite: 115]:
+
+### 1. ReLU (Rectified Linear Unit)
+$$ \text{ReLU}(z) = \begin{cases} z & \text{se } z \ge 0 \\ 0 & \text{se } z < 0 \end{cases} \implies (\text{ReLU})'(z) = \begin{cases} 1 & \text{se } z > 0 \\ 0 & \text{se } z < 0 \end{cases} $$
+*Osservazione critica*: **Cosa succede in $z = 0$?** La funzione presenta uno spigolo e non è differenziabile; come visto con la Hinge Loss, si ricorre a un [[Subgradiente]] nell'intervallo $[0, 1]$ (in pratica, le librerie implementano convenzionalmente $0$ o $1$)[cite: 115].
+
+### 2. Sigmoide
+$$ \sigma(z) = \frac{1}{1 + e^{-z}} \implies \sigma'(z) = \sigma(z)(1 - \sigma(z)) $$[cite: 115]
+
+### 3. Tangente Iperbolica ($\tanh$)
+> [!definition] Funzione $\tanh$
+> La tangente iperbolica è una funzione continua e differenziabile ovunque che mappa $\mathbb{R}$ in $(-1, 1)$:
+> $$ \tanh(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}} $$
+> **Valori notevoli e limiti**:
+> - $\tanh(0) = 0$
+> - $\lim_{z \to +\infty} \frac{e^z - e^{-z}}{e^z + e^{-z}} = \lim_{z \to +\infty} \frac{e^z(1 - e^{-2z})}{e^z(1 + e^{-2z})} = 1$
+> - $\lim_{z \to -\infty} \tanh(z) = -1$[cite: 115]
+
+> [!theorem] Derivata di $\tanh(z)$
+> Applicando la regola di derivazione del quoziente:
+> $$ (\tanh(z))' = \frac{(e^z - e^{-z})'(e^z + e^{-z}) - (e^z - e^{-z})(e^z + e^{-z})'}{(e^z + e^{-z})^2} $$
+> $$ = \frac{(e^z + e^{-z})(e^z + e^{-z}) - (e^z - e^{-z})(e^z - e^{-z})}{(e^z + e^{-z})^2} = \frac{(e^z + e^{-z})^2 - (e^z - e^{-z})^2}{(e^z + e^{-z})^2} $$
+> $$ = 1 - \frac{(e^z - e^{-z})^2}{(e^z + e^{-z})^2} = 1 - \tanh^2(z) $$[cite: 115]
+
+# Lezione 17: Architettura delle Reti Neurali e Algoritmo di Backpropagation
+
+## 1. Architettura, Parametri e Ottimizzazione a Due Livelli
+Riprendiamo la notazione generale per una [[Feed-Forward Neural Networks|rete neurale feed-forward]] che mappa un input $x \in \mathbb{R}^d$ in un output $y \in \mathcal{Y}$, dove ogni singolo neurone calcola una trasformazione affine seguita da una non-linearità $h(\langle x, \theta \rangle + d)$[cite: 117].
+
+> [!definition] Notazione Generale e Distinzione Parametri / Iperparametri
+> Consideriamo una rete composta da un *input layer* (layer $0$), eventuali strati nascosti e un *output layer* (layer $D$):
+> - **Profondità ($D$)**: numero totale di strati (1-layer = *shallow neural network*; $n$-layer con $n > 1$ = *deep neural network*).
+> - **Larghezza ($d_0, d_1, \dots, d_D$)**: numero di nodi in ciascuno strato, dove $d_0 = d$ è la dimensione dell'input e $d_D$ è la dimensione dell'output.
+> - **Iperparametri (discreti)**: la topologia della rete ($D$ e i vari $d_l$) e le funzioni di attivazione $\pi^l: \mathbb{R}^{d_l} \rightarrow \mathbb{R}^{d_l}$ per $l = 1, \dots, D$ (es. ReLU).
+> - **Parametri (continui)**: le matrici dei pesi $W^l \in \mathbb{R}^{d_l \times d_{l-1}}$ e i vettori dei bias $b^l \in \mathbb{R}^{d_l}$ per ogni strato $l = 1, \dots, D$.
+> 
+> **Forward Pass**: ponendo $a^0 = x$, per ogni strato $l = 1, \dots, D$ la rete calcola:
+> $$ z^l = W^l a^{l-1} + b^l \quad (\text{vettore di pre-attivazione}) $$
+> $$ a^l = \pi^l(z^l) \quad (\text{vettore di attivazione}) $$[cite: 117]
+
+Il nostro obiettivo teorico è minimizzare il rischio atteso $\min_\theta R_{\mathcal{D}}(f_\theta)$, utilizzando come proxy la minimizzazione del [[Rischio Empirico]]:
+$$ \min_\theta \hat{R}_S(f_\theta) = \min_\theta \frac{1}{n}\sum_{i=1}^n l(f_\theta(x_i), y_i) $$[cite: 117]
+
+> [!intuition] Separazione dell'Ottimizzazione in Due Livelli
+> Non possiamo ottimizzare parametri e iperparametri allo stesso modo. Il processo di minimizzazione viene quindi separato in due livelli distinti:
+> 1. **Iperparametri discreti** (topologia e attivazioni): ottimizzati tramite **[[Validation Set]]** utilizzando strategie di ricerca come la **Grid Search**.
+> 2. **Parametri continui** ($W^l, b^l$): ottimizzati sul **[[Training Set]]** tramite **[[Gradient Descent]]** (o [[SGD (Stochastic Gradient Descent)]]).[cite: 117]
+
+---
+
+## 2. Impostazione della Backpropagation e il Segnale di Errore $\delta^l$
+Per eseguire il Gradient Descent dobbiamo calcolare i gradienti $\nabla_{W^l} \hat{R}_S(f_\theta)$ e $\nabla_{b^l} \hat{R}_S(f_\theta)$[cite: 117]. Per la linearità dell'operatore gradiente, il gradiente sull'intero dataset è semplicemente la media dei gradienti sui singoli campioni:
+$$ \nabla_{W^l} \hat{R}_S(f_\theta) = \frac{1}{n}\sum_{i=1}^n \nabla_{W^l} l(f_\theta(x_i), y_i), \qquad \nabla_{b^l} \hat{R}_S(f_\theta) = \frac{1}{n}\sum_{i=1}^n \nabla_{b^l} l(f_\theta(x_i), y_i) $$[cite: 117]
+
+Possiamo quindi fissare una generica coppia $(x, y)$ (omettendone la dipendenza per snellire la notazione) e concentrarci sul calcolo di $\nabla_{W^l} l$ e $\nabla_{b^l} l$ al variare dei pesi[cite: 117].
+
+> [!definition] Vettore di Errore / Sensibilità ($\delta^l$)
+> Per ogni strato $l = 1, \dots, D$, definiamo il vettore $\delta^l \in \mathbb{R}^{d_l}$ come il gradiente della loss rispetto al vettore di pre-attivazione $z^l$:
+> $$ \delta^l = \nabla_{z^l} l(f_\theta(x), y) $$[cite: 117]
+
+> [!intuition] Cosa rappresenta $\delta^l$?
+> Il vettore $\delta^l$ misura **quanto e in quale direzione** varia la funzione di loss $l$ rispetto a una piccola perturbazione della pre-attivazione $z^l$[cite: 117]. Calcolando i $\delta^l$ a ritroso dall'ultimo strato fino al primo, evitiamo di ricalcolare ripetutamente le stesse derivate parziali della regola della catena.
+
+---
+
+## 3. Il Caso Base: Calcolo di $\delta^D$ nell'Output Layer
+Nell'ultimo strato ($l = D$), la formula di $\delta^D$ dipende direttamente dalla funzione di loss scelta per il task[cite: 117]. Analizziamo i tre casi canonici:
+
+1. **Regressione 1D con Squared Loss ($d_D = 1$)**:
+   La loss è $l(z^D, y) = (z^D - y)^2$, dove $z^D$ è l'output della rete e $y$ è la vera etichetta. Derivando direttamente:
+   $$ \delta^D = \frac{\partial l}{\partial z^D} = 2(z^D - y) $$[cite: 117]
+
+2. **Classificazione Binaria con Binary Cross-Entropy ($d_D = 1$)**:
+   L'output passa attraverso la sigmoide $\sigma(z^D)$ e la loss è $l(\sigma(z^D), y) = -y\log\sigma(z^D) - (1-y)\log(1 - \sigma(z^D))$. Sfruttando $\sigma'(z) = \sigma(z)(1-\sigma(z))$:
+   $$ \delta^D = \frac{\partial l}{\partial z^D} = -\frac{y}{\sigma(z^D)}\sigma(z^D)(1-\sigma(z^D)) + \frac{1-y}{1-\sigma(z^D)}\sigma(z^D)(1-\sigma(z^D)) $$
+   $$ = -y + y\sigma(z^D) + \sigma(z^D) - y\sigma(z^D) = \sigma(z^D) - y $$[cite: 117]
+
+3. **Classificazione Multi-classe con Cross-Entropy ($d_D = K$)**:
+   L'output passa attraverso la [[Softmax Regression|Softmax]] $p_j(z^D) = \frac{e^{z_j^D}}{\sum_{k=1}^K e^{z_k^D}}$ e la loss è $l(z^D, y) = -\sum_{j=1}^K y^{(j)} \log p_j(z^D)$. Analogamente a quanto derivato nella Lezione 14, ogni componente $j$-esima di $\delta^D$ è:
+   $$ \delta_j^D = \frac{\partial l}{\partial z_j^D} = p_j(z^D) - y^{(j)} $$[cite: 118]
+
+---
+
+## 4. Il Teorema di Backpropagation
+
+> [!theorem] [[Backpropagation]] per una Rete Fully Connected
+> In una rete neurale completamente connessa di profondità $D$:
+> 1. **Propagazione dell'errore negli strati nascosti**: per $l = D-1, D-2, \dots, 1$, i vettori $\delta^l$ soddisfano la relazione ricorsiva:
+>    $$ \delta^l = \left((W^{l+1})^T \delta^{l+1}\right) \odot (\pi^l)'(z^l) $$
+>    dove $\odot$ indica il prodotto componente per componente (prodotto di Hadamard).
+> 2. **Gradienti rispetto ai parametri**: per ogni strato $l = 1, \dots, D$ (incluso l'output layer), i gradienti rispetto a pesi e bias sono dati da:
+>    $$ \nabla_{W^l} l = \delta^l (a^{l-1})^T \in \mathbb{R}^{d_l \times d_{l-1}}, \qquad \nabla_{b^l} l = \delta^l \in \mathbb{R}^{d_l} $$[cite: 118]
+
+### Dimostrazione Analitica Passo-Passo
+Dimostriamo le tre identità applicando rigorosamente la regola della catena multivariata[cite: 118].
+
+**1. Derivata rispetto alle attivazioni $a_j^l$**:
+La $k$-esima pre-attivazione dello strato successivo $l+1$ è data da:
+$$ z_k^{l+1} = (W^{l+1} a^l)_k + b_k^{l+1} = \sum_{j=1}^{d_l} W_{kj}^{l+1} a_j^l + b_k^{l+1} $$
+Poiché l'attivazione $a_j^l$ influenza la loss attraverso *tutte* le pre-attivazioni $z_k^{l+1}$ dello strato successivo, per la regola della catena sommiamo su $k = 1, \dots, d_{l+1}$:
+$$ \frac{\partial l}{\partial a_j^l} = \sum_{k=1}^{d_{l+1}} \frac{\partial l}{\partial z_k^{l+1}} \frac{\partial z_k^{l+1}}{\partial a_j^l} = \sum_{k=1}^{d_{l+1}} \delta_k^{l+1} W_{kj}^{l+1} = \left((W^{l+1})^T \delta^{l+1}\right)_j $$[cite: 118]
+
+**2. Ricorsione per $\delta_j^l$**:
+Poiché $a_j^l = \pi^l(z_j^l)$ dipende unicamente dalla $j$-esima pre-attivazione $z_j^l$, otteniamo:
+$$ \delta_j^l = \frac{\partial l}{\partial z_j^l} = \frac{\partial l}{\partial a_j^l} \cdot \frac{\partial a_j^l}{\partial z_j^l} = \left((W^{l+1})^T \delta^{l+1}\right)_j \cdot (\pi^l)'(z_j^l) $$
+Riscrivendo l'espressione in forma vettoriale tramite il prodotto di Hadamard $\odot$, si ottiene $\delta^l = \left((W^{l+1})^T \delta^{l+1}\right) \odot (\pi^l)'(z^l)$[cite: 118].
+
+**3. Gradienti rispetto a $W^l$ e $b^l$**:
+Dalla relazione $z_j^l = \sum_{k=1}^{d_{l-1}} W_{jk}^l a_k^{l-1} + b_j^l$, notiamo che il peso $W_{jk}^l$ e il bias $b_j^l$ entrano *solo* nella $j$-esima pre-attivazione $z_j^l$:
+- Per i pesi:
+  $$ \frac{\partial l}{\partial W_{jk}^l} = \frac{\partial l}{\partial z_j^l} \frac{\partial z_j^l}{\partial W_{jk}^l} = \delta_j^l \cdot a_k^{l-1} \implies \nabla_{W^l} l = \delta^l (a^{l-1})^T \in \mathbb{R}^{d_l \times d_{l-1}} $$
+- Per i bias:
+  $$ \frac{\partial l}{\partial b_j^l} = \frac{\partial l}{\partial z_j^l} \frac{\partial z_j^l}{\partial b_j^l} = \delta_j^l \cdot 1 = \delta_j^l \implies \nabla_{b^l} l = \delta^l \in \mathbb{R}^{d_l} $$[cite: 118]
+
+---
+
+## 5. Caso Studio Numerico: Regressione con ReLU
+
+> [!example] Esercizio Svolto: Forward Pass e Backward Pass a mano
+> Consideriamo una rete per regressione (con squared loss) di profondità $D = 2$ con dimensioni $d_0 = 2$, $d_1 = 2$, $d_2 = 1$ e attivazione ReLU nello strato nascosto ($\pi^1 = \text{ReLU}$). I parametri sono:
+> $$ W^1 = \begin{pmatrix} 1 & -1 \\ 1 & 1 \end{pmatrix}, \quad b^1 = \begin{pmatrix} 0 \\ -1 \end{pmatrix}, \quad W^2 = \begin{pmatrix} 1 & -1 \end{pmatrix}, \quad b^2 = 0 $$
+> Calcoliamo l'output, la loss e tutti i gradienti per l'input $x = \begin{pmatrix} 2 \\ 1 \end{pmatrix}$ con target $y = 1$.
+> 
+> **1. Forward Pass**
+> - **Layer 1**:
+>   $$ z^1 = W^1 x + b^1 = \begin{pmatrix} 1 & -1 \\ 1 & 1 \end{pmatrix}\begin{pmatrix} 2 \\ 1 \end{pmatrix} + \begin{pmatrix} 0 \\ -1 \end{pmatrix} = \begin{pmatrix} 1 \\ 3 \end{pmatrix} + \begin{pmatrix} 0 \\ -1 \end{pmatrix} = \begin{pmatrix} 1 \\ 2 \end{pmatrix} $$
+>   $$ a^1 = \text{ReLU}(z^1) = \begin{pmatrix} 1 \\ 2 \end{pmatrix} $$
+> - **Layer 2 (Output)**:
+>   $$ z^2 = W^2 a^1 + b^2 = \begin{pmatrix} 1 & -1 \end{pmatrix}\begin{pmatrix} 1 \\ 2 \end{pmatrix} + 0 = 1 - 2 = -1 $$
+> - **Calcolo della Loss** (con $y = 1$):
+>   $$ l(z^2, y) = (z^2 - y)^2 = (-1 - 1)^2 = 4 $$
+> 
+> **2. Backward Pass (Backpropagation)**
+> - **Layer 2**:
+>   $$ \delta^2 = 2(z^2 - y) = 2(-1 - 1) = -4 $$
+>   $$ \nabla_{b^2} l = \delta^2 = -4 $$
+>   $$ \nabla_{W^2} l = \delta^2 (a^1)^T = -4 \begin{pmatrix} 1 & 2 \end{pmatrix} = \begin{pmatrix} -4 & -8 \end{pmatrix} $$
+> - **Layer 1**:
+>   Poiché entrambe le componenti di $z^1 = \begin{pmatrix} 1 \\ 2 \end{pmatrix}$ sono strettamente positive, la derivata della ReLU vale $(\pi^1)'(z^1) = \begin{pmatrix} 1 \\ 1 \end{pmatrix}$.
+>   $$ \delta^1 = \left((W^2)^T \delta^2\right) \odot (\pi^1)'(z^1) = \left[\begin{pmatrix} 1 \\ -1 \end{pmatrix}(-4)\right] \odot \begin{pmatrix} 1 \\ 1 \end{pmatrix} = \begin{pmatrix} -4 \\ 4 \end{pmatrix} $$
+>   $$ \nabla_{W^1} l = \delta^1 x^T = \begin{pmatrix} -4 \\ 4 \end{pmatrix}\begin{pmatrix} 2 & 1 \end{pmatrix} = \begin{pmatrix} -8 & -4 \\ 8 & 4 \end{pmatrix} $$
+>   $$ \nabla_{b^1} l = \delta^1 = \begin{pmatrix} -4 \\ 4 \end{pmatrix} $$[cite: 118]
