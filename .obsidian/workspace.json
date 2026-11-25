@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Dependable Distributed System/DDS part 2.md",
+                "file": "Dependable Distributed System/Blockchain, Consensus & Smart Contracts.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "DDS part 2"
+              "title": "Blockchain, Consensus & Smart Contracts"
             }
           }
         ]
@@ -83,8 +83,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "f6cc322df633c375",
@@ -190,14 +189,25 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "b95a9e32fabd1cec",
+  "active": "e085b63d3534c645",
   "lastOpenFiles": [
-    "immagini DS/Scheda 1-1795016547604.webp",
-    "immagini DS/Scheda 1-1795015700023.webp",
-    "immagini DS/Scheda 1-1795015687040.webp",
-    "immagini DS/Scheda 1-1795015214912.webp",
-    "immagini DS/Scheda 1-1795014974809.webp",
-    "immagini DS/Scheda 1-1795014051579.webp",
+    "Dependable Distributed System/DDS part 2.md",
+    "Dependable Distributed System/Blockchain, Consensus & Smart Contracts.md",
+    "immagini DS/slides/DDS_4_68_reentrancy.png",
+    "immagini DS/slides/DDS_4_60_evm_layer.png",
+    "immagini DS/slides/DDS_4_59_code_gen.png",
+    "immagini DS/slides/DDS_4_55_gas_flow.png",
+    "immagini DS/slides/DDS_4_53_call_depth.png",
+    "immagini DS/slides/DDS_4_52_evm_exec.png",
+    "immagini DS/slides/DDS_4_42_evm_space.png",
+    "immagini DS/slides/DDS_4_41_evm_arch.png",
+    "immagini DS/slides/DDS_4_38_four_messages.png",
+    "immagini DS/slides/DDS_4_35_mt_vs_mpt.png",
+    "immagini DS/slides",
+    "Dependable Distributed System/Slide/4. Smart Contracts_ Beyond transactions.pdf",
+    "Dependable Distributed System/Slide/2. Blockchain Tech ingredients.pdf",
+    "Dependable Distributed System/Slide/3. Consensus.pdf",
+    "Dependable Distributed System/Slide/3.5 Safety and Liveness of Bitcoin (1).pdf",
     "Dependable Distributed System/Dependable distributed system.md",
     "Dependable Distributed System/DDS, per argomenti/Time in distributed system.md",
     "Dependable Distributed System/DDS, per argomenti/Modelling distributed system.md",
@@ -206,31 +216,20 @@
     "Dependable Distributed System/DDS, per argomenti/Abstracting communication.md",
     "Dependable Distributed System/DDS, per argomenti",
     "Dependable Distributed System/Dependable distributed system 1 1.md",
-    "Dependable Distributed System/DDS part 2.md",
-    "DDS part 2-1795434730944.webp",
-    "DDS part 2-1795434446660.webp",
     "Dependable Distributed System/Slide/3.5 Safety and Liveness of Bitcoin.pdf",
     "desktop.ini",
     "Senza nome.base",
     "2026-11-19.md",
     "Senza nome.md",
-    "immagini DS/Vector_Clocks_Execution.png",
-    "immagini DS/DDS part 2-1795089191849.webp",
-    "immagini DS/DDS part 2-1795089077362.webp",
     "Dependable Distributed System/Slide",
     "Dependable Distributed System/Dependable distributed system 1 1 1.md",
     "Cybersecurity/Lesson 10 - Block cipher operations.md",
     "Dependable Distributed System/EserciziBonomi/Scheda 1.md",
-    "Dependable Distributed System/EserciziBonomi",
     "Machine Learning.md",
     "Cybersecurity/Lesson 4 - Email system and security challenges.md",
     "Dependable Distributed System/Dependable distributed system 1.md",
-    "Cybersecurity/Assets/SLIDES/07 Block cipher operations.pdf",
     "Cybersecurity/Lesson 9 - AES.md",
     "Cybersecurity/Lezione 8.md",
-    "Cybersecurity/Assets/SLIDES/06 AES.pdf",
-    "Cybersecurity/Assets/SLIDES",
-    "Cybersecurity/Assets",
     "Cybersecurity/Lesson 6 - Block ciphers and DES.md",
     "Cybersecurity/Lesson 7 - Finite Fields.md",
     "Cybersecurity/Lesson 5 - Classic cryptography.md",
